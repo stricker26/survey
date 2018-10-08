@@ -1,0 +1,21 @@
+footer {
+	width: 100%;
+	background-color: #606060;
+	.container {
+		max-width: 80%;
+		.nav {
+			li {
+				a {
+					color: #ffffff;
+				}
+			}
+		}
+		p {
+			display: block;
+			width: 100%;
+			text-align: left;
+			color: #ffffff;
+			padding-left: 15px;
+		}
+	}
+}

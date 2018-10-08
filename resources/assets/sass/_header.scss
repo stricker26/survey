@@ -1,0 +1,27 @@
+header {
+	width: 100%;
+	background-color: #1d497d;
+	.container {
+		max-width: 80%;
+		.nav {
+			li {
+				a {
+					color: #ffffff;
+				}
+				.btn-orange {
+					background-color: #f89937;
+					color: #000000;
+				}
+			}
+		}
+		.nav.right-nav {
+			li {
+				.dropdown-menu {
+					a {
+						color: #000000;
+					}
+				}
+			}
+		}
+	}
+}

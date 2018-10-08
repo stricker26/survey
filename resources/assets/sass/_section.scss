@@ -1,0 +1,162 @@
+section {
+	.container-fluid {
+		.bg-dark {
+			color: #ffffff;
+			overflow: hidden;
+		}
+		.sidebar {
+			width: 100%;
+			padding: 2rem 10%;
+			.row {
+				.survey-name {
+					width: 100%;
+					border: 0;
+					border-bottom: 1px solid #f89937;
+					background-color: transparent;
+					padding: 0;
+					margin-bottom: 2rem;
+					color: #ffffff;
+				}
+				.survey-name::-webkit-input-placeholder {
+					color: #ffffff;
+				}
+				.survey-properties {
+					padding-left: 15px;
+					margin: 2rem 0 5rem 0;
+					li {
+						font-size: 1.2em;
+						margin-bottom: 1rem;
+					}
+				}
+			}
+			.tools {
+				padding: .4rem 0;
+				.instruction {
+					.fa-check-square {
+						color: #f89937;
+						vertical-align: middle;
+					}
+				}
+				.tool {
+					cursor: pointer;
+				}
+				.advanced-option {
+					position: relative;
+					cursor: pointer;
+					&:after {
+						content: "";
+						width: 18px;
+						height: 10px;
+						display: inline-block;
+						margin-left: 20px;
+						background: url('/../../../images/expand-icon.png') no-repeat center bottom;
+					}
+				}
+				p {
+					margin-bottom: 0;
+				}
+			}
+			.tool-options {
+				.form-group {
+					position: relative;
+					button {
+						width: auto;
+						position: absolute;
+					    top: 0;
+					    padding: 0.6rem 1rem 0.55rem 1rem;
+					    border: 0;
+					    right: 0;
+					    border-radius: 0 5px 5px 0;
+					    background-color: #f89937;
+					    color: #ffffff;
+					    outline: none;
+					    cursor: pointer;
+					}
+				}
+				button {
+					outline: none;
+					width: 100%;
+				}
+			}
+		}
+		.content-inner {
+			background-color: #efefef;
+			.content-inner-head {
+				border-bottom: 1px solid #a7a7a7;
+				margin-bottom: 2rem;
+				padding: 1rem;
+				ul {
+					padding: 0;
+					li {
+						display: inline-block;
+						padding-right: 50px;
+					}
+				}
+			}
+			.content-inner-body {
+				form {
+					width: 100%;
+				}
+				padding: 0 1rem;
+				.border {
+					background-color: #ffffff;
+					text-align: center;
+					padding: 1rem 0;
+					label {
+						display: block;
+						margin-bottom: 0;
+					}
+					label.question-label {
+						font-size: 1.5em;
+					}
+					.question-tools {
+						.question-tools-item {
+							width: 25%;
+							display: inline-block;
+						}
+					}
+				}
+				.col-lg-11.border {
+					.row {
+						padding-top: .3rem;
+					}
+				}
+			}
+		}
+		.section-bg-gray {
+			background-color: #efefef;
+		}
+		.overview {
+			padding: 0 15px;
+			.border {
+				background-color: #ffffff;
+				text-align: center;
+				padding: 1rem 0;
+				label {
+					display: block;
+				}
+			}
+		}
+		.surveys {
+			width: 100%;
+			margin-right: 0;
+			margin-left: 0;
+			padding: 15px 0;
+			background-color: #ffffff;
+			div {
+				label {
+					display: block;
+					text-align: center;
+				}
+				a {
+					display: block;
+				}
+			}
+			.col-7 {
+				label {
+					text-align: left;
+				}
+			}
+		}
+	}	
+}
