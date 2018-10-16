@@ -10,16 +10,16 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
 export default class AddQuestions extends Component {
 
-    constructor() {
+     constructor() {
         super();
         this.state = {
             name: '',
             answers: [{ name: '' }],
-            defaultQtype: 'Multiple Choice',
+            defaultQtype: 'Checkbox',
             passToolvalue: '',
             qTitle: 'Question Title',
-            random: false, 
-            wChoice: false,
+            random: 0, 
+            wChoice: 0,
             result: ''
         };
     }
@@ -49,12 +49,23 @@ export default class AddQuestions extends Component {
         this.setState({
             defaultQtype: e
         });
+
+        // const wQtype = this.state.qType;
+        let tool;
+
+        if(e == 'Checkbox') {
+            tool = '<input type="checkbox">';
+        } else {
+            tool = '<input type="radio">';
+        }
+
     }
 
     handleQtitle = (e) => {
         this.setState({
             qTitle: e.target.getContent()
         });
+
     }
 
     selectRandom = () => {
@@ -67,7 +78,6 @@ export default class AddQuestions extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-
         const form = {
             title: this.state.qTitle,
             type: this.state.defaultQtype,
@@ -76,17 +86,24 @@ export default class AddQuestions extends Component {
             answers: this.state.answers
         }
 
-        let uri = '/dashboard/survey/add';
-        axios.post(uri, form).then((response) => {
-            // this.setState({
-            //     result: response
-            // });
+        axios.post('/api/question', form).then(response => {
             console.log(response);
+        }).then(error => {
+            console.log(error);
         });
 
     }
 
     render() {
+
+        let tool = this.state.defaultQtype;
+
+        if(tool == 'Checkbox') {
+            tool = '<input type="checkbox">';
+        } else {
+            tool = '<input type="radio">';
+        }
+
         return (
             <React.Fragment>
                 <header>
@@ -99,21 +116,6 @@ export default class AddQuestions extends Component {
                         <div className="row">
                             <div className="col-lg-3 bg-dark">
                                 <div className="sidebar">
-                                    <div className="row tools mb-3">
-                                        <div className="col instruction">
-                                            <FontAwesomeIcon icon="check-square" className="fa-2x mr-3" /> Required Question
-                                        </div>
-                                    </div>
-                                    <div className="row tools">
-                                        <div className="col">
-                                            <div className="hr-full"></div>
-                                        </div>
-                                    </div>
-                                    <div className="row tools">
-                                        <div className="col">
-                                            <p>Question Type</p>
-                                        </div>
-                                    </div>
                                     <Tools 
                                         passToolvalue = {this.passToolvalue}
                                     />
@@ -204,14 +206,7 @@ export default class AddQuestions extends Component {
                                                             {this.state.qTitle.replace(/<\/?[^>]+(>|$)/g, "")}
                                                         </div>
                                                         <div className="card-body">
-                                                            {this.state.answers.map((answer, idx) => (
-                                                                <div className="form-group" key={idx}>
-                                                                    <div className="checkbox">
-                                                                        <input type="checkbox" id={idx} name="multiple" />
-                                                                        <label htmlFor={idx}><span>{answer.name}</span></label>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
+                                                            {tool}
                                                         </div>
                                                     </div>
                                                     <input type="hidden" value={this.state.defaultQtype} />

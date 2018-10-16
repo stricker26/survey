@@ -3,13 +3,28 @@ import ReactDOM from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default class Tools extends Component {
-
+    
     render() {
 
         const {passToolvalue} = this.props;
 
         return (
             <React.Fragment>
+                <div className="row tools mb-3">
+                    <div className="col instruction">
+                        <FontAwesomeIcon icon="check-square" className="fa-2x mr-3" /> Required Question
+                    </div>
+                </div>
+                <div className="row tools">
+                    <div className="col">
+                        <div className="hr-full"></div>
+                    </div>
+                </div>
+                <div className="row tools">
+                    <div className="col">
+                        <p>Question Type</p>
+                    </div>
+                </div>
                 <div className="row tools">
                     <div className="col">
                         <span className="tool" onClick={(e) => passToolvalue('Multiple Choice')}><FontAwesomeIcon icon="list" /> Multiple Choice</span>

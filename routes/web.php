@@ -23,5 +23,5 @@ Route::prefix('dashboard')->group(function() {
 	Route::get('/{path}', 'Dashboard\SurveyController@index');
 	Route::get('/{path}/{url}', 'Dashboard\SurveyController@index');
 	Route::get('/{path}/{url}/{id}', 'Dashboard\SurveyController@index');
-	Route::post('/dashboard/survey/add', 'Dashboard\SurveyController@add');
+	Route::post('/dashboard/survey/add/', 'Dashboard\SurveyController@add');
 });

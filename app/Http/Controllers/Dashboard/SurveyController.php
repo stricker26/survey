@@ -48,4 +48,12 @@ class SurveyController extends Controller
 
     }
 
+    public function get_question() {
+
+        $sqlview = DB::table('survey_questions')->get();
+
+        return response()->json($sqlview);
+
+    }
+
 }
