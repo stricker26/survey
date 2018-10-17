@@ -80,6 +80,7 @@ select.dropdown {
 	border-radius: 0;
 	padding: 1rem 5rem;
 	position: relative;
+	background-color: #efefef;
 	&:before {
 		content: "";
 		position: absolute;
@@ -88,6 +89,12 @@ select.dropdown {
 		width: 60px;
 		height: 57px;
 		background: #558ed5 url(/../../../images/add-icon.png) no-repeat center center;
+	}
+	&:active,
+	&:focus,
+	&:active:focus {
+		outline: none;
+		box-shadow: none;
 	}
 }
 

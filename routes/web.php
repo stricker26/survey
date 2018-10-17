@@ -15,13 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/default', [
-	'uses' => 'Dashboard\SurveyController@defaultadd'
-]);
+Route::prefix('survey')->group(function() {
+	Route::get('/{id}', 'StartSurveyController@start');
+});
 
 Route::prefix('dashboard')->group(function() {
-	Route::get('/{path}', 'Dashboard\SurveyController@index');
-	Route::get('/{path}/{url}', 'Dashboard\SurveyController@index');
-	Route::get('/{path}/{url}/{id}', 'Dashboard\SurveyController@index');
-	Route::post('/dashboard/survey/add/', 'Dashboard\SurveyController@add');
+	Route::get('/{path}', 'Dashboard\DashboardController@index');
+	Route::get('/{path}/{url}', 'Dashboard\DashboardController@index');
+	Route::get('/{path}/{url}/{id}', 'Dashboard\DashboardController@index');
+	Route::post('/dashboard/survey/add/', 'Dashboard\DashboardController@add');
 });

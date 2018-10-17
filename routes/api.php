@@ -17,4 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('question', 'Api\QuestionController');
+Route::prefix('webmaster')->group(function() {
+	Route::resource('survey', 'Api\SurveyController');
+	Route::resource('question', 'Api\QuestionController');
+	Route::get('lists', 'Api\MainSurveyController@lists');
+});

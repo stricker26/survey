@@ -13,23 +13,34 @@ export default class CreateSurvey extends Component {
             duplicateIcon: './../../images/duplicate-icon.png',
             dragIcon: './../../images/drag-drop-icon.png',
             deleteIcon: './../../images/delete-icon.png',
-            questions: []
+            questions: [],
+            sTitle: ''
         }
     }
 
-    componentWillMount() {
+    handleChange = (e) => {
+        this.setState({
+            sTitle: e.target.value
+        });
+    }
 
-        axios.get('/api/question').then(response => {
-            this.setState({
-                questions: response.data
-            });
-        }).catch(errors => {
-            console.log(errors);
-        })
+    addSurveyTitle = (e) => {
+        e.preventDefault();
+        const form = {
+            title: this.state.sTitle
+        }
 
+        axios.post('/api/webmaster/survey', form).then(response => {
+            if(response.data.success) {
+                this.props.history.push('/dashboard/survey/'+ response.data.id +'/add/');
+            }
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     render() {
+
         return (
             <React.Fragment>
                 <header>
@@ -46,7 +57,7 @@ export default class CreateSurvey extends Component {
                                 <div className="sidebar">
                                     <div className="row">
                                         <div className="col">
-                                            <input type="text" className="survey-name" placeholder="Untitled" />
+                                            <input type="text" value={this.state.value} onChange={this.handleChange} className="survey-name" placeholder="Untitled" />
                                         </div>
                                     </div>
                                     <div className="row">
@@ -87,52 +98,9 @@ export default class CreateSurvey extends Component {
                                 </div>
                                 <div className="row content-inner-body">
                                     <div className="col-lg-12">
-                                        <div className="row">
-                                            <div className="col">
-                                                <p>TITLE</p>
-                                            </div>
-                                            <div className="col">
-                                                <p>QUESTION TYPE</p>
-                                            </div>
-                                        </div>
-                                        {this.state.questions.map(question => 
-                                            <div className="row mr-1 ml-1 mb-3">
-                                                <div className="col-lg-1 border">
-                                                    <label className="question-label">Q</label>
-                                                </div>
-                                                <div className="col-lg-11 border">
-                                                    <div className="row">
-                                                        <div className="col-lg-4">
-                                                            <label>{question.q_title}</label>
-                                                        </div>
-                                                        <div className="col-lg-4">
-                                                            <label>{question.q_type}</label>
-                                                        </div>
-                                                        <div className="col-lg-4">
-                                                            <div className="question-tools">
-                                                                <div className="question-tools-item">
-                                                                    <img src={this.state.editIcon} />
-                                                                </div>
-                                                                <div className="question-tools-item">
-                                                                    <img src={this.state.duplicateIcon} />
-                                                                </div>
-                                                                <div className="question-tools-item">
-                                                                    <img src={this.state.dragIcon} />
-                                                                </div>
-                                                                <div className="question-tools-item">
-                                                                    <img src={this.state.deleteIcon} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
                                         <div className="row mt-5 mb-5">
                                         	<div className="col text-center">
-                                        		<Link to="/dashboard/survey/add/1" className="nav-link">
-                                        			<div className="btn add-question">Add a question</div>
-                                        		</Link>
+                                        		<button type="submit" className="btn add-question" onClick={this.addSurveyTitle}>Add a question</button>
                                         	</div>
                                         </div>
                                     </div>

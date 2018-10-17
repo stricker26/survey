@@ -35,39 +35,39 @@ export default class Tools extends Component {
                 </div>
                 <div className="row tools">
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="book" /> Essay</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Essay')}><FontAwesomeIcon icon="book" /> Essay</span>
                     </div>
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="star" /> Star Rating</span>
-                    </div>
-                </div>
-                <div className="row tools">
-                    <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="text-width" /> Textbox</span>
-                    </div>
-                    <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="comment-dots" /> Comment Box</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Star')}><FontAwesomeIcon icon="star" /> Star Rating</span>
                     </div>
                 </div>
                 <div className="row tools">
                     <div className="col">
-                        <span className="tooToolsl"><FontAwesomeIcon icon="arrows-alt-v" /> Dropdown</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Textbox')}><FontAwesomeIcon icon="text-width" /> Textbox</span>
                     </div>
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="table" /> Matrix/Rating Scale</span>
-                    </div>
-                </div>
-                <div className="row tools">
-                    <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="chart-bar" /> Ranking</span>
-                    </div>
-                    <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="sliders-h" /> Slider</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Comment')}><FontAwesomeIcon icon="comment-dots" /> Comment Box</span>
                     </div>
                 </div>
                 <div className="row tools">
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="bars" /> Multiple Textboxes</span>
+                        <span className="tooToolsl" onClick={(e) => passToolvalue('Dropdown')}><FontAwesomeIcon icon="arrows-alt-v" /> Dropdown</span>
+                    </div>
+                    <div className="col">
+                        <span className="tool" onClick={(e) => passToolvalue('Rating')}><FontAwesomeIcon icon="table" /> Matrix/Rating Scale</span>
+                    </div>
+                </div>
+                <div className="row tools">
+                    <div className="col">
+                        <span className="tool" onClick={(e) => passToolvalue('Ranking')}><FontAwesomeIcon icon="chart-bar" /> Ranking</span>
+                    </div>
+                    <div className="col">
+                        <span className="tool" onClick={(e) => passToolvalue('Slider')}><FontAwesomeIcon icon="sliders-h" /> Slider</span>
+                    </div>
+                </div>
+                <div className="row tools">
+                    <div className="col">
+                        <span className="tool" onClick={(e) => passToolvalue('Textboxes')}><FontAwesomeIcon icon="bars" /> Multiple Textboxes</span>
                     </div>
                     <div className="col">
                         <span className="tool"><FontAwesomeIcon icon="user-check" /> Contact Info</span>
@@ -75,15 +75,15 @@ export default class Tools extends Component {
                 </div>
                 <div className="row tools">
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="calendar-alt" /> Date/Time</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Date')}><FontAwesomeIcon icon="calendar-alt" /> Date/Time</span>
                     </div>
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="image" /> Image Choice</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Image')}><FontAwesomeIcon icon="image" /> Image Choice</span>
                     </div>
                 </div>
                 <div className="row tools">
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="cloud-upload-alt" /> Image Upload</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Upload Image')}><FontAwesomeIcon icon="cloud-upload-alt" /> Image Upload</span>
                     </div>
                     <div className="col"></div>
                 </div>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import surveyImage from './images/live-survey.jpg';
@@ -8,12 +10,26 @@ export default class Survey extends Component {
     constructor() {
         super()
         this.state = {
+            surveyLists: [],
             editIcon: './../../images/edit-icon.png',
             analyzeIcon: './../../images/analyze-icon.png',
             shareIcon: './../../images/share-default-icon.png',
             moreIcon: './../../images/more-icon.png',
             researcherIcon: './../../images/researcher-icon.png',
         }
+    }
+
+    componentWillMount() {
+
+        axios.get('/api/webmaster/lists').then(response => {
+            this.setState({
+                surveyLists: response.data
+            });
+            console.log(response);
+        }).catch(error => { 
+            console.log(error);
+        });
+
     }
 
     render() {
@@ -56,62 +72,22 @@ export default class Survey extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td className="pl-4">
-                                                        <div className="text-success">DIGITAL SURVEY</div>
-                                                        <div>Marketing Survey Questionnaire</div>
-                                                        <div className="">Created on 02/11/2018.</div>
-                                                    </td>
-                                                    <td><div>04/11/2018</div></td>
-                                                    <td><div>5</div></td>
-                                                    <td><img src={this.state.editIcon} alt="Edit" /></td>
-                                                    <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                    <td><img src={this.state.shareIcon} alt="Share" /></td>
-                                                    <td><img src={this.state.moreIcon} alt="More" /></td>
-                                                    <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="pl-4">
-                                                        <div className="text-primary">LIVE SURVEY</div>
-                                                        <div>Seminar Questionnaire</div>
-                                                        <div className="">Created on 02/11/2018.</div>
-                                                    </td>
-                                                    <td><div>04/11/2018</div></td>
-                                                    <td><div>30</div></td>
-                                                    <td><img src={this.state.editIcon} alt="Edit" /></td>
-                                                    <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                    <td><img src={this.state.shareIcon} alt="Share" /></td>
-                                                    <td><img src={this.state.moreIcon} alt="More" /></td>
-                                                    <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="pl-4">
-                                                        <div className="text-success">LIVE SURVEY</div>
-                                                        <div>Health Survey Questionnaire</div>
-                                                        <div className="">Created on 02/11/2018.</div>
-                                                    </td>
-                                                    <td><div>04/11/2018</div></td>
-                                                    <td><div>5</div></td>
-                                                    <td><img src={this.state.editIcon} alt="Edit" /></td>
-                                                    <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                    <td><img src={this.state.shareIcon} alt="Share" /></td>
-                                                    <td><img src={this.state.moreIcon} alt="More" /></td>
-                                                    <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="pl-4">
-                                                        <div className="text-danger">DRAFTED SURVEY</div>
-                                                        <div>Work Culture Questionnaire</div>
-                                                        <div className="">Created on 02/11/2018.</div>
-                                                    </td>
-                                                    <td><div>04/11/2018</div></td>
-                                                    <td><div>0</div></td>
-                                                    <td><img src={this.state.editIcon} alt="Edit" /></td>
-                                                    <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                    <td><img src={this.state.shareIcon} alt="Share" /></td>
-                                                    <td><img src={this.state.moreIcon} alt="More" /></td>
-                                                    <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
-                                                </tr>
+                                                {this.state.surveyLists.map(list => 
+                                                    <tr>
+                                                        <td className="pl-4">
+                                                            <div className="text-success">DIGITAL SURVEY</div>
+                                                            <div>{list.title}</div>
+                                                            <div className="">Created on {list.created_at}.</div>
+                                                        </td>
+                                                        <td><div>{list.updated_at}</div></td>
+                                                        <td><div>0</div></td>
+                                                        <td><Link to={'/dashboard/survey/'+ list.survey_id +'/view'}><img src={this.state.editIcon} alt="Edit" /></Link></td>
+                                                        <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
+                                                        <td><img src={this.state.shareIcon} alt="Share" /></td>
+                                                        <td><img src={this.state.moreIcon} alt="More" /></td>
+                                                        <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </table>
                                     </div>

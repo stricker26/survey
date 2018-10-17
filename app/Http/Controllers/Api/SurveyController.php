@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Question;
 use App\Survey;
+use App\Created;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class QuestionController extends Controller
+class SurveyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +16,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $questions = Question::all();
-
-        return response()->json($questions);
+        //
     }
 
     /**
@@ -39,17 +37,20 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        $question = new Question;
+        $created = new Created;
+        $uniqueID = strftime(time());
 
-        $question->q_title = $request->get('title');
-        $question->q_type = $request->get('type');
-        $question->q_order = $request->get('order');
-        $question->q_writeinchoice = $request->get('wchoice');
-        $question->survey_id = $request->get('id');
-        $question->answer = json_encode($request->get('answers'));
-        $question->save();
+        $survey = new Survey;
+        $survey->title = $request->get('title');
+        $survey->status = 1;
+        $survey->survey_id = $uniqueID;
+        $survey->save();
 
-        return response()->json('Successfully Added!');
+        $created->id = $uniqueID;
+        $created->save();
+
+        return response()->json(['success' => 'Successfully Added!', 'id' => $uniqueID]);
+
     }
 
     /**
@@ -60,11 +61,7 @@ class QuestionController extends Controller
      */
     public function show($id)
     {
-        
-        $questions = Question::where('survey_id', '=', $id)->get();
-        $survey = Survey::where('survey_id', '=', $id)->first();
-
-        return response()->json(['surveys' => $survey, 'questions' => $questions]);
+        //
     }
 
     /**

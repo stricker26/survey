@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
@@ -14,20 +13,24 @@ export default class AddQuestions extends Component {
         super();
         this.state = {
             name: '',
-            answers: [{ name: '' }],
+            answers: [{ answer: '' }],
             defaultQtype: 'Checkbox',
             passToolvalue: '',
-            qTitle: 'Question Title',
+            qTitle: '',
             random: 0, 
             wChoice: 0,
-            result: ''
+            result: '',
+            surveyID: '',
+            circleIcon: './../../../../images/circle-icon.png',
+            squareIcon: './../../../../images/square-icon.png',
+            starIcon: './../../../../images/star-icon.png',
         };
     }
 
     handleAnswerNameChange = (idx) => (evt) => {
         const newAnswers = this.state.answers.map((answer, sidx) => {
             if (idx !== sidx) return answer;
-            return { ...answer, name: evt.target.value };
+            return { ...answer, answer: evt.target.value };
         });
 
         this.setState({ answers: newAnswers });
@@ -35,7 +38,7 @@ export default class AddQuestions extends Component {
 
     handleAddAnswer = () => {
         this.setState({
-            answers: this.state.answers.concat([{ name: '' }])
+            answers: this.state.answers.concat([{ answer: '' }])
         });
     }
 
@@ -49,16 +52,6 @@ export default class AddQuestions extends Component {
         this.setState({
             defaultQtype: e
         });
-
-        // const wQtype = this.state.qType;
-        let tool;
-
-        if(e == 'Checkbox') {
-            tool = '<input type="checkbox">';
-        } else {
-            tool = '<input type="radio">';
-        }
-
     }
 
     handleQtitle = (e) => {
@@ -76,9 +69,15 @@ export default class AddQuestions extends Component {
         this.setState({ wChoice: !this.state.wChoice });
     }
 
+    componentDidMount() {
+        const { id } = this.props.match.params;
+        this.setState({ surveyID: id });
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         const form = {
+            id: this.state.surveyID,
             title: this.state.qTitle,
             type: this.state.defaultQtype,
             order: this.state.random,
@@ -86,9 +85,9 @@ export default class AddQuestions extends Component {
             answers: this.state.answers
         }
 
-        axios.post('/api/question', form).then(response => {
+        axios.post('/api/webmaster/question', form).then(response => {
             console.log(response);
-        }).then(error => {
+        }).catch(error => {
             console.log(error);
         });
 
@@ -96,15 +95,66 @@ export default class AddQuestions extends Component {
 
     render() {
 
-        let tool = this.state.defaultQtype;
+        let toolType = this.state.defaultQtype;
+        let tool;
 
-        if(tool == 'Checkbox') {
-            tool = '<input type="checkbox">';
+        if(toolType == 'Checkbox') {
+            tool = this.state.answers.map((answer, idx) => (
+                <div className="form-group" key={idx}>
+                    <div className="tool-option">
+                        <img src={this.state.squareIcon} alt="Checkbox" />
+                        <label htmlFor={idx}><span>{answer.answer}</span></label>
+                    </div>
+                </div>
+            ));
+        } else if(toolType == 'Multiple Choice') {
+             tool = this.state.answers.map((answer, idx) => (
+                <div className="form-group" key={idx}>
+                    <div className="tool-option">
+                        <img src={this.state.circleIcon} alt="Selectbox" />
+                        <label htmlFor={idx}><span>{answer.answer}</span></label>
+                    </div>
+                </div>
+            ));
+        } else if(toolType == 'Star') {
+             tool = this.state.answers.map((answer, idx) => (
+                <div className="form-group" key={idx}>
+                    <div className="tool-option">
+                        <img src={this.state.starIcon} alt="Selectbox" />
+                        <label htmlFor={idx}><span>{answer.answer}</span></label>
+                    </div>
+                </div>
+            ));
+        } else if(toolType == 'Essay') {
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <div className="border-bottom">
+                        <p>Long answer text</p>
+                    </div>
+                </div>
+            </div>
+        } else if(toolType == 'Textbox') {
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <div className="border-bottom">
+                        <p>Short answer text</p>
+                    </div>
+                </div>
+            </div>
+        } else if(toolType == 'Comment') {
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <div className="border-bottom">
+                        <p>Long answer text</p>
+                    </div>
+                </div>
+            </div>
         } else {
-            tool = '<input type="radio">';
+            
         }
 
         return (
+
             <React.Fragment>
                 <header>
                     <div className="container">
@@ -125,7 +175,7 @@ export default class AddQuestions extends Component {
                                                 <div className="form-group" key={idx}>
                                                    <input
                                                         type="text"
-                                                        value={answer.name}
+                                                        value={answer.answer}
                                                         onChange={this.handleAnswerNameChange(idx)}
                                                         className="form-control"
                                                         placeholder="Type your answer"
