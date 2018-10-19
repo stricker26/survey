@@ -76085,7 +76085,7 @@ var Survey = function (_Component) {
                                 )
                             )
                         )
-                    ) : list.q_type == 'Star' ? null : null
+                    ) : list.q_type == 'Essay' ? null : null
                 );
             });
 

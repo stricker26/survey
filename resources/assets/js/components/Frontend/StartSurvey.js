@@ -144,7 +144,7 @@ export default class Survey extends Component {
                             </div>
                         }
                     </When>
-                    <When condition = {list.q_type == 'Star'}>
+                    <When condition = {list.q_type == 'Essay'}>
 
                     </When>
                 </Choose>
