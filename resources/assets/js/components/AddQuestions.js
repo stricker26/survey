@@ -21,6 +21,7 @@ export default class AddQuestions extends Component {
             wChoice: 0,
             result: '',
             surveyID: '',
+            warningModal: false,
             circleIcon: './../../../../images/circle-icon.png',
             squareIcon: './../../../../images/square-icon.png',
             starIcon: './../../../../images/star-icon.png',
@@ -74,6 +75,12 @@ export default class AddQuestions extends Component {
         this.setState({ surveyID: id });
     }
 
+    toggleWarnigModal() {
+        this.setState({
+            warningModal: !this.state.warningModal
+        });
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         const form = {
@@ -86,7 +93,11 @@ export default class AddQuestions extends Component {
         }
 
         axios.post('/api/webmaster/question', form).then(response => {
-            console.log(response);
+            if(response.data.success) {
+
+            } else {
+                this.toggleWarnigModal
+            }
         }).catch(error => {
             console.log(error);
         });

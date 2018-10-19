@@ -47,7 +47,7 @@ class SurveyController extends Controller
 
         if($validator->fails()) {
 
-            return response()->json(['warning', 'Survey name is required!']);
+            return response()->json(['warning' => 'Survey name is required!']);
 
         } else {
 

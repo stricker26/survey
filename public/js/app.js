@@ -1266,6 +1266,7 @@ module.exports = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_react_fontawesome__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_router_dom__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Modal_SurveyModal__ = __webpack_require__(125);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Modal_ValidateModal__ = __webpack_require__(195);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1273,6 +1274,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -1340,6 +1342,8 @@ var Header = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var showValidateModal = this.props.showValidateModal;
+
 
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
@@ -1428,6 +1432,10 @@ var Header = function (_Component) {
                     )
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Modal_SurveyModal__["a" /* default */], {
+                    isOpen: this.state.showModal,
+                    closeSurvey: this.closeSurvey
+                }),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Modal_ValidateModal__["a" /* default */], {
                     isOpen: this.state.showModal,
                     closeSurvey: this.closeSurvey
                 })
@@ -73410,7 +73418,9 @@ var AddQuestions = function (_Component) {
                 };
 
                 __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/api/webmaster/question', form).then(function (response) {
-                    console.log(response);
+                    if (response.data.success) {} else {
+                        _this.toggleWarnigModal;
+                    }
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -73427,6 +73437,7 @@ var AddQuestions = function (_Component) {
             wChoice: 0,
             result: '',
             surveyID: '',
+            warningModal: false,
             circleIcon: './../../../../images/circle-icon.png',
             squareIcon: './../../../../images/square-icon.png',
             starIcon: './../../../../images/star-icon.png'
@@ -73440,6 +73451,13 @@ var AddQuestions = function (_Component) {
             var id = this.props.match.params.id;
 
             this.setState({ surveyID: id });
+        }
+    }, {
+        key: 'toggleWarnigModal',
+        value: function toggleWarnigModal() {
+            this.setState({
+                warningModal: !this.state.warningModal
+            });
         }
     }, {
         key: 'render',
@@ -83866,6 +83884,87 @@ bunker(function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_router_dom__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_reactstrap__ = __webpack_require__(126);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+var ValidateModal = function (_Component) {
+	_inherits(ValidateModal, _Component);
+
+	function ValidateModal() {
+		_classCallCheck(this, ValidateModal);
+
+		return _possibleConstructorReturn(this, (ValidateModal.__proto__ || Object.getPrototypeOf(ValidateModal)).apply(this, arguments));
+	}
+
+	_createClass(ValidateModal, [{
+		key: 'render',
+		value: function render() {
+			var _props = this.props,
+			    isOpen = _props.isOpen,
+			    closeSurvey = _props.closeSurvey;
+
+
+			return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
+				null,
+				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+					__WEBPACK_IMPORTED_MODULE_2_reactstrap__["a" /* Modal */],
+					{ isOpen: isOpen },
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_2_reactstrap__["d" /* ModalHeader */],
+						null,
+						'Warning!'
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_2_reactstrap__["b" /* ModalBody */],
+						null,
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							'p',
+							null,
+							'Question type and Question title are required.'
+						)
+					),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+						__WEBPACK_IMPORTED_MODULE_2_reactstrap__["c" /* ModalFooter */],
+						null,
+						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+							'button',
+							{ type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' },
+							'Close'
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return ValidateModal;
+}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
+
+/* harmony default export */ __webpack_exports__["a"] = (ValidateModal);
 
 /***/ })
 /******/ ]);

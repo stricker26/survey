@@ -51,6 +51,8 @@ class QuestionController extends Controller
 
         if($validator->fails()) {
 
+            return response()->json(['warning' => 'Check required fields.']);
+
         } else {
 
             $question = new Question;
@@ -63,7 +65,7 @@ class QuestionController extends Controller
             $question->answer = json_encode($request->get('answers'));
             $question->save();
 
-            return response()->json('Successfully Added!');
+            return response()->json(['success' => 'Successfully Added!']);
         }
     }
 
