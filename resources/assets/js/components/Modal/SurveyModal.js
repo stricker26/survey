@@ -16,7 +16,7 @@ export default class SurveyModal extends Component {
 
 		return (
 			<React.Fragment>
-				<Modal isOpen={isOpen}>
+				<Modal isOpen={isOpen} className="create-survey">
 					<ModalHeader>Choose Survey Type</ModalHeader>
 					<ModalBody>
 						<div className="row">

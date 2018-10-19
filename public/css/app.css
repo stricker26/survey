@@ -10894,40 +10894,40 @@ Checkbox
 Modal
 *************************************************/
 
-.modal .modal-dialog {
+.modal .create-survey {
   max-width: 650px;
 }
 
-.modal .modal-dialog .modal-content .modal-header {
+.modal .create-survey .modal-content .modal-header {
   text-align: center;
   border-bottom: 0;
 }
 
-.modal .modal-dialog .modal-content .modal-header h5 {
+.modal .create-survey .modal-content .modal-header h5 {
   font-size: 2em;
   margin: 1rem auto;
 }
 
-.modal .modal-dialog .modal-content .modal-body .blue-border {
+.modal .create-survey .modal-content .modal-body .blue-border {
   border: 3px solid #558ed5;
   width: 250px;
   padding: 1rem 0;
   margin: auto;
 }
 
-.modal .modal-dialog .modal-content .modal-body .blue-border img {
+.modal .create-survey .modal-content .modal-body .blue-border img {
   display: block;
   margin: auto;
 }
 
-.modal .modal-dialog .modal-content .modal-body .blue-border p {
+.modal .create-survey .modal-content .modal-body .blue-border p {
   text-align: center;
   font-size: 2em;
   color: #558ed5;
   margin: auto;
 }
 
-.modal .modal-dialog .modal-content .modal-footer {
+.modal .create-survey .modal-content .modal-footer {
   border-top: 0;
   margin: 1rem 0;
 }
@@ -10941,6 +10941,15 @@ Modal
   background: url("/../../../images/close-icon.png") no-repeat;
   background-size: 100%;
   cursor: pointer;
+}
+
+.modal .modal-dialog .modal-header {
+  background-color: #1d497d;
+}
+
+.modal .modal-dialog .modal-header h5 {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 /************************************************

@@ -157,7 +157,7 @@ Modal
 *************************************************/
 
 .modal {
-	.modal-dialog {
+	.create-survey {
 		max-width: 650px;
 		.modal-content {
 			.modal-header {
@@ -201,6 +201,15 @@ Modal
 	    background: url('/../../../images/close-icon.png') no-repeat;
 	    background-size: 100%;
 	    cursor: pointer;
+	}
+	.modal-dialog {
+		.modal-header {
+			background-color: #1d497d;
+			h5 {
+				color: #ffffff;
+				font-weight: 700;
+			}
+		}
 	}
 }
 

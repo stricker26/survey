@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import SurveyModal from './../Modal/SurveyModal';
-import ValidateModal from './../Modal/ValidateModal';
 
 class Header extends Component {
     constructor(props) {
@@ -44,8 +43,6 @@ class Header extends Component {
 
     render() {
 
-        const {showValidateModal} = this.props;
-
         return (
             <React.Fragment>
                 <nav className="navbar navbar-default">
@@ -71,10 +68,6 @@ class Header extends Component {
                 	</ul>
     	      	</nav>
                 <SurveyModal
-                    isOpen = {this.state.showModal}
-                    closeSurvey = {this.closeSurvey}
-                />
-                <ValidateModal
                     isOpen = {this.state.showModal}
                     closeSurvey = {this.closeSurvey}
                 />

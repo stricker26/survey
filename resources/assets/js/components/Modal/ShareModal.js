@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-export default class ValidateModal extends Component {
+export default class ShareModal extends Component {
 
 	render() {
 		const { isOpen, closeSurvey} = this.props;
@@ -10,9 +10,9 @@ export default class ValidateModal extends Component {
 		return (
 			<React.Fragment>
 				<Modal isOpen={isOpen}>
-					<ModalHeader>Warning!</ModalHeader>
+					<ModalHeader>Share Survey</ModalHeader>
 					<ModalBody>
-						<p>Question type and Question title are required.</p>
+						<input type="text" value={value} />
 					</ModalBody>
 					<ModalFooter>
 						<button type="button" className="btn btn-primary" onClick={closeSurvey}>Close</button>
