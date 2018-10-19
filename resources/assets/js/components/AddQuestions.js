@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import Tools from './Tools';
+import ValidateModal from './Modal/ValidateModal';
 import { Editor } from '@tinymce/tinymce-react';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 
@@ -14,7 +16,7 @@ export default class AddQuestions extends Component {
         this.state = {
             name: '',
             answers: [{ answer: '' }],
-            defaultQtype: 'Checkbox',
+            defaultQtype: '',
             passToolvalue: '',
             qTitle: '',
             random: 0, 
@@ -81,6 +83,10 @@ export default class AddQuestions extends Component {
         });
     }
 
+    closeWarningModal = () => {
+        this.toggleWarnigModal();
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         const form = {
@@ -96,7 +102,8 @@ export default class AddQuestions extends Component {
             if(response.data.success) {
 
             } else {
-                this.toggleWarnigModal
+                this.toggleWarnigModal();
+                console.log(response.data.warning);
             }
         }).catch(error => {
             console.log(error);
@@ -169,7 +176,13 @@ export default class AddQuestions extends Component {
             <React.Fragment>
                 <header>
                     <div className="container">
-                        <Header />
+                        <Header
+                            showValidateModal = {this.toggleWarnigModal}
+                        />
+                        <ValidateModal
+                            isOpen = {this.state.warningModal}
+                            closeSurvey = {this.closeWarningModal}
+                        />
                     </div>
                 </header>
                 <section>
@@ -229,7 +242,7 @@ export default class AddQuestions extends Component {
                                 <div className="row content-inner-head">
                                     <div className="col">
                                         <ul>
-                                            <li>Back</li>
+                                            <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/view"} className="nav-link">Back</Link></li>
                                         </ul>
                                     </div>
                                 </div>

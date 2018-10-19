@@ -1266,7 +1266,6 @@ module.exports = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__fortawesome_react_fontawesome__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_router_dom__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Modal_SurveyModal__ = __webpack_require__(125);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Modal_ValidateModal__ = __webpack_require__(195);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1274,7 +1273,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
 
 
 
@@ -1342,8 +1340,6 @@ var Header = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var showValidateModal = this.props.showValidateModal;
-
 
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
@@ -1432,10 +1428,6 @@ var Header = function (_Component) {
                     )
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Modal_SurveyModal__["a" /* default */], {
-                    isOpen: this.state.showModal,
-                    closeSurvey: this.closeSurvey
-                }),
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Modal_ValidateModal__["a" /* default */], {
                     isOpen: this.state.showModal,
                     closeSurvey: this.closeSurvey
                 })
@@ -65256,7 +65248,7 @@ var SurveyModal = function (_Component) {
 				null,
 				__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 					__WEBPACK_IMPORTED_MODULE_2_reactstrap__["a" /* Modal */],
-					{ isOpen: isOpen },
+					{ isOpen: isOpen, className: 'create-survey' },
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 						__WEBPACK_IMPORTED_MODULE_2_reactstrap__["d" /* ModalHeader */],
 						null,
@@ -73300,14 +73292,16 @@ var CreateSurvey = function (_Component) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Header__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Layouts_Footer__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Tools__ = __webpack_require__(141);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__tinymce_tinymce_react__ = __webpack_require__(142);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_react_transition_group_CSSTransitionGroup__ = __webpack_require__(146);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_react_transition_group_CSSTransitionGroup___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_react_transition_group_CSSTransitionGroup__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_router_dom__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Layouts_Header__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Layouts_Footer__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Tools__ = __webpack_require__(141);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__Modal_ValidateModal__ = __webpack_require__(195);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__tinymce_tinymce_react__ = __webpack_require__(142);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_react_transition_group_CSSTransitionGroup__ = __webpack_require__(146);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_react_transition_group_CSSTransitionGroup___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_react_transition_group_CSSTransitionGroup__);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -73317,6 +73311,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
 
 
 
@@ -73403,6 +73399,13 @@ var AddQuestions = function (_Component) {
                 _this.setState({ wChoice: !_this.state.wChoice });
             }
         });
+        Object.defineProperty(_this, 'closeWarningModal', {
+            enumerable: true,
+            writable: true,
+            value: function value() {
+                _this.toggleWarnigModal();
+            }
+        });
         Object.defineProperty(_this, 'handleSubmit', {
             enumerable: true,
             writable: true,
@@ -73417,9 +73420,10 @@ var AddQuestions = function (_Component) {
                     answers: _this.state.answers
                 };
 
-                __WEBPACK_IMPORTED_MODULE_2_axios___default.a.post('/api/webmaster/question', form).then(function (response) {
+                __WEBPACK_IMPORTED_MODULE_3_axios___default.a.post('/api/webmaster/question', form).then(function (response) {
                     if (response.data.success) {} else {
-                        _this.toggleWarnigModal;
+                        _this.toggleWarnigModal();
+                        console.log(response.data.warning);
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -73430,7 +73434,7 @@ var AddQuestions = function (_Component) {
         _this.state = {
             name: '',
             answers: [{ answer: '' }],
-            defaultQtype: 'Checkbox',
+            defaultQtype: '',
             passToolvalue: '',
             qTitle: '',
             random: 0,
@@ -73595,7 +73599,13 @@ var AddQuestions = function (_Component) {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'container' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Layouts_Header__["a" /* default */], null)
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Layouts_Header__["a" /* default */], {
+                            showValidateModal: this.toggleWarnigModal
+                        }),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_7__Modal_ValidateModal__["a" /* default */], {
+                            isOpen: this.state.warningModal,
+                            closeSurvey: this.closeWarningModal
+                        })
                     )
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -73613,7 +73623,7 @@ var AddQuestions = function (_Component) {
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'div',
                                     { className: 'sidebar' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__Tools__["a" /* default */], {
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__Tools__["a" /* default */], {
                                         passToolvalue: this.passToolvalue
                                     }),
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -73724,7 +73734,11 @@ var AddQuestions = function (_Component) {
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'li',
                                                 null,
-                                                'Back'
+                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                    __WEBPACK_IMPORTED_MODULE_2_react_router_dom__["b" /* Link */],
+                                                    { to: "/dashboard/survey/" + this.state.surveyID + "/view", className: 'nav-link' },
+                                                    'Back'
+                                                )
                                             )
                                         )
                                     )
@@ -73762,7 +73776,7 @@ var AddQuestions = function (_Component) {
                                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                     'div',
                                                     { className: 'col' },
-                                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__tinymce_tinymce_react__["a" /* Editor */], {
+                                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_8__tinymce_tinymce_react__["a" /* Editor */], {
                                                         apiKey: 'exzya7bbl9q4vfh1gpckwyoph94dkj5e7xeuj3lu1ts5eoh3',
                                                         init: {
                                                             plugins: ["advlist autolink lists link image charmap print preview hr anchor pagebreak", "searchreplace wordcount visualblocks visualchars code fullscreen", "insertdatetime media nonbreaking save table contextmenu directionality", "emoticons template paste textcolor colorpicker textpattern"],
@@ -73818,7 +73832,7 @@ var AddQuestions = function (_Component) {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'container' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Layouts_Footer__["a" /* default */], null)
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5__Layouts_Footer__["a" /* default */], null)
                     )
                 )
             );
@@ -83952,7 +83966,7 @@ var ValidateModal = function (_Component) {
 						null,
 						__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 							'button',
-							{ type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' },
+							{ type: 'button', className: 'btn btn-primary', onClick: closeSurvey },
 							'Close'
 						)
 					)
