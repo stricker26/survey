@@ -5,17 +5,17 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 export default class ValidateModal extends Component {
 
 	render() {
-		const { isOpen, closeSurvey} = this.props;
+		const { isOpen, closeSurvey, warningHeader, warningContent, warningTheme} = this.props;
 
 		return (
 			<React.Fragment>
 				<Modal isOpen={isOpen}>
-					<ModalHeader>Warning!</ModalHeader>
+					<ModalHeader className={warningTheme}>{warningHeader}</ModalHeader>
 					<ModalBody>
-						<p>Question type and Question title are required.</p>
+						<p>{warningContent}</p>
 					</ModalBody>
 					<ModalFooter>
-						<button type="button" className="btn btn-primary" onClick={closeSurvey}>Close</button>
+						<button type="button" className={"btn btn-" + warningTheme} onClick={closeSurvey}>Close</button>
 					</ModalFooter>
 				</Modal>
 			</React.Fragment>	

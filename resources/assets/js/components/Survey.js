@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
+import ShareModal from './Modal/ShareModal';
 import surveyImage from './images/live-survey.jpg';
 
 export default class Survey extends Component {
@@ -11,6 +12,8 @@ export default class Survey extends Component {
         super()
         this.state = {
             surveyLists: [],
+            shareModal: false,
+            shareSurveyURL: '',
             editIcon: './../../images/edit-icon.png',
             analyzeIcon: './../../images/analyze-icon.png',
             shareIcon: './../../images/share-default-icon.png',
@@ -19,8 +22,20 @@ export default class Survey extends Component {
         }
     }
 
-    componentWillMount() {
+    shareSurvey = (id) => () => {
+        this.setState({
+            shareSurveyURL: id
+        });
+        this.toggleShareModal();
+    }
 
+    toggleShareModal = () => {
+        this.setState({
+            shareModal: !this.state.shareModal
+        });
+    }
+
+    componentWillMount() {
         axios.get('/api/webmaster/lists').then(response => {
             this.setState({
                 surveyLists: response.data
@@ -28,7 +43,6 @@ export default class Survey extends Component {
         }).catch(error => { 
             console.log(error);
         });
-
     }
 
     render() {
@@ -37,9 +51,14 @@ export default class Survey extends Component {
                 <header>
                     <div className="container">
                         <Header />
+                        <ShareModal
+                            isOpen = {this.state.shareModal}
+                            closeSurvey = {this.toggleShareModal}
+                            surveyID = {this.state.shareSurveyURL}
+                        />
                     </div>
                 </header>
-                <section>
+                <section className="dashboard-survey">
                     <div className="container-fluid">
                         <div className="row justify-content-center">
                             <div className="col-lg-10">
@@ -57,7 +76,7 @@ export default class Survey extends Component {
                                 </div>
                                 <div className="row mb-5">
                                     <div className="col-lg-12">
-                                        <table className="table">
+                                        <table className="table survey-list">
                                             <thead className="thead-dark">
                                                 <tr>
                                                     <th scope="col" className="pl-4">Title</th>
@@ -72,7 +91,7 @@ export default class Survey extends Component {
                                             </thead>
                                             <tbody>
                                                 {this.state.surveyLists.map(list => 
-                                                    <tr>
+                                                    <tr key={list.id}>
                                                         <td className="pl-4">
                                                             <div className="text-success">DIGITAL SURVEY</div>
                                                             <div>{list.title}</div>
@@ -82,7 +101,7 @@ export default class Survey extends Component {
                                                         <td><div>0</div></td>
                                                         <td><Link to={'/dashboard/survey/'+ list.survey_id +'/view'}><img src={this.state.editIcon} alt="Edit" /></Link></td>
                                                         <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                        <td><img src={this.state.shareIcon} alt="Share" /></td>
+                                                        <td><img src={this.state.shareIcon} alt="Share" onClick={this.shareSurvey(list.survey_id)} /></td>
                                                         <td><img src={this.state.moreIcon} alt="More" /></td>
                                                         <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
                                                     </tr>

@@ -51,7 +51,7 @@ export default class Tools extends Component {
                 </div>
                 <div className="row tools">
                     <div className="col">
-                        <span className="tooToolsl" onClick={(e) => passToolvalue('Dropdown')}><FontAwesomeIcon icon="arrows-alt-v" /> Dropdown</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Dropdown')}><FontAwesomeIcon icon="arrows-alt-v" /> Dropdown</span>
                     </div>
                     <div className="col">
                         <span className="tool" onClick={(e) => passToolvalue('Rating')}><FontAwesomeIcon icon="table" /> Matrix/Rating Scale</span>
