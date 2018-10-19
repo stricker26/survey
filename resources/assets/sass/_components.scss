@@ -204,11 +204,16 @@ Modal
 	}
 	.modal-dialog {
 		.modal-header {
-			background-color: #1d497d;
 			h5 {
 				color: #ffffff;
 				font-weight: 700;
 			}
+		}
+		.primary {
+			background-color: #1d497d;
+		}
+		.success {
+			background-color: #28a745;
 		}
 	}
 }

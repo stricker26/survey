@@ -62,6 +62,16 @@
 	}
 }
 
+.dashboard-survey {
+	.survey-list {
+		td {
+			img {
+				cursor: pointer;
+			}
+		}
+	}
+}
+
 .content-inner-body {
 	.form-group {
 		.tool-option {

@@ -10943,13 +10943,17 @@ Modal
   cursor: pointer;
 }
 
-.modal .modal-dialog .modal-header {
-  background-color: #1d497d;
-}
-
 .modal .modal-dialog .modal-header h5 {
   color: #ffffff;
   font-weight: 700;
+}
+
+.modal .modal-dialog .primary {
+  background-color: #1d497d;
+}
+
+.modal .modal-dialog .success {
+  background-color: #28a745;
 }
 
 /************************************************
@@ -11148,6 +11152,10 @@ Switch Button
 .front .container .question-wrapper .row .col .answer label::before {
   -webkit-transition: .25s all ease;
   transition: .25s all ease;
+}
+
+.dashboard-survey .survey-list td img {
+  cursor: pointer;
 }
 
 .content-inner-body .form-group .tool-option label {

@@ -24,9 +24,13 @@ export default class AddQuestions extends Component {
             result: '',
             surveyID: '',
             warningModal: false,
+            warningHeader: '',
+            warningContent: '',
+            warningTheme: '',
             circleIcon: './../../../../images/circle-icon.png',
             squareIcon: './../../../../images/square-icon.png',
             starIcon: './../../../../images/star-icon.png',
+            datetime: './../../../../images/date-time-icon.png',
         };
     }
 
@@ -100,10 +104,19 @@ export default class AddQuestions extends Component {
 
         axios.post('/api/webmaster/question', form).then(response => {
             if(response.data.success) {
-
-            } else {
+                this.setState({
+                    warningHeader: 'Success!',
+                    warningContent: 'Successfully Added!',
+                    warningTheme: 'success',
+                });
                 this.toggleWarnigModal();
-                console.log(response.data.warning);
+            } else {
+                this.setState({
+                    warningHeader: 'Warning!',
+                    warningContent: 'Question type and Question title are required.',
+                    warningTheme: 'primary',
+                });
+                this.toggleWarnigModal();
             }
         }).catch(error => {
             console.log(error);
@@ -126,7 +139,7 @@ export default class AddQuestions extends Component {
                 </div>
             ));
         } else if(toolType == 'Multiple Choice') {
-             tool = this.state.answers.map((answer, idx) => (
+            tool = this.state.answers.map((answer, idx) => (
                 <div className="form-group" key={idx}>
                     <div className="tool-option">
                         <img src={this.state.circleIcon} alt="Selectbox" />
@@ -135,10 +148,10 @@ export default class AddQuestions extends Component {
                 </div>
             ));
         } else if(toolType == 'Star') {
-             tool = this.state.answers.map((answer, idx) => (
+            tool = this.state.answers.map((answer, idx) => (
                 <div className="form-group" key={idx}>
                     <div className="tool-option">
-                        <img src={this.state.starIcon} alt="Selectbox" />
+                        <img src={this.state.starIcon} alt="Rate" />
                         <label htmlFor={idx}><span>{answer.answer}</span></label>
                     </div>
                 </div>
@@ -167,6 +180,25 @@ export default class AddQuestions extends Component {
                     </div>
                 </div>
             </div>
+        } else if(toolType == 'Date') {
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <div>
+                        <img src={this.state.datetime} alt="Selectbox" />
+                    </div>
+                </div>
+            </div>
+        } else if(toolType == 'Dropdown') {
+            let iteration = 1;
+            tool = this.state.answers.map((answer, idx) => (
+                <div className="form-group" key={idx}>
+                    <div className="tool-option">
+                        <div className="border-bottom">
+                            {iteration++}. <label><span>{answer.answer}</span></label>
+                        </div>
+                    </div>
+                </div>
+            ));
         } else {
             
         }
@@ -182,6 +214,9 @@ export default class AddQuestions extends Component {
                         <ValidateModal
                             isOpen = {this.state.warningModal}
                             closeSurvey = {this.closeWarningModal}
+                            warningHeader = {this.state.warningHeader}
+                            warningContent = {this.state.warningContent}
+                            warningTheme = {this.state.warningTheme}
                         />
                     </div>
                 </header>
