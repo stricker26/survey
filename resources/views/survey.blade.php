@@ -9,6 +9,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+        <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
     </head>
     <body class="front">        
         <div id="app"></div>

@@ -11,12 +11,29 @@ export default class Survey extends Component {
         this.state = {
             survey: [],
             title: '',
-            rating: 0
+            rating: 0,
+            defaultRating: 0,
+            starImage: './../../images/star-single.png'
         };
     }
 
     onStarClick(nextValue, prevValue, name) {
-        this.setState({rating: nextValue});
+        this.setState({
+            rating: nextValue,
+            defaultRating: nextValue
+        });
+    }
+
+    onStarHover(nextValue, prevValue, name) {
+        console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name);  
+        if(nextValue > this.state.defaultRating) {
+            this.setState({rating: nextValue});
+        }
+    }
+
+    onStarHoverOut(nextValue, prevValue, name) {
+        console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name); 
+        this.setState({rating: this.state.defaultRating});
     }
 
     componentWillMount() {
@@ -26,14 +43,20 @@ export default class Survey extends Component {
             this.setState({
                 survey: response.data.survey,
                 title: response.data.title,
-                index: ''
+                index: '',
+                hover: false
             });
         }).catch(error => {
             console.log(error);
         });
     }
 
+    mouseLeave = () => {
+  this.setState({ isMouseInside: false });
+}
+
     render() {
+        var star = 5;
         var iterator = 1;
         const { rating } = this.state;
         const renderQuestion = this.state.survey.map(list => 
@@ -76,17 +99,53 @@ export default class Survey extends Component {
                     </When>
                     <When condition = {list.q_type == 'Star'}>
                         {
-                            <div className="row">
-                                <div className="col">
-                                    <StarRatingComponent 
-                                        name="rate1" 
-                                        starCount={10}
-                                        value={rating}
-                                        onStarClick={this.onStarClick.bind(this)}
-                                    />
+                            <div>
+                                <div className="row">
+                                    <div className="col text-center starNumber">
+                                        <div><span>1</span></div>
+                                        <div><span>2</span></div>
+                                        <div><span>3</span></div>
+                                        <div><span>4</span></div>
+                                        <div><span>5</span></div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col text-center starImageDiv">
+                                        <StarRatingComponent 
+                                            name="rateStar" 
+                                            starColor="#f89937"
+                                            starCount={5}
+                                            value={rating}
+                                            onStarClick={this.onStarClick.bind(this)}
+                                            onStarHover={this.onStarHover.bind(this)} /* on icon hover handler */
+                                            onStarHoverOut={this.onStarHoverOut.bind(this)} /* on icon hover out handler */
+                                            renderStarIcon={(index, value) => {
+                                                return (
+                                                    <div className="iconStarDiv">
+                                                        <div>
+                                                            <i className={index <= value ? 'fas fa-star star-' + star-- : 'far fa-star star-' + star--} />
+                                                        </div>
+                                                    </div>
+                                                );
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col starText">
+                                        <div className="h-dis">
+                                            <span>Highly Dissatisfied</span>
+                                        </div>
+                                        <div className="h-sat">
+                                            <span>Highly Satisfied</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         }
+                    </When>
+                    <When condition = {list.q_type == 'Star'}>
+
                     </When>
                 </Choose>
             </div>

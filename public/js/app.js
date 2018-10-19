@@ -75850,10 +75850,20 @@ var Survey = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (Survey.__proto__ || Object.getPrototypeOf(Survey)).call(this));
 
+        Object.defineProperty(_this, 'mouseLeave', {
+            enumerable: true,
+            writable: true,
+            value: function value() {
+                _this.setState({ isMouseInside: false });
+            }
+        });
+
         _this.state = {
             survey: [],
             title: '',
-            rating: 0
+            rating: 0,
+            defaultRating: 0,
+            starImage: './../../images/star-single.png'
         };
         return _this;
     }
@@ -75861,7 +75871,24 @@ var Survey = function (_Component) {
     _createClass(Survey, [{
         key: 'onStarClick',
         value: function onStarClick(nextValue, prevValue, name) {
-            this.setState({ rating: nextValue });
+            this.setState({
+                rating: nextValue,
+                defaultRating: nextValue
+            });
+        }
+    }, {
+        key: 'onStarHover',
+        value: function onStarHover(nextValue, prevValue, name) {
+            console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name);
+            if (nextValue > this.state.defaultRating) {
+                this.setState({ rating: nextValue });
+            }
+        }
+    }, {
+        key: 'onStarHoverOut',
+        value: function onStarHoverOut(nextValue, prevValue, name) {
+            console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name);
+            this.setState({ rating: this.state.defaultRating });
         }
     }, {
         key: 'componentWillMount',
@@ -75875,7 +75902,8 @@ var Survey = function (_Component) {
                 _this2.setState({
                     survey: response.data.survey,
                     title: response.data.title,
-                    index: ''
+                    index: '',
+                    hover: false
                 });
             }).catch(function (error) {
                 console.log(error);
@@ -75886,6 +75914,7 @@ var Survey = function (_Component) {
         value: function render() {
             var _this3 = this;
 
+            var star = 5;
             var iterator = 1;
             var rating = this.state.rating;
 
@@ -75948,18 +75977,115 @@ var Survey = function (_Component) {
                         );
                     }) : list.q_type == 'Star' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
-                        { className: 'row' },
+                        null,
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'div',
-                            { className: 'col' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_star_rating_component___default.a, {
-                                name: 'rate1',
-                                starCount: 10,
-                                value: rating,
-                                onStarClick: _this3.onStarClick.bind(_this3)
-                            })
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col text-center starNumber' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    null,
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        '1'
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    null,
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        '2'
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    null,
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        '3'
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    null,
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        '4'
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    null,
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        '5'
+                                    )
+                                )
+                            )
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col text-center starImageDiv' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_star_rating_component___default.a, {
+                                    name: 'rateStar',
+                                    starColor: '#f89937',
+                                    starCount: 5,
+                                    value: rating,
+                                    onStarClick: _this3.onStarClick.bind(_this3),
+                                    onStarHover: _this3.onStarHover.bind(_this3) /* on icon hover handler */
+                                    , onStarHoverOut: _this3.onStarHoverOut.bind(_this3) /* on icon hover out handler */
+                                    , renderStarIcon: function renderStarIcon(index, value) {
+                                        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'div',
+                                            { className: 'iconStarDiv' },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'div',
+                                                null,
+                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: index <= value ? 'fas fa-star star-' + star-- : 'far fa-star star-' + star-- })
+                                            )
+                                        );
+                                    }
+                                })
+                            )
+                        ),
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col starText' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'h-dis' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        'Highly Dissatisfied'
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'h-sat' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        null,
+                                        'Highly Satisfied'
+                                    )
+                                )
+                            )
                         )
-                    ) : null
+                    ) : list.q_type == 'Star' ? null : null
                 );
             });
 
