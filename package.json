@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "axios": "^0.18.0",
+    "babel-plugin-jsx-control-statements": "^3.2.8",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
@@ -42,6 +43,7 @@
     "react-image": "^1.4.1",
     "react-router-dom": "^4.3.1",
     "react-router-relative-link": "^4.0.2",
+    "react-star-rating-component": "^1.4.1",
     "react-transition-group": "^1.2.1",
     "reactstrap": "^6.4.0",
     "tinymce": "^4.8.2"
