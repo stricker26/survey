@@ -147,6 +147,12 @@ export default class Survey extends Component {
                     <When condition = {list.q_type == 'Essay'}>
 
                     </When>
+                    <When condition = {list.q_type == 'Textbox'}>
+
+                    </When>
+                    <When condition = {list.q_type == 'Comment'}>
+
+                    </When>
                 </Choose>
             </div>
         );

@@ -76418,7 +76418,7 @@ var Survey = function (_Component) {
                                 )
                             )
                         )
-                    ) : list.q_type == 'Essay' ? null : null
+                    ) : list.q_type == 'Essay' ? null : list.q_type == 'Textbox' ? null : list.q_type == 'Comment' ? null : null
                 );
             });
 
