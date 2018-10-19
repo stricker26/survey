@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Question;
 use App\Survey;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
+use Validator;
 
 class QuestionController extends Controller
 {
@@ -39,17 +41,30 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        $question = new Question;
 
-        $question->q_title = $request->get('title');
-        $question->q_type = $request->get('type');
-        $question->q_order = $request->get('order');
-        $question->q_writeinchoice = $request->get('wchoice');
-        $question->survey_id = $request->get('id');
-        $question->answer = json_encode($request->get('answers'));
-        $question->save();
+        $rules = array(
+            'title' => 'required',
+            'type' => 'required'
+        );
 
-        return response()->json('Successfully Added!');
+        $validator = Validator::make(Input::all(), $rules);
+
+        if($validator->fails()) {
+
+        } else {
+
+            $question = new Question;
+
+            $question->q_title = $request->get('title');
+            $question->q_type = $request->get('type');
+            $question->q_order = $request->get('order');
+            $question->q_writeinchoice = $request->get('wchoice');
+            $question->survey_id = $request->get('id');
+            $question->answer = json_encode($request->get('answers'));
+            $question->save();
+
+            return response()->json('Successfully Added!');
+        }
     }
 
     /**
