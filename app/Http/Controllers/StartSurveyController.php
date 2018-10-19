@@ -9,8 +9,6 @@ class StartSurveyController extends Controller
 {
     public function start($id) {
 
-    	//$sqlSelect = DB::table()
-
     	return view('survey');
     }
 }

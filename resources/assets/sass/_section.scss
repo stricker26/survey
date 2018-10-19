@@ -13,12 +13,15 @@ section {
 					border: 0;
 					border-bottom: 1px solid #f89937;
 					background-color: transparent;
-					padding: 0;
+					padding: .5em 0;
 					margin-bottom: 2rem;
 					color: #ffffff;
 				}
 				.survey-name::-webkit-input-placeholder {
 					color: #ffffff;
+				}
+				.survey-name.error {
+					border: 1px solid #c83a4b;
 				}
 				.survey-properties {
 					padding-left: 15px;

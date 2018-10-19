@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Survey;
 use App\Created;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
+use Validator;
 
 class SurveyController extends Controller
 {
@@ -36,20 +38,33 @@ class SurveyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $created = new Created;
-        $uniqueID = strftime(time());
+    {   
+        $rules = array(
+            'title' => 'required'
+        );
 
-        $survey = new Survey;
-        $survey->title = $request->get('title');
-        $survey->status = 1;
-        $survey->survey_id = $uniqueID;
-        $survey->save();
+        $validator = Validator::make(Input::all(), $rules);
 
-        $created->id = $uniqueID;
-        $created->save();
+        if($validator->fails()) {
 
-        return response()->json(['success' => 'Successfully Added!', 'id' => $uniqueID]);
+            return response()->json(['warning', 'Survey name is required!']);
+
+        } else {
+
+            $created = new Created;
+            $uniqueID = strftime(time());
+
+            $survey = new Survey;
+            $survey->title = $request->get('title');
+            $survey->status = 1;
+            $survey->survey_id = $uniqueID;
+            $survey->save();
+
+            $created->id = $uniqueID;
+            $created->save();
+
+            return response()->json(['success' => 'Successfully Added!', 'id' => $uniqueID]);
+        }
 
     }
 

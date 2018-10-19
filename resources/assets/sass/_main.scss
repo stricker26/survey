@@ -1,3 +1,64 @@
+.front {
+	.container {
+		width: 80%;
+		max-width: 80%;
+		.question-wrapper {
+			margin-bottom: 2rem;
+			.row {
+				text-indent: 100; 
+				.col {
+					.answer input[type="radio"] {
+					  position: absolute;
+					  opacity: 0;
+					  z-index: -1;
+					}
+					.answer label {
+					  position: relative;
+					  display: inline-block;
+					  margin-right: 10px;
+					  margin-bottom: 5px;
+					  padding-left: 30px;
+					  padding-right: 30px;
+					  line-height: 4em;
+					  cursor: pointer;
+					  background: transparent;
+					  width: 100%;
+					  color: #fff;
+					}
+					.answer label::before {
+					  content: " ";
+					  position: absolute;
+					  left: 0;
+					  display: block;
+					  width: 100%;
+					  height: 100%;
+					  z-index: -1;
+					  background: #558ed5;
+					}
+					/* Checked */
+					.answer input[type="radio"]:checked + label {
+					  padding-left: 30px;
+					  color: #fff;
+					}
+					.answer input[type="radio"]:checked + label::before {
+					  top: 0;
+					  width: 100%;
+					  height: 100%;
+					  background: #f79939;
+					}
+					/* Transition */
+					.answer label,
+					.answer label::before {
+					  -webkit-transition: .25s all ease;
+					  -o-transition: .25s all ease;
+					  transition: .25s all ease;
+					}
+				}
+			}
+		}
+	}
+}
+
 .content-inner-body {
 	.form-group {
 		.tool-option {

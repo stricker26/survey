@@ -10471,6 +10471,21 @@ a.text-dark:focus {
   }
 }
 
+.front header {
+  padding: 1rem 0;
+}
+
+.front header .title-wrapper {
+  height: 74px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.front header .title-wrapper h3 {
+  color: #ffffff;
+  margin-bottom: 0;
+}
+
 header {
   width: 100%;
   background-color: #1d497d;
@@ -10508,13 +10523,17 @@ section .container-fluid .sidebar .row .survey-name {
   border: 0;
   border-bottom: 1px solid #f89937;
   background-color: transparent;
-  padding: 0;
+  padding: .5em 0;
   margin-bottom: 2rem;
   color: #ffffff;
 }
 
 section .container-fluid .sidebar .row .survey-name::-webkit-input-placeholder {
   color: #ffffff;
+}
+
+section .container-fluid .sidebar .row .survey-name.error {
+  border: 1px solid #c83a4b;
 }
 
 section .container-fluid .sidebar .row .survey-properties {
@@ -11050,6 +11069,73 @@ Switch Button
 
 .tgl-ios:checked + .tgl-btn:active:after {
   margin-left: -.8em;
+}
+
+.front .container {
+  width: 80%;
+  max-width: 80%;
+}
+
+.front .container .question-wrapper {
+  margin-bottom: 2rem;
+}
+
+.front .container .question-wrapper .row {
+  text-indent: 100;
+}
+
+.front .container .question-wrapper .row .col {
+  /* Checked */
+  /* Transition */
+}
+
+.front .container .question-wrapper .row .col .answer input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.front .container .question-wrapper .row .col .answer label {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  line-height: 4em;
+  cursor: pointer;
+  background: transparent;
+  width: 100%;
+  color: #fff;
+}
+
+.front .container .question-wrapper .row .col .answer label::before {
+  content: " ";
+  position: absolute;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: #558ed5;
+}
+
+.front .container .question-wrapper .row .col .answer input[type="radio"]:checked + label {
+  padding-left: 30px;
+  color: #fff;
+}
+
+.front .container .question-wrapper .row .col .answer input[type="radio"]:checked + label::before {
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #f79939;
+}
+
+.front .container .question-wrapper .row .col .answer label,
+.front .container .question-wrapper .row .col .answer label::before {
+  -webkit-transition: .25s all ease;
+  transition: .25s all ease;
 }
 
 .content-inner-body .form-group .tool-option label {

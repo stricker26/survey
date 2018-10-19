@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     </head>
-    <body>        
+    <body class="front">        
         <div id="app"></div>
         <script src="{{ asset('js/app.js') }}"></script>
     </body>

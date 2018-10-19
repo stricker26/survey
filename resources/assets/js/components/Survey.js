@@ -25,7 +25,6 @@ export default class Survey extends Component {
             this.setState({
                 surveyLists: response.data
             });
-            console.log(response);
         }).catch(error => { 
             console.log(error);
         });

@@ -14,13 +14,15 @@ export default class CreateSurvey extends Component {
             dragIcon: './../../images/drag-drop-icon.png',
             deleteIcon: './../../images/delete-icon.png',
             questions: [],
-            sTitle: ''
+            sTitle: '',
+            addClass: ''
         }
     }
 
     handleChange = (e) => {
         this.setState({
-            sTitle: e.target.value
+            sTitle: e.target.value,
+            addClass: ''
         });
     }
 
@@ -33,6 +35,10 @@ export default class CreateSurvey extends Component {
         axios.post('/api/webmaster/survey', form).then(response => {
             if(response.data.success) {
                 this.props.history.push('/dashboard/survey/'+ response.data.id +'/add/');
+            } else {
+                this.setState({
+                    addClass: 'error'
+                });
             }
         }).catch(error => {
             console.log(error);
@@ -57,7 +63,7 @@ export default class CreateSurvey extends Component {
                                 <div className="sidebar">
                                     <div className="row">
                                         <div className="col">
-                                            <input type="text" value={this.state.value} onChange={this.handleChange} className="survey-name" placeholder="Untitled" />
+                                            <input type="text" value={this.state.value} onChange={this.handleChange} className={"survey-name " + this.state.addClass} placeholder="Untitled" />
                                         </div>
                                     </div>
                                     <div className="row">
