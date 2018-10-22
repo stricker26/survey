@@ -144,14 +144,50 @@ export default class Survey extends Component {
                             </div>
                         }
                     </When>
-                    <When condition = {list.q_type == 'Essay'}>
-
+                    <When condition = {list.q_type == 'Essay' || list.q_type == 'Comment'}>
+                        <div className="row">
+                            <div className="col">
+                                <div className="answer-text">
+                                    <textarea className="essay-textarea"/>
+                                </div>
+                            </div>
+                        </div>
                     </When>
                     <When condition = {list.q_type == 'Textbox'}>
-
+                        <div className="row">
+                            <div className="col">
+                                <div className="answer-text">
+                                    <input type="text" className="textbox-input"/>
+                                </div>
+                            </div>
+                        </div>
                     </When>
-                    <When condition = {list.q_type == 'Comment'}>
-
+                    <When condition = {list.q_type == 'Dropdown'}>
+                        <div className="row">
+                            <div className="col">
+                                <div className="answer-text">
+                                    <div className="dropdown-select">
+                                        <select>
+                                            <option className="dropdown-option" disabled selected value>-- Select --</option>
+                                            {
+                                                (JSON.parse(list.answer)).map(key =>
+                                                    <option className="dropdown-option" value={key.answer}>{key.answer}</option>
+                                                )
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </When>
+                    <When condition = {list.q_type == 'Date'}>
+                        <div className="row">
+                            <div className="col">
+                                <div className="answer-text">
+                                    
+                                </div>
+                            </div>
+                        </div>
                     </When>
                 </Choose>
             </div>

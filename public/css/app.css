@@ -11205,3 +11205,42 @@ Switch Button
   padding-left: 156px;
 }
 
+.answer-text .essay-textarea {
+  width: 100%;
+  border: 1.5px solid #558ed5;
+  padding: 7px 10px;
+  height: 150px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.answer-text .essay-textarea:focus {
+  outline: none;
+  border: 1.5px solid #f89937;
+}
+
+.answer-text .textbox-input {
+  width: 100%;
+  border: 1.5px solid #558ed5;
+  padding: 10px 10px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.answer-text .textbox-input:focus {
+  outline: none;
+  border: 1.5px solid #f89937;
+}
+
+.answer-text .dropdown-select {
+  width: 100%;
+}
+
+.answer-text .dropdown-select select {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 10px 10px;
+  border: 1.5px solid #558ed5;
+}
+
