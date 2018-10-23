@@ -184,7 +184,7 @@ export default class Survey extends Component {
                         <div className="row">
                             <div className="col">
                                 <div className="answer-text">
-                                    
+                                    <input type="date" className="date-input"/>
                                 </div>
                             </div>
                         </div>

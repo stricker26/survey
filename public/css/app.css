@@ -11219,7 +11219,8 @@ Switch Button
   border: 1.5px solid #f89937;
 }
 
-.answer-text .textbox-input {
+.answer-text .textbox-input,
+.answer-text .date-input {
   width: 100%;
   border: 1.5px solid #558ed5;
   padding: 10px 10px;
@@ -11227,7 +11228,8 @@ Switch Button
   transition: all 0.2s;
 }
 
-.answer-text .textbox-input:focus {
+.answer-text .textbox-input:focus,
+.answer-text .date-input:focus {
   outline: none;
   border: 1.5px solid #f89937;
 }
