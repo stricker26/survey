@@ -76524,6 +76524,7 @@ var ViewSurvey = function (_Component) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_html_react_parser__ = __webpack_require__(183);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_html_react_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_html_react_parser__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Layouts_Header__ = __webpack_require__(194);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__fortawesome_react_fontawesome__ = __webpack_require__(31);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -76531,6 +76532,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -76772,246 +76774,272 @@ var Survey = function (_Component) {
         value: function render() {
             var _this3 = this;
 
+            var liCount = 1;
             var iterator = 1;
             var rating = this.state.rating;
 
             var renderQuestion = this.state.survey.map(function (list) {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'div',
-                    { className: 'question-wrapper', key: list.id },
+                    'li',
+                    { key: list.id, className: "item-" + liCount++ },
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
-                        { className: 'row' },
+                        { className: 'question-wrapper' },
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'div',
-                            { className: 'col' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'h4',
-                                null,
-                                __WEBPACK_IMPORTED_MODULE_4_html_react_parser___default()(list.q_title)
-                            )
-                        )
-                    ),
-                    list.q_type == 'Multiple Choice' ? JSON.parse(list.answer).map(function (key) {
-                        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'row', key: iterator.toString() },
+                            { className: 'row' },
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'col' },
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    { className: 'answer' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'radio', name: list.id, id: "option" + iterator.toString(), value: key.answer, onChange: _this3.radioClick }),
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'label',
-                                        { htmlFor: "option" + iterator },
-                                        key.answer
-                                    )
-                                )
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: iterator = iterator + 1 })
-                        );
-                    }) : list.q_type == 'Checkbox' ? JSON.parse(list.answer).map(function (key) {
-                        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'row', key: iterator.toString() },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'col' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    { className: 'answer' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: list.id, id: "option" + iterator.toString(), value: key.answer, onChange: _this3.checkboxClick }),
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'label',
-                                        { htmlFor: "option" + iterator },
-                                        key.answer
-                                    )
-                                )
-                            ),
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: iterator = iterator + 1 })
-                        );
-                    }) : list.q_type == 'Star' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        null,
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'row' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'col text-center starNumber' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
+                                    'h4',
                                     null,
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        '1'
-                                    )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    null,
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        '2'
-                                    )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    null,
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        '3'
-                                    )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    null,
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        '4'
-                                    )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    null,
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        '5'
-                                    )
+                                    __WEBPACK_IMPORTED_MODULE_4_html_react_parser___default()(list.q_title)
                                 )
                             )
                         ),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'row' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        list.q_type == 'Multiple Choice' ? JSON.parse(list.answer).map(function (key) {
+                            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
-                                { className: 'col text-center starImageDiv' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_star_rating_component___default.a, {
-                                    name: list.id.toString(),
-                                    starColor: '#f89937',
-                                    starCount: 5,
-                                    value: rating,
-                                    onStarClick: _this3.onStarClick.bind(_this3),
-                                    onStarHover: _this3.onStarHover.bind(_this3) /* on icon hover handler */
-                                    , onStarHoverOut: _this3.onStarHoverOut.bind(_this3) /* on icon hover out handler */
-                                    , renderStarIcon: function renderStarIcon(index, value) {
-                                        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                            'div',
-                                            { className: 'iconStarDiv' },
-                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                                'div',
-                                                null,
-                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: index <= value ? 'fas fa-star' : 'far fa-star' })
-                                            )
-                                        );
-                                    }
-                                })
-                            )
-                        ),
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'row' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'col starText' },
+                                { className: 'row', key: iterator.toString() },
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'div',
-                                    { className: 'h-dis' },
+                                    { className: 'col' },
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        'Highly Dissatisfied'
-                                    )
-                                ),
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    { className: 'h-sat' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'span',
-                                        null,
-                                        'Highly Satisfied'
-                                    )
-                                )
-                            )
-                        )
-                    ) : list.q_type == 'Essay' || list.q_type == 'Comment' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'row' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'col' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { className: "essay-textarea " + list.q_type, name: list.id, onChange: _this3.essayCommentChange })
-                            )
-                        )
-                    ) : list.q_type == 'Textbox' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'row' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'col' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'textbox-input', name: list.id, onChange: _this3.textboxChange })
-                            )
-                        )
-                    ) : list.q_type == 'Dropdown' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'row' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                            'div',
-                            { className: 'col' },
-                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                'div',
-                                { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                    'div',
-                                    { className: 'dropdown-select' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'select',
-                                        { value: _this3.state.selectValue, name: list.id, onChange: _this3.dropdownChange },
+                                        'div',
+                                        { className: 'answer' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'radio', name: list.id, id: "option" + iterator.toString(), value: key.answer, onChange: _this3.radioClick }),
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                            'option',
-                                            { className: 'dropdown-option', value: _this3.state.defaultSelectValue, disabled: true },
-                                            '-- Select --'
-                                        ),
-                                        JSON.parse(list.answer).map(function (key) {
+                                            'label',
+                                            { htmlFor: "option" + iterator },
+                                            key.answer
+                                        )
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: iterator = iterator + 1 })
+                            );
+                        }) : list.q_type == 'Checkbox' ? JSON.parse(list.answer).map(function (key) {
+                            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'row', key: iterator.toString() },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'col' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'answer' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: list.id, id: "option" + iterator.toString(), value: key.answer, onChange: _this3.checkboxClick }),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'label',
+                                            { htmlFor: "option" + iterator },
+                                            key.answer
+                                        )
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('span', { className: iterator = iterator + 1 })
+                            );
+                        }) : list.q_type == 'Star' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            null,
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'row' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'col text-center starNumber' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        null,
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            '1'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        null,
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            '2'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        null,
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            '3'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        null,
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            '4'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        null,
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            '5'
+                                        )
+                                    )
+                                )
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'row' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'col text-center starImageDiv' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_star_rating_component___default.a, {
+                                        name: list.id.toString(),
+                                        starColor: '#f89937',
+                                        starCount: 5,
+                                        value: rating,
+                                        onStarClick: _this3.onStarClick.bind(_this3),
+                                        onStarHover: _this3.onStarHover.bind(_this3) /* on icon hover handler */
+                                        , onStarHoverOut: _this3.onStarHoverOut.bind(_this3) /* on icon hover out handler */
+                                        , renderStarIcon: function renderStarIcon(index, value) {
                                             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                                'option',
-                                                { className: "dropdown-option" + (iterator = iterator + 1), key: iterator.toString(), value: key.answer },
-                                                key.answer
+                                                'div',
+                                                { className: 'iconStarDiv' },
+                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                    'div',
+                                                    null,
+                                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: index <= value ? 'fas fa-star' : 'far fa-star' })
+                                                )
                                             );
-                                        })
+                                        }
+                                    })
+                                )
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'row' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'col starText' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'h-dis' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            'Highly Dissatisfied'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'h-sat' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            'Highly Satisfied'
+                                        )
                                     )
                                 )
                             )
-                        )
-                    ) : list.q_type == 'Date' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                        'div',
-                        { className: 'row' },
-                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        ) : list.q_type == 'Essay' || list.q_type == 'Comment' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'div',
-                            { className: 'col' },
+                            { className: 'row' },
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
-                                { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'date', className: 'date-input', name: list.id, onChange: _this3.dateChange })
+                                { className: 'col' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'answer-text' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { className: "essay-textarea " + list.q_type, name: list.id, onChange: _this3.essayCommentChange })
+                                )
                             )
-                        )
-                    ) : null
+                        ) : list.q_type == 'Textbox' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'answer-text' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'textbox-input', name: list.id, onChange: _this3.textboxChange })
+                                )
+                            )
+                        ) : list.q_type == 'Dropdown' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'answer-text' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'dropdown-select' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'select',
+                                            { value: _this3.state.selectValue, name: list.id, onChange: _this3.dropdownChange },
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'option',
+                                                { className: 'dropdown-option', value: _this3.state.defaultSelectValue, disabled: true },
+                                                '-- Select --'
+                                            ),
+                                            JSON.parse(list.answer).map(function (key) {
+                                                return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                    'option',
+                                                    { className: "dropdown-option" + (iterator = iterator + 1), key: iterator.toString(), value: key.answer },
+                                                    key.answer
+                                                );
+                                            })
+                                        )
+                                    )
+                                )
+                            )
+                        ) : list.q_type == 'Date' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'answer-text' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'date', className: 'date-input', name: list.id, onChange: _this3.dateChange })
+                                )
+                            )
+                        ) : null
+                    )
                 );
             });
+            var submitformdiv = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'li',
+                { className: "item-" + this.state.survey.length },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'row' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'col' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'submit-answer text-center' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'button',
+                                { type: 'submit', className: 'btn-submit-answer', onClick: this.submitAnswer },
+                                'Submit'
+                            )
+                        )
+                    )
+                )
+            );
 
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
@@ -77033,21 +77061,31 @@ var Survey = function (_Component) {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'container mt-5' },
-                        renderQuestion,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'ul',
+                            null,
+                            renderQuestion,
+                            submitformdiv
+                        )
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'row' },
                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                             'div',
-                            { className: 'row' },
+                            { className: 'col' },
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
-                                { className: 'col' },
+                                { className: 'rightleftarrow' },
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'div',
-                                    { className: 'submit-answer text-center' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                                        'button',
-                                        { type: 'submit', className: 'btn-submit-answer', onClick: this.submitAnswer },
-                                        'Submit'
-                                    )
+                                    { className: 'left-arrow' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__fortawesome_react_fontawesome__["a" /* FontAwesomeIcon */], { icon: 'faArrowAltCircleRight' })
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'right-arrow' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_6__fortawesome_react_fontawesome__["a" /* FontAwesomeIcon */], { icon: 'faArrowAltCircleLeft' })
                                 )
                             )
                         )
