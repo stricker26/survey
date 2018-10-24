@@ -11170,7 +11170,7 @@ Switch Button
   color: #9f9f9f;
 }
 
-.starImageDiv i {
+.starImageDiv svg {
   font-size: 4rem;
   margin-right: 40px;
 }
@@ -11333,6 +11333,10 @@ Switch Button
   margin-bottom: 2rem;
 }
 
+.submit-answer .hideSubmit {
+  display: none;
+}
+
 .submit-answer .btn-submit-answer {
   padding: 10px 100px;
   border: 1px solid #558ed5;
@@ -11342,5 +11346,95 @@ Switch Button
 
 .submit-answer .btn-submit-answer:hover {
   cursor: pointer;
+}
+
+.rightleftarrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.rightleftarrow .hideArrow {
+  display: none;
+}
+
+.rightleftarrow .left-arrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.rightleftarrow .left-arrow span {
+  margin-left: 15px;
+  font-size: 1rem;
+}
+
+.rightleftarrow .left-arrow svg {
+  font-size: 4rem;
+}
+
+.rightleftarrow .left-arrow svg:hover {
+  cursor: pointer;
+  color: #f89937;
+}
+
+.rightleftarrow .right-arrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.rightleftarrow .right-arrow span {
+  margin-right: 15px;
+  font-size: 1rem;
+}
+
+.rightleftarrow .right-arrow svg {
+  font-size: 4rem;
+}
+
+.rightleftarrow .right-arrow svg:hover {
+  cursor: pointer;
+  color: #f89937;
+}
+
+.li-active {
+  display: block;
+}
+
+.li-hidden {
+  display: none;
 }
 

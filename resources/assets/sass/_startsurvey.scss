@@ -1,5 +1,5 @@
 .starImageDiv{
-	i {
+	svg {
 		font-size: 4rem;
 		margin-right: 40px;
 	}
@@ -154,6 +154,10 @@
 
 .submit-answer {
 	margin-bottom: 2rem;
+	.hideSubmit {
+		display: none;
+	}
+
 	.btn-submit-answer {
 		padding: 10px 100px;
 		border: 1px solid #558ed5;
@@ -163,4 +167,63 @@
 			cursor: pointer;
 		}
 	}
+}
+
+.rightleftarrow {
+	display: flex;
+	justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+	width: 100%;
+	margin-bottom: 2rem;
+	.hideArrow {
+		display: none;
+	}
+
+	.left-arrow {
+		display: flex;
+	    flex-direction: row;
+	    flex-wrap: wrap;
+	    align-items: center;
+	    span {
+	    	margin-left: 15px;
+	    	font-size: 1rem;
+	    }
+
+		svg {
+			font-size: 4rem;
+			&:hover {
+				cursor: pointer;
+				color: #f89937;
+			}
+		}
+	}
+
+	.right-arrow {
+		display: flex;
+	    flex-direction: row;
+	    flex-wrap: wrap;
+	    align-items: center;
+	    span {
+	    	margin-right: 15px;
+	    	font-size: 1rem;
+	    }
+
+		svg {
+			font-size: 4rem;
+			&:hover {
+				cursor: pointer;
+				color: #f89937;
+			}
+		}
+	}
+}
+
+.li-active {
+	display: block;
+}
+
+.li-hidden {
+	display: none;
 }

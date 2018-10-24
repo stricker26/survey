@@ -5,6 +5,10 @@ import StarRatingComponent from 'react-star-rating-component';
 import Parser from 'html-react-parser';
 import Header from './Layouts/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowAltCircleRight } from '@fortawesome/free-regular-svg-icons';
+import { faArrowAltCircleLeft } from '@fortawesome/free-regular-svg-icons';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as farFaStar } from '@fortawesome/free-regular-svg-icons';
 
 export default class Survey extends Component {
     constructor() {
@@ -16,6 +20,11 @@ export default class Survey extends Component {
             defaultRating: 1,
             defaultSelectValue: 'none',
             selectValue: 'none',
+            submitShow: 'hideSubmit',
+            leftHide: 'hideArrow',
+            rightHide: '',
+            pageCount: 1,
+            liActive: 'list-1',
 
             //answers
             respondentId: '',
@@ -38,6 +47,7 @@ export default class Survey extends Component {
         };
     }
 
+    //star hover functions
     onStarHover(nextValue, prevValue, name) {
         if(nextValue > this.state.defaultRating) {
             this.setState({rating: nextValue});
@@ -48,6 +58,52 @@ export default class Survey extends Component {
         this.setState({rating: this.state.defaultRating});
     }
 
+    //right left arrow click function
+    leftArrowClick = (e) => {
+        var newPageCount = this.state.pageCount;
+        newPageCount--;
+        if(newPageCount == 1) {
+            this.setState({
+                leftHide: 'hideArrow',
+                rightHide: '',
+                pageCount: newPageCount,
+                submitShow: 'hideSubmit',
+                liActive: 'list-' + newPageCount.toString()
+            });
+        } else {
+            this.setState({
+                leftHide: '',
+                rightHide: '',
+                pageCount: newPageCount,
+                submitShow: 'hideSubmit',
+                liActive: 'list-' + newPageCount.toString()
+            });
+        }
+        console.log(newPageCount);
+    }
+
+    rightArrowClick = (e) => {
+        var newPageCount = this.state.pageCount;
+        newPageCount++;
+        if(newPageCount == this.state.survey.length) {
+            this.setState({
+                leftHide: '',
+                rightHide: 'hideArrow',
+                pageCount: newPageCount,
+                submitShow: '',
+                liActive: 'list-' + newPageCount.toString()
+            });
+        } else {
+            this.setState({
+                leftHide: '',
+                rightHide: '',
+                submitShow: 'hideSubmit',
+                pageCount: newPageCount,
+                liActive: 'list-' + newPageCount.toString()
+            });
+        }
+        console.log(newPageCount);
+    }
 
     //set values for submitting results
     radioClick = (e) => {
@@ -202,8 +258,16 @@ export default class Survey extends Component {
         var liCount = 1;
         var iterator = 1;
         const { rating } = this.state;
+        const { liActive } = this.state;
+        function checkActive(active) {
+            if(active === liActive) {
+                return "li-active";
+            } else {
+                return "li-hidden";
+            }
+        }
         const renderQuestion = this.state.survey.map(list =>
-            <li key={list.id} className={"item-" + liCount++}>
+            <li key={list.id} className={checkActive("list-" + liCount++)}>
                 <div className="question-wrapper">
                     <div className="row">
                         <div className="col">
@@ -267,7 +331,7 @@ export default class Survey extends Component {
                                                     return (
                                                         <div className="iconStarDiv">
                                                             <div>
-                                                                <i className={index <= value ? 'fas fa-star': 'far fa-star'} />
+                                                                <FontAwesomeIcon icon={index <= value ? faStar : farFaStar }/>
                                                             </div>
                                                         </div>
                                                     );
@@ -337,19 +401,7 @@ export default class Survey extends Component {
                 </div>
             </li>
         );
-        const submitformdiv = (
-            <li className={"item-" + this.state.survey.length}>
-                <div className="row">
-                    <div className="col">
-                        <div className="submit-answer text-center">
-                            <button type="submit" className="btn-submit-answer" onClick={this.submitAnswer}>Submit</button>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        );
         
-
         return(
             <React.Fragment>
                 <header>
@@ -362,21 +414,29 @@ export default class Survey extends Component {
                 <section>
                     <div className="container mt-5">
                         <ul>
-                            {renderQuestion}
-                            {submitformdiv}
-                        </ul>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            <div className="rightleftarrow">
-                                <div className="left-arrow">
-                                    <FontAwesomeIcon icon="faArrowAltCircleRight"/>
-                                </div>
-                                <div className="right-arrow">
-                                    <FontAwesomeIcon icon="faArrowAltCircleLeft"/>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="rightleftarrow">
+                                        <div className="left-arrow">
+                                            <FontAwesomeIcon icon={faArrowAltCircleLeft} onClick={this.leftArrowClick} id={this.state.pageCount} className={this.state.leftHide}/>
+                                            <span className={this.state.leftHide}>Previous</span>
+                                        </div>
+                                        <div className="right-arrow">
+                                            <span className={this.state.rightHide}>Next</span>
+                                            <FontAwesomeIcon icon={faArrowAltCircleRight} onClick={this.rightArrowClick} id={this.state.pageCount} className={this.state.rightHide}/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            {renderQuestion}
+                            <div className="row">
+                                <div className="col">
+                                    <div className="submit-answer text-center">
+                                        <button type="submit" className={"btn-submit-answer " + this.state.submitShow} onClick={this.submitAnswer}>Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </ul>
                     </div>
                 </section>
             </React.Fragment>
