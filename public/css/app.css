@@ -11246,3 +11246,101 @@ Switch Button
   border: 1.5px solid #558ed5;
 }
 
+.top-image-welcomeSurvey {
+  width: 100%;
+  border-bottom: 10px solid #f89937;
+}
+
+.top-image-welcomeSurvey img {
+  width: 100%;
+  height: auto;
+}
+
+.container-welcomeSurvey {
+  background-color: #efefef;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey {
+  padding: 100px 140px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .welcomeheader-welcomeSurvey {
+  margin-bottom: 30px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .welcomebody-welcomeSurvey {
+  margin-bottom: 70px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey {
+  margin-bottom: 20px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span {
+  font-weight: bold;
+  font-size: 1rem;
+  display: block;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span .asterisk-default {
+  display: inline-block;
+  color: #000;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span .asterisk-error {
+  display: inline-block;
+  color: #ff0000;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey .error-hide {
+  color: #ff0000;
+  display: none;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey .error-show {
+  color: #ff0000;
+  display: block;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey {
+  display: inline-block;
+  margin-right: 10px;
+  width: 60%;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey input {
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  padding: 10px 10px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey {
+  display: inline-block;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey button {
+  padding: 10px 100px;
+  border: 1px solid #558ed5;
+  background-color: #558ed5;
+  color: #fff;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey button:hover {
+  cursor: pointer;
+}
+
+.submit-answer {
+  margin-bottom: 2rem;
+}
+
+.submit-answer .btn-submit-answer {
+  padding: 10px 100px;
+  border: 1px solid #558ed5;
+  background-color: #558ed5;
+  color: #fff;
+}
+
+.submit-answer .btn-submit-answer:hover {
+  cursor: pointer;
+}
+

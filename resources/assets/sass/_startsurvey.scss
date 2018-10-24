@@ -72,3 +72,95 @@
 		}
 	}
 }
+
+//welcome survey
+.top-image-welcomeSurvey {
+	width: 100%;
+	border-bottom: 10px solid #f89937;
+	img {
+		width: 100%;
+		height: auto;
+	}
+}
+
+.container-welcomeSurvey {
+	background-color: #efefef;
+	.body-welcomeSurvey {
+		padding: 100px 140px;
+		.welcomeheader-welcomeSurvey {
+			margin-bottom: 30px;
+		}
+
+		.welcomebody-welcomeSurvey {
+			margin-bottom: 70px;
+		}
+
+		.form-welcomeSurvey {
+			.label-form-welcomeSurvey {
+				margin-bottom: 20px;
+				span {
+					font-weight: bold;
+					font-size: 1rem;
+					display: block;
+					.asterisk-default {
+						display: inline-block;
+						//color: #ff0000;
+						color: #000;
+					}
+
+					.asterisk-error {
+						display: inline-block;
+						color: #ff0000;
+					}
+				}
+				
+				.error-hide {
+					color: #ff0000;
+					display: none;
+				}
+
+				.error-show {
+					color: #ff0000;
+					display: block;
+				}
+			}
+
+			.inputDiv-welcomeSurvey {
+				display: inline-block;
+				margin-right: 10px;
+				width: 60%;
+				input {
+					width: 100%;
+					border: 1px solid #a7a7a7;
+					padding: 10px 10px;
+				}
+			}
+
+			.submitDiv-welcomeSurvey {
+				display: inline-block;
+				button {
+					padding: 10px 100px;
+					border: 1px solid #558ed5;
+					background-color: #558ed5;
+					color: #fff;
+					&:hover {
+						cursor: pointer;
+					}
+				}
+			}
+		}
+	}
+}
+
+.submit-answer {
+	margin-bottom: 2rem;
+	.btn-submit-answer {
+		padding: 10px 100px;
+		border: 1px solid #558ed5;
+		background-color: #558ed5;
+		color: #fff;
+		&:hover {
+			cursor: pointer;
+		}
+	}
+}

@@ -49637,6 +49637,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_AddQuestions__ = __webpack_require__(145);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_ViewSurvey__ = __webpack_require__(163);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__components_Frontend_StartSurvey__ = __webpack_require__(164);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__components_Frontend_StartSurveyWelcome__ = __webpack_require__(202);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49657,6 +49658,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 //Frontend
+
 
 
 var Index = function (_Component) {
@@ -49683,7 +49685,8 @@ var Index = function (_Component) {
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Route */], { exact: true, path: "/dashboard/survey/add", component: __WEBPACK_IMPORTED_MODULE_6__components_CreateSurvey__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Route */], { exact: true, path: "/dashboard/survey/:id/view", component: __WEBPACK_IMPORTED_MODULE_8__components_ViewSurvey__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Route */], { exact: true, name: 'add', path: "/dashboard/survey/:id/add", component: __WEBPACK_IMPORTED_MODULE_7__components_AddQuestions__["a" /* default */] }),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Route */], { exact: true, path: "/survey/:id", component: __WEBPACK_IMPORTED_MODULE_9__components_Frontend_StartSurvey__["a" /* default */] })
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Route */], { exact: true, path: "/survey/:id", component: __WEBPACK_IMPORTED_MODULE_9__components_Frontend_StartSurvey__["a" /* default */] }),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Route */], { exact: true, path: "/survey/welcome/:id", component: __WEBPACK_IMPORTED_MODULE_10__components_Frontend_StartSurveyWelcome__["a" /* default */] })
 				)
 			);
 		}
@@ -76544,36 +76547,182 @@ var Survey = function (_Component) {
 
         var _this = _possibleConstructorReturn(this, (Survey.__proto__ || Object.getPrototypeOf(Survey)).call(this));
 
-        Object.defineProperty(_this, 'mouseLeave', {
+        Object.defineProperty(_this, 'radioClick', {
             enumerable: true,
             writable: true,
-            value: function value() {
-                _this.setState({ isMouseInside: false });
+            value: function value(e) {
+                var targetId = parseInt(e.target.name, 10);
+                _this.setState({
+                    multipleChoiceAnswer: e.target.value,
+                    multipleChoiceId: targetId
+                });
+            }
+        });
+        Object.defineProperty(_this, 'checkboxClick', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                var checkboxArray = _this.state.checkboxAnswer;
+                if (e.target.checked === true) {
+                    if (checkboxArray.length == 0) {
+                        checkboxArray = e.target.value;
+                        _this.setState({
+                            checkboxAnswer: checkboxArray,
+                            checkboxId: e.target.name
+                        });
+                    } else {
+                        checkboxArray = checkboxArray + "," + e.target.value;
+                        _this.setState({
+                            checkboxAnswer: checkboxArray,
+                            checkboxId: e.target.name
+                        });
+                    }
+                } else {
+                    if (checkboxArray.indexOf(e.target.value) == 0) {
+                        if (checkboxArray.indexOf(",") !== -1) {
+                            checkboxArray = checkboxArray.replace(e.target.value + ",", "");
+                            _this.setState({
+                                checkboxAnswer: checkboxArray,
+                                checkboxId: e.target.name
+                            });
+                        } else {
+                            checkboxArray = checkboxArray.replace(e.target.value, "");
+                            _this.setState({
+                                checkboxAnswer: checkboxArray,
+                                checkboxId: e.target.name
+                            });
+                        }
+                    } else {
+                        checkboxArray = checkboxArray.replace("," + e.target.value, "");
+                        _this.setState({
+                            checkboxAnswer: checkboxArray,
+                            checkboxId: e.target.name
+                        });
+                    }
+                }
+            }
+        });
+        Object.defineProperty(_this, 'essayCommentChange', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                if (e.target.classList.contains("Comment")) {
+                    _this.setState({
+                        commentAnswer: e.target.value,
+                        commentId: e.target.name
+                    });
+                } else {
+                    _this.setState({
+                        essayAnswer: e.target.value,
+                        essayId: e.target.name
+                    });
+                }
+            }
+        });
+        Object.defineProperty(_this, 'textboxChange', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                _this.setState({
+                    textboxAnswer: e.target.value,
+                    textboxId: e.target.name
+                });
+            }
+        });
+        Object.defineProperty(_this, 'dropdownChange', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                _this.setState({
+                    dropdownAnswer: e.target.value,
+                    dropdownId: e.target.name,
+                    selectValue: e.target.value
+                });
+            }
+        });
+        Object.defineProperty(_this, 'dateChange', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                var targetId = parseInt(e.target.name, 10);
+                _this.setState({
+                    dateAnswer: e.target.value,
+                    dateId: targetId
+                });
+            }
+        });
+        Object.defineProperty(_this, 'submitAnswer', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                e.preventDefault();
+                var form = {
+                    respondentId: _this.state.respondentId,
+                    //answers
+                    multipleChoiceAnswer: _this.state.multipleChoiceAnswer,
+                    multipleChoiceId: _this.state.multipleChoiceId,
+                    checkboxAnswer: _this.state.checkboxAnswer,
+                    checkboxId: _this.state.checkboxId,
+                    starRatingAnswer: _this.state.starRatingAnswer,
+                    starRatingId: _this.state.starRatingId,
+                    essayAnswer: _this.state.essayAnswer,
+                    essayId: _this.state.essayId,
+                    commentAnswer: _this.state.commentAnswer,
+                    commentId: _this.state.commentId,
+                    textboxAnswer: _this.state.textboxAnswer,
+                    textboxId: _this.state.textboxId,
+                    dropdownAnswer: _this.state.dropdownAnswer,
+                    dropdownId: _this.state.dropdownId,
+                    dateAnswer: _this.state.dateAnswer,
+                    dateId: _this.state.dateId
+                };
+
+                axios.post('/api/webmaster/answerRespondent', form).then(function (response) {
+                    if (response.data.success) {} else {
+                        _this.setState({
+                            asteriskClass: 'asterisk-error',
+                            errorClass: 'error-show'
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
             }
         });
 
         _this.state = {
             survey: [],
             title: '',
-            rating: 0,
-            defaultRating: 0,
-            starImage: './../../images/star-single.png'
+            rating: 1,
+            defaultRating: 1,
+            defaultSelectValue: 'none',
+            selectValue: 'none',
+
+            //answers
+            respondentId: '',
+            multipleChoiceAnswer: '',
+            multipleChoiceId: '',
+            checkboxAnswer: '',
+            checkboxId: '',
+            starRatingAnswer: '',
+            starRatingId: '',
+            essayAnswer: '',
+            essayId: '',
+            commentAnswer: '',
+            commentId: '',
+            textboxAnswer: '',
+            textboxId: '',
+            dropdownAnswer: '',
+            dropdownId: '',
+            dateAnswer: '',
+            dateId: ''
         };
         return _this;
     }
 
     _createClass(Survey, [{
-        key: 'onStarClick',
-        value: function onStarClick(nextValue, prevValue, name) {
-            this.setState({
-                rating: nextValue,
-                defaultRating: nextValue
-            });
-        }
-    }, {
         key: 'onStarHover',
         value: function onStarHover(nextValue, prevValue, name) {
-            console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name);
             if (nextValue > this.state.defaultRating) {
                 this.setState({ rating: nextValue });
             }
@@ -76581,9 +76730,24 @@ var Survey = function (_Component) {
     }, {
         key: 'onStarHoverOut',
         value: function onStarHoverOut(nextValue, prevValue, name) {
-            console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name);
             this.setState({ rating: this.state.defaultRating });
         }
+
+        //set values for submitting results
+
+    }, {
+        key: 'onStarClick',
+        value: function onStarClick(nextValue, prevValue, name) {
+            this.setState({
+                rating: nextValue,
+                defaultRating: nextValue,
+                starRatingAnswer: nextValue,
+                starRatingId: name
+            });
+        }
+
+        //submit form
+
     }, {
         key: 'componentWillMount',
         value: function componentWillMount() {
@@ -76597,7 +76761,7 @@ var Survey = function (_Component) {
                     survey: response.data.survey,
                     title: response.data.title,
                     index: '',
-                    hover: false
+                    respondentId: response.data.responid
                 });
             }).catch(function (error) {
                 console.log(error);
@@ -76608,7 +76772,6 @@ var Survey = function (_Component) {
         value: function render() {
             var _this3 = this;
 
-            var star = 5;
             var iterator = 1;
             var rating = this.state.rating;
 
@@ -76639,7 +76802,7 @@ var Survey = function (_Component) {
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'div',
                                     { className: 'answer' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'radio', name: "answer" + list.id + "[]", id: "option" + iterator.toString(), value: key.answer }),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'radio', name: list.id, id: "option" + iterator.toString(), value: key.answer, onChange: _this3.radioClick }),
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'label',
                                         { htmlFor: "option" + iterator },
@@ -76659,7 +76822,7 @@ var Survey = function (_Component) {
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                     'div',
                                     { className: 'answer' },
-                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: "answer" + list.id + "[]", id: "option" + iterator.toString(), value: key.answer }),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'checkbox', name: list.id, id: "option" + iterator.toString(), value: key.answer, onChange: _this3.checkboxClick }),
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'label',
                                         { htmlFor: "option" + iterator },
@@ -76732,7 +76895,7 @@ var Survey = function (_Component) {
                                 'div',
                                 { className: 'col text-center starImageDiv' },
                                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_react_star_rating_component___default.a, {
-                                    name: 'rateStar',
+                                    name: list.id.toString(),
                                     starColor: '#f89937',
                                     starCount: 5,
                                     value: rating,
@@ -76746,7 +76909,7 @@ var Survey = function (_Component) {
                                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'div',
                                                 null,
-                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: index <= value ? 'fas fa-star star-' + star-- : 'far fa-star star-' + star-- })
+                                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: index <= value ? 'fas fa-star' : 'far fa-star' })
                                             )
                                         );
                                     }
@@ -76788,7 +76951,7 @@ var Survey = function (_Component) {
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { className: 'essay-textarea' })
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { className: "essay-textarea " + list.q_type, name: list.id, onChange: _this3.essayCommentChange })
                             )
                         )
                     ) : list.q_type == 'Textbox' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -76800,7 +76963,7 @@ var Survey = function (_Component) {
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'textbox-input' })
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'textbox-input', name: list.id, onChange: _this3.textboxChange })
                             )
                         )
                     ) : list.q_type == 'Dropdown' ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -76817,16 +76980,16 @@ var Survey = function (_Component) {
                                     { className: 'dropdown-select' },
                                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                         'select',
-                                        null,
+                                        { value: _this3.state.selectValue, name: list.id, onChange: _this3.dropdownChange },
                                         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                             'option',
-                                            { className: 'dropdown-option', disabled: true, selected: true, value: true },
+                                            { className: 'dropdown-option', value: _this3.state.defaultSelectValue, disabled: true },
                                             '-- Select --'
                                         ),
                                         JSON.parse(list.answer).map(function (key) {
                                             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                                 'option',
-                                                { className: 'dropdown-option', value: key.answer },
+                                                { className: "dropdown-option" + (iterator = iterator + 1), key: iterator.toString(), value: key.answer },
                                                 key.answer
                                             );
                                         })
@@ -76843,7 +77006,7 @@ var Survey = function (_Component) {
                             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                                 'div',
                                 { className: 'answer-text' },
-                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'date', className: 'date-input' })
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'date', className: 'date-input', name: list.id, onChange: _this3.dateChange })
                             )
                         )
                     ) : null
@@ -76870,7 +77033,24 @@ var Survey = function (_Component) {
                     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                         'div',
                         { className: 'container mt-5' },
-                        renderQuestion
+                        renderQuestion,
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'row' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'col' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'submit-answer text-center' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'button',
+                                        { type: 'submit', className: 'btn-submit-answer', onClick: this.submitAnswer },
+                                        'Submit'
+                                    )
+                                )
+                            )
+                        )
                     )
                 )
             );
@@ -85163,6 +85343,203 @@ bunker(function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_html_react_parser__ = __webpack_require__(183);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_html_react_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_html_react_parser__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Header__ = __webpack_require__(194);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+
+var Survey = function (_Component) {
+    _inherits(Survey, _Component);
+
+    function Survey() {
+        _classCallCheck(this, Survey);
+
+        var _this = _possibleConstructorReturn(this, (Survey.__proto__ || Object.getPrototypeOf(Survey)).call(this));
+
+        Object.defineProperty(_this, 'handleChange', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                _this.setState({
+                    respondentEmail: e.target.value
+                });
+            }
+        });
+        Object.defineProperty(_this, 'submitForm', {
+            enumerable: true,
+            writable: true,
+            value: function value(e) {
+                e.preventDefault();
+                var form = {
+                    survey_id: _this.state.surveyId,
+                    respondentEmail: _this.state.respondentEmail
+                };
+
+                axios.post('/api/webmaster/emailRespondent', form).then(function (response) {
+                    if (response.data.success) {
+                        _this.props.history.push('/survey/' + _this.state.surveyId);
+                    } else {
+                        _this.setState({
+                            asteriskClass: 'asterisk-error',
+                            errorClass: 'error-show'
+                        });
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        });
+
+        _this.state = {
+            title: '',
+            surveyId: '',
+            respondentEmail: '',
+            asteriskClass: 'asterisk-default',
+            errorClass: 'error-hide',
+            topImage: './../../images/startsurvey.png'
+        };
+        return _this;
+    }
+
+    _createClass(Survey, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            var _this2 = this;
+
+            var id = this.props.match.params.id;
+
+
+            axios.get('/api/front/' + id).then(function (response) {
+                _this2.setState({
+                    title: response.data.title,
+                    surveyId: id
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'header',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'container' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Layouts_Header__["a" /* default */], {
+                            title: this.state.title
+                        })
+                    )
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'section',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'top-image-welcomeSurvey' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: this.state.topImage })
+                    ),
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'container-welcomeSurvey' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'container' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'body-welcomeSurvey' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'h1',
+                                    { className: 'welcomeheader-welcomeSurvey' },
+                                    'Welcome!'
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'welcomebody-welcomeSurvey' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'p',
+                                        null,
+                                        'This is a survey about Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id laborum.'
+                                    )
+                                ),
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'form-welcomeSurvey' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'label-form-welcomeSurvey' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'span',
+                                            null,
+                                            'Please input your Email Address to proceed.',
+                                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                                'span',
+                                                { className: this.state.asteriskClass },
+                                                '*'
+                                            )
+                                        ),
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'small',
+                                            { className: this.state.errorClass },
+                                            '*This field is required.'
+                                        )
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'inputDiv-welcomeSurvey' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', className: 'input-welcomeSurvey', onChange: this.handleChange })
+                                    ),
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'div',
+                                        { className: 'submitDiv-welcomeSurvey' },
+                                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                            'button',
+                                            { type: 'submit', className: 'submit-welcomeSurvey', onClick: this.submitForm },
+                                            'Begin'
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Survey;
+}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
+
+/* harmony default export */ __webpack_exports__["a"] = (Survey);
 
 /***/ })
 /******/ ]);

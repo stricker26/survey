@@ -20,6 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('webmaster')->group(function() {
 	Route::resource('survey', 'Api\SurveyController');
 	Route::resource('question', 'Api\QuestionController');
+	Route::post('emailRespondent', 'Api\RespondentsController@emailRespondent');
+	Route::post('answerRespondent', 'Api\RespondentsController@answerRespondent');
 	Route::get('lists', 'Api\MainSurveyController@lists');
 });
 

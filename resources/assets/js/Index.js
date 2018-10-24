@@ -11,6 +11,7 @@ import ViewSurvey from './components/ViewSurvey';
 
 //Frontend
 import StartSurvey from './components/Frontend/StartSurvey';
+import StartSurveyWelcome from './components/Frontend/StartSurveyWelcome';
 
 export default class Index extends Component {
 	render() {
@@ -24,6 +25,7 @@ export default class Index extends Component {
 					<Route exact path={"/dashboard/survey/:id/view"} component={ViewSurvey} />
 					<Route exact name="add" path={"/dashboard/survey/:id/add"} component={AddQuestions} />
 					<Route exact path={"/survey/:id"} component={StartSurvey} />
+					<Route exact path={"/survey/welcome/:id"} component={StartSurveyWelcome} />
 				</React.Fragment>
 			</Router>
 		);

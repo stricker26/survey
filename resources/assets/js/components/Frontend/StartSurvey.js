@@ -11,29 +11,175 @@ export default class Survey extends Component {
         this.state = {
             survey: [],
             title: '',
-            rating: 0,
-            defaultRating: 0,
-            starImage: './../../images/star-single.png'
+            rating: 1,
+            defaultRating: 1,
+            defaultSelectValue: 'none',
+            selectValue: 'none',
+
+            //answers
+            respondentId: '',
+            multipleChoiceAnswer: '',
+            multipleChoiceId: '',
+            checkboxAnswer: '',
+            checkboxId: '',
+            starRatingAnswer: '',
+            starRatingId: '',
+            essayAnswer: '',
+            essayId: '',
+            commentAnswer: '',
+            commentId: '',
+            textboxAnswer: '',
+            textboxId: '',
+            dropdownAnswer: '',
+            dropdownId: '',
+            dateAnswer: '',
+            dateId: ''
         };
     }
 
-    onStarClick(nextValue, prevValue, name) {
-        this.setState({
-            rating: nextValue,
-            defaultRating: nextValue
-        });
-    }
-
     onStarHover(nextValue, prevValue, name) {
-        console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name);  
         if(nextValue > this.state.defaultRating) {
             this.setState({rating: nextValue});
         }
     }
 
     onStarHoverOut(nextValue, prevValue, name) {
-        console.log("Next Value %s, Previous Value %s, Name %s", nextValue, prevValue, name); 
         this.setState({rating: this.state.defaultRating});
+    }
+
+
+    //set values for submitting results
+    radioClick = (e) => {
+        var targetId = parseInt(e.target.name, 10);
+        this.setState({
+            multipleChoiceAnswer: e.target.value,
+            multipleChoiceId: targetId
+        });
+    }
+
+    checkboxClick = (e) => {
+        var checkboxArray = this.state.checkboxAnswer;
+        if(e.target.checked === true) {
+            if(checkboxArray.length == 0) {
+                checkboxArray = e.target.value;
+                this.setState({
+                    checkboxAnswer: checkboxArray,
+                    checkboxId: e.target.name
+                });
+            } else {
+                checkboxArray = checkboxArray + "," + e.target.value;
+                this.setState({
+                    checkboxAnswer: checkboxArray,
+                    checkboxId: e.target.name
+                });
+            }
+        } else {
+            if(checkboxArray.indexOf(e.target.value) == 0) {
+                if(checkboxArray.indexOf(",") !== -1) {
+                    checkboxArray = checkboxArray.replace(e.target.value + ",", "");
+                    this.setState({
+                        checkboxAnswer: checkboxArray,
+                        checkboxId: e.target.name
+                    });
+                } else {
+                    checkboxArray = checkboxArray.replace(e.target.value, "");
+                    this.setState({
+                        checkboxAnswer: checkboxArray,
+                        checkboxId: e.target.name
+                    });
+                }
+            } else {
+                checkboxArray = checkboxArray.replace("," + e.target.value, "");
+                this.setState({
+                    checkboxAnswer: checkboxArray,
+                    checkboxId: e.target.name
+                });
+            }
+        }
+    }
+
+    onStarClick(nextValue, prevValue, name) {
+        this.setState({
+            rating: nextValue,
+            defaultRating: nextValue,
+            starRatingAnswer: nextValue,
+            starRatingId: name
+        });
+    }
+
+    essayCommentChange = (e) => {
+        if(e.target.classList.contains("Comment")) {
+            this.setState({
+                commentAnswer: e.target.value,
+                commentId: e.target.name
+            });
+        } else {
+            this.setState({
+                essayAnswer: e.target.value,
+                essayId: e.target.name
+            });
+        }
+    }
+
+    textboxChange = (e) => {
+        this.setState({
+            textboxAnswer: e.target.value,
+            textboxId: e.target.name
+        });
+    }
+
+    dropdownChange = (e) => {
+        this.setState({
+            dropdownAnswer: e.target.value,
+            dropdownId: e.target.name,
+            selectValue: e.target.value
+        });
+    }
+
+    dateChange = (e) => {
+        var targetId = parseInt(e.target.name, 10);
+        this.setState({
+            dateAnswer: e.target.value,
+            dateId: targetId
+        });
+    }
+
+    //submit form
+    submitAnswer = (e) => {
+        e.preventDefault();
+        const form = {
+            respondentId: this.state.respondentId,
+            //answers
+            multipleChoiceAnswer: this.state.multipleChoiceAnswer,
+            multipleChoiceId: this.state.multipleChoiceId,
+            checkboxAnswer: this.state.checkboxAnswer,
+            checkboxId: this.state.checkboxId,
+            starRatingAnswer: this.state.starRatingAnswer,
+            starRatingId: this.state.starRatingId,
+            essayAnswer: this.state.essayAnswer,
+            essayId: this.state.essayId,
+            commentAnswer: this.state.commentAnswer,
+            commentId: this.state.commentId,
+            textboxAnswer: this.state.textboxAnswer,
+            textboxId: this.state.textboxId,
+            dropdownAnswer: this.state.dropdownAnswer,
+            dropdownId: this.state.dropdownId,
+            dateAnswer: this.state.dateAnswer,
+            dateId: this.state.dateId
+        }
+        
+        axios.post('/api/webmaster/answerRespondent', form).then(response => {
+            if(response.data.success) {
+                
+            } else {
+                this.setState({
+                    asteriskClass: 'asterisk-error',
+                    errorClass: 'error-show'
+                });
+            }
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     componentWillMount() {
@@ -44,22 +190,17 @@ export default class Survey extends Component {
                 survey: response.data.survey,
                 title: response.data.title,
                 index: '',
-                hover: false
+                respondentId: response.data.responid
             });
         }).catch(error => {
             console.log(error);
         });
     }
 
-    mouseLeave = () => {
-  this.setState({ isMouseInside: false });
-}
-
     render() {
-        var star = 5;
         var iterator = 1;
         const { rating } = this.state;
-        const renderQuestion = this.state.survey.map(list => 
+        const renderQuestion = this.state.survey.map(list =>
             <div className="question-wrapper" key={list.id}>
                 <div className="row">
                     <div className="col">
@@ -73,7 +214,7 @@ export default class Survey extends Component {
                                 <div className="row" key={iterator.toString()}>
                                     <div className="col">
                                         <div className="answer">
-                                            <input type="radio" name={"answer" + list.id + "[]"} id={"option" + iterator.toString()} value={key.answer} />
+                                            <input type="radio" name={list.id} id={"option" + iterator.toString()} value={key.answer} onChange={this.radioClick} />
                                             <label htmlFor={"option" + iterator}>{key.answer}</label>
                                         </div>
                                     </div>
@@ -88,7 +229,7 @@ export default class Survey extends Component {
                                 <div className="row" key={iterator.toString()}>
                                     <div className="col">
                                         <div className="answer">
-                                            <input type="checkbox" name={"answer" + list.id + "[]"} id={"option" + iterator.toString()} value={key.answer} />
+                                            <input type="checkbox" name={list.id} id={"option" + iterator.toString()} value={key.answer} onChange={this.checkboxClick}/>
                                             <label htmlFor={"option" + iterator}>{key.answer}</label>
                                         </div>
                                     </div>
@@ -112,7 +253,7 @@ export default class Survey extends Component {
                                 <div className="row">
                                     <div className="col text-center starImageDiv">
                                         <StarRatingComponent 
-                                            name="rateStar" 
+                                            name={list.id.toString()} 
                                             starColor="#f89937"
                                             starCount={5}
                                             value={rating}
@@ -123,7 +264,7 @@ export default class Survey extends Component {
                                                 return (
                                                     <div className="iconStarDiv">
                                                         <div>
-                                                            <i className={index <= value ? 'fas fa-star star-' + star-- : 'far fa-star star-' + star--} />
+                                                            <i className={index <= value ? 'fas fa-star': 'far fa-star'} />
                                                         </div>
                                                     </div>
                                                 );
@@ -148,7 +289,7 @@ export default class Survey extends Component {
                         <div className="row">
                             <div className="col">
                                 <div className="answer-text">
-                                    <textarea className="essay-textarea"/>
+                                    <textarea className={"essay-textarea " + list.q_type} name={list.id} onChange={this.essayCommentChange}/>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +298,7 @@ export default class Survey extends Component {
                         <div className="row">
                             <div className="col">
                                 <div className="answer-text">
-                                    <input type="text" className="textbox-input"/>
+                                    <input type="text" className="textbox-input" name={list.id} onChange={this.textboxChange}/>
                                 </div>
                             </div>
                         </div>
@@ -167,11 +308,11 @@ export default class Survey extends Component {
                             <div className="col">
                                 <div className="answer-text">
                                     <div className="dropdown-select">
-                                        <select>
-                                            <option className="dropdown-option" disabled selected value>-- Select --</option>
+                                        <select value={this.state.selectValue} name={list.id} onChange={this.dropdownChange}>
+                                            <option className="dropdown-option" value={this.state.defaultSelectValue} disabled>-- Select --</option>
                                             {
                                                 (JSON.parse(list.answer)).map(key =>
-                                                    <option className="dropdown-option" value={key.answer}>{key.answer}</option>
+                                                    <option className={"dropdown-option"+ (iterator = iterator + 1)} key={iterator.toString()} value={key.answer}>{key.answer}</option>
                                                 )
                                             }
                                         </select>
@@ -184,7 +325,7 @@ export default class Survey extends Component {
                         <div className="row">
                             <div className="col">
                                 <div className="answer-text">
-                                    <input type="date" className="date-input"/>
+                                    <input type="date" className="date-input" name={list.id} onChange={this.dateChange}/>
                                 </div>
                             </div>
                         </div>
@@ -206,6 +347,13 @@ export default class Survey extends Component {
                 <section>
                     <div className="container mt-5">
                         {renderQuestion}
+                        <div className="row">
+                            <div className="col">
+                                <div className="submit-answer text-center">
+                                    <button type="submit" className="btn-submit-answer" onClick={this.submitAnswer}>Submit</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </React.Fragment>
