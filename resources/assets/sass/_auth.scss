@@ -1,0 +1,102 @@
+.login-section {
+	background-color: #efefef;
+	width: 100%;
+	.header-loginImg {
+		.header1 {
+			position: absolute;
+			width: 100%;
+			height: auto;
+		}
+		.header2 {
+			margin-top: 10.5%;
+			width: 100%;
+			height: auto;
+		}
+		h1 {
+			padding: 4% 12%;
+			position: absolute;
+		}
+	}
+
+	.body-login {
+		padding: 50px 0;
+		.card-login {
+			background-color: #fff;
+			width: 600px;
+			box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.5);
+			padding: 20px 50px;
+			margin-left: calc(50% - 300px);
+			.card-body-login {
+				text-align: center;
+				.card-logo {
+					padding: 60px 0px;
+				}
+				h4 {
+					color: #1d497d;
+					font-weight: bold;
+					margin-bottom: 60px;
+				}
+			}
+			.card-form-input {
+				.div-input-username {
+					width: 100%;
+					margin-bottom: 50px;
+					text-align: left;
+					input {
+						width: 100%;
+						border: 1px solid #a7a7a7;
+						padding: 5px 10px;
+					}
+					label {
+						font-size: 1.1rem;
+						color: #1d497d;
+					}
+				}
+				.div-input-password {
+					width: 100%;
+					text-align: left;
+					input {
+						width: 100%;
+						border: 1px solid #a7a7a7;
+						padding: 5px 10px;
+					}
+					label {
+						font-size: 1.1rem;
+						color: #1d497d;
+					}
+				}
+				.div-forgot-password {
+					text-align: right;
+					color: #1d497d;
+					margin-top: 5px;
+					span {
+						text-decoration: underline;
+						font-size: 0.8rem;
+						&:hover {
+							cursor: pointer;
+						}
+					} 
+				}
+			}
+			.card-form-submit {
+				width: 100%;
+				margin: 80px 0;
+				button {
+					background-color: #f89937;
+					border: 0;
+					color: #fff;
+					padding: 10px 150px;
+					font-size: 1.1rem;
+					&:hover {
+						cursor: pointer;
+					}
+				}
+			}
+		}
+	}
+}
+
+.login-header {
+	text-decoration: underline;
+	padding-left: 10px;
+}

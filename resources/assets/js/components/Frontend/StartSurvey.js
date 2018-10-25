@@ -79,7 +79,6 @@ export default class Survey extends Component {
                 liActive: 'list-' + newPageCount.toString()
             });
         }
-        console.log(newPageCount);
     }
 
     rightArrowClick = (e) => {
@@ -102,7 +101,6 @@ export default class Survey extends Component {
                 liActive: 'list-' + newPageCount.toString()
             });
         }
-        console.log(newPageCount);
     }
 
     //set values for submitting results
@@ -413,7 +411,7 @@ export default class Survey extends Component {
                 </header>
                 <section>
                     <div className="container mt-5">
-                        <ul>
+                        <ul className="startSurvey-page">
                             <div className="row">
                                 <div className="col">
                                     <div className="rightleftarrow">

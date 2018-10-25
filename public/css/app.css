@@ -10488,7 +10488,7 @@ a.text-dark:focus {
 
 header {
   width: 100%;
-  background-color: #1d497d;
+  background-color: #558ed5;
 }
 
 header .container {
@@ -11436,5 +11436,129 @@ Switch Button
 
 .li-hidden {
   display: none;
+}
+
+ul.startSurvey-page {
+  -webkit-padding-start: initial;
+          padding-inline-start: initial;
+}
+
+.login-section {
+  background-color: #efefef;
+  width: 100%;
+}
+
+.login-section .header-loginImg .header1 {
+  position: absolute;
+  width: 100%;
+  height: auto;
+}
+
+.login-section .header-loginImg .header2 {
+  margin-top: 10.5%;
+  width: 100%;
+  height: auto;
+}
+
+.login-section .header-loginImg h1 {
+  padding: 4% 12%;
+  position: absolute;
+}
+
+.login-section .body-login {
+  padding: 50px 0;
+}
+
+.login-section .body-login .card-login {
+  background-color: #fff;
+  width: 600px;
+  -webkit-box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.5);
+  padding: 20px 50px;
+  margin-left: calc(50% - 300px);
+}
+
+.login-section .body-login .card-login .card-body-login {
+  text-align: center;
+}
+
+.login-section .body-login .card-login .card-body-login .card-logo {
+  padding: 60px 0px;
+}
+
+.login-section .body-login .card-login .card-body-login h4 {
+  color: #1d497d;
+  font-weight: bold;
+  margin-bottom: 60px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-username {
+  width: 100%;
+  margin-bottom: 50px;
+  text-align: left;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-username input {
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  padding: 5px 10px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-username label {
+  font-size: 1.1rem;
+  color: #1d497d;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-password {
+  width: 100%;
+  text-align: left;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-password input {
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  padding: 5px 10px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-password label {
+  font-size: 1.1rem;
+  color: #1d497d;
+}
+
+.login-section .body-login .card-login .card-form-input .div-forgot-password {
+  text-align: right;
+  color: #1d497d;
+  margin-top: 5px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-forgot-password span {
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.login-section .body-login .card-login .card-form-input .div-forgot-password span:hover {
+  cursor: pointer;
+}
+
+.login-section .body-login .card-login .card-form-submit {
+  width: 100%;
+  margin: 80px 0;
+}
+
+.login-section .body-login .card-login .card-form-submit button {
+  background-color: #f89937;
+  border: 0;
+  color: #fff;
+  padding: 10px 150px;
+  font-size: 1.1rem;
+}
+
+.login-section .body-login .card-login .card-form-submit button:hover {
+  cursor: pointer;
+}
+
+.login-header {
+  text-decoration: underline;
+  padding-left: 10px;
 }
 
