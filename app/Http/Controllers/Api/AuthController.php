@@ -33,7 +33,6 @@ class AuthController extends Controller
     	$username = $request->get('username');
     	$password = Hash::make($request->get('password'));
     	$tokens = Hash::make(microtime(true) . random_bytes('16'));
-
     	$usernew = new User;
     	$usernew->name = $name;
     	$usernew->username = $username;
