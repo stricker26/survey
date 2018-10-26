@@ -12,6 +12,7 @@
     </head>
     <body>        
         <div id="app"></div>
+        <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
         <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>
