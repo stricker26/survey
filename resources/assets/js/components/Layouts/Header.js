@@ -7,8 +7,20 @@ class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false,
+            showModal: false
         };
+
+        const form = {
+            token: localStorage.getItem('token')
+        };
+
+        axios.post('/api/webmaster/getName', form).then(response => {
+            this.setState({
+                user: response.data.user
+            });
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     createSurvey = () => {
@@ -56,13 +68,13 @@ class Header extends Component {
                             <button type="button" className="btn btn-orange" onClick={this.createSurvey}>Create Survey</button>
                         </li>
                 		<li className="nav-item dropdown">
-    				    	<a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><FontAwesomeIcon icon="user" /> rjhonnas</a>
+    				    	<a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><FontAwesomeIcon icon="user" /> {this.state.user}</a>
     				    	<div className="dropdown-menu">
     				      		<a className="dropdown-item" href="#">Action</a>
     				      		<a className="dropdown-item" href="#">Another action</a>
     				      		<a className="dropdown-item" href="#">Something else here</a>
     				      		<div className="dropdown-divider"></div>
-    				      		<a className="dropdown-item" href="#">Separated link</a>
+    				      		<a className="dropdown-item" href="/dashboard/logout">Logout</a>
     				    	</div>
     				  	</li>
                 	</ul>

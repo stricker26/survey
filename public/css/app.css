@@ -10488,7 +10488,7 @@ a.text-dark:focus {
 
 header {
   width: 100%;
-  background-color: #1d497d;
+  background-color: #558ed5;
 }
 
 header .container {
@@ -11241,7 +11241,7 @@ Switch Button
   color: #9f9f9f;
 }
 
-.starImageDiv i {
+.starImageDiv svg {
   font-size: 4rem;
   margin-right: 40px;
 }
@@ -11274,5 +11274,388 @@ Switch Button
   padding-left: 3px;
   text-align: left;
   padding-left: 156px;
+}
+
+.answer-text .essay-textarea {
+  width: 100%;
+  border: 1.5px solid #558ed5;
+  padding: 7px 10px;
+  height: 150px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.answer-text .essay-textarea:focus {
+  outline: none;
+  border: 1.5px solid #f89937;
+}
+
+.answer-text .textbox-input,
+.answer-text .date-input {
+  width: 100%;
+  border: 1.5px solid #558ed5;
+  padding: 10px 10px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.answer-text .textbox-input:focus,
+.answer-text .date-input:focus {
+  outline: none;
+  border: 1.5px solid #f89937;
+}
+
+.answer-text .dropdown-select {
+  width: 100%;
+}
+
+.answer-text .dropdown-select select {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 10px 10px;
+  border: 1.5px solid #558ed5;
+}
+
+.top-image-welcomeSurvey {
+  width: 100%;
+  border-bottom: 10px solid #f89937;
+}
+
+.top-image-welcomeSurvey img {
+  width: 100%;
+  height: auto;
+}
+
+.container-welcomeSurvey {
+  background-color: #efefef;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey {
+  padding: 100px 140px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .welcomeheader-welcomeSurvey {
+  margin-bottom: 30px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .welcomebody-welcomeSurvey {
+  margin-bottom: 70px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey {
+  margin-bottom: 20px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span {
+  font-weight: bold;
+  font-size: 1rem;
+  display: block;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span .asterisk-default {
+  display: inline-block;
+  color: #000;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span .asterisk-error {
+  display: inline-block;
+  color: #ff0000;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey .error-hide {
+  color: #ff0000;
+  display: none;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey .error-show {
+  color: #ff0000;
+  display: block;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey {
+  display: inline-block;
+  margin-right: 10px;
+  width: 60%;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey input {
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  padding: 10px 10px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey {
+  display: inline-block;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey button {
+  padding: 10px 100px;
+  border: 1px solid #558ed5;
+  background-color: #558ed5;
+  color: #fff;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey button:hover {
+  cursor: pointer;
+}
+
+.submit-answer {
+  margin-bottom: 2rem;
+}
+
+.submit-answer .hideSubmit {
+  display: none;
+}
+
+.submit-answer .btn-submit-answer {
+  padding: 10px 100px;
+  border: 1px solid #558ed5;
+  background-color: #558ed5;
+  color: #fff;
+}
+
+.submit-answer .btn-submit-answer:hover {
+  cursor: pointer;
+}
+
+.rightleftarrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.rightleftarrow .hideArrow {
+  display: none;
+}
+
+.rightleftarrow .left-arrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.rightleftarrow .left-arrow span {
+  margin-left: 15px;
+  font-size: 1rem;
+}
+
+.rightleftarrow .left-arrow svg {
+  font-size: 4rem;
+}
+
+.rightleftarrow .left-arrow svg:hover {
+  cursor: pointer;
+  color: #f89937;
+}
+
+.rightleftarrow .right-arrow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.rightleftarrow .right-arrow span {
+  margin-right: 15px;
+  font-size: 1rem;
+}
+
+.rightleftarrow .right-arrow svg {
+  font-size: 4rem;
+}
+
+.rightleftarrow .right-arrow svg:hover {
+  cursor: pointer;
+  color: #f89937;
+}
+
+.li-active {
+  display: block;
+}
+
+.li-hidden {
+  display: none;
+}
+
+ul.startSurvey-page {
+  -webkit-padding-start: initial;
+          padding-inline-start: initial;
+}
+
+.login-section {
+  background-color: #efefef;
+  width: 100%;
+}
+
+.login-section .header-loginImg .header1 {
+  background-color: #fefefe;
+  padding: 2rem 12%;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.login-section .header-loginImg .header1 span {
+  min-width: 445px;
+}
+
+.login-section .header-loginImg .header {
+  width: 100%;
+  height: auto;
+}
+
+.login-section .body-login {
+  padding: 50px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.login-section .body-login .card-login {
+  background-color: #fff;
+  max-width: 600px;
+  width: 600px;
+  -webkit-box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.5);
+  padding: 20px 50px;
+}
+
+.login-section .body-login .card-login .card-body-login {
+  text-align: center;
+}
+
+.login-section .body-login .card-login .card-body-login .card-logo {
+  padding: 60px 0px;
+}
+
+.login-section .body-login .card-login .card-body-login h4 {
+  color: #1d497d;
+  font-weight: bold;
+  margin-bottom: 60px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-username {
+  width: 100%;
+  margin-bottom: 50px;
+  text-align: left;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-username input {
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  padding: 5px 10px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-username label {
+  font-size: 1.1rem;
+  color: #1d497d;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-password {
+  width: 100%;
+  text-align: left;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-password input {
+  width: 100%;
+  border: 1px solid #a7a7a7;
+  padding: 5px 10px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-input-password label {
+  font-size: 1.1rem;
+  color: #1d497d;
+}
+
+.login-section .body-login .card-login .card-form-input .div-forgot-password {
+  text-align: right;
+  color: #1d497d;
+  margin-top: 5px;
+}
+
+.login-section .body-login .card-login .card-form-input .div-forgot-password span {
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.login-section .body-login .card-login .card-form-input .div-forgot-password span:hover {
+  cursor: pointer;
+}
+
+.login-section .body-login .card-login .card-form-submit {
+  width: 100%;
+  margin: 80px 0;
+}
+
+.login-section .body-login .card-login .card-form-submit button {
+  background-color: #f89937;
+  border: 0;
+  color: #fff;
+  padding: 10px 0;
+  width: 60%;
+  font-size: 1.1rem;
+}
+
+.login-section .body-login .card-login .card-form-submit button:hover {
+  cursor: pointer;
+}
+
+.login-header {
+  text-decoration: underline;
+  padding-left: 10px;
+}
+
+@media (max-width: 705px) {
+  .body-login .card-login {
+    max-width: 400px !important;
+    height: auto;
+  }
+}
+
+.response-section {
+  font-family: "Nunito", sans-serif;
+}
+
+.response-section .response-body {
+  padding: 50px 0;
+}
+
+.response-section .response-body .response-body-header {
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 

@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Route::prefix('survey')->group(function() {
 	Route::get('/{id}', 'StartSurveyController@start');
+	Route::get('/welcome/{id}', 'StartSurveyController@start');
 });
 
 Route::prefix('dashboard')->group(function() {

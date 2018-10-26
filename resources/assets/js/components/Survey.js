@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import ShareModal from './Modal/ShareModal';
@@ -19,6 +20,13 @@ export default class Survey extends Component {
             shareIcon: './../../images/share-default-icon.png',
             moreIcon: './../../images/more-icon.png',
             researcherIcon: './../../images/researcher-icon.png',
+            token: localStorage.getItem('token')
+        }
+    }
+
+    renderRedirect = () => {
+        if(!this.state.token) {
+            return <Redirect to='/dashboard/login' />
         }
     }
 
@@ -48,6 +56,7 @@ export default class Survey extends Component {
     render() {
         return(
             <React.Fragment>
+                {this.renderRedirect()}
                 <header>
                     <div className="container">
                         <Header />

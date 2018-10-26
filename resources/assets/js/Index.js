@@ -10,15 +10,20 @@ import AddQuestions from './components/AddQuestions';
 import ViewSurvey from './components/ViewSurvey';
 import SurveyLogic from './components/SurveyLogic';
 import Branching from './components/Branching';
+import Login from './components/Auth/Login';
+import Logout from './components/Auth/Logout';
 
 //Frontend
 import StartSurvey from './components/Frontend/StartSurvey';
+import StartSurveyWelcome from './components/Frontend/StartSurveyWelcome';
 
 export default class Index extends Component {
 	render() {
 		return(
 			<Router>
 				<React.Fragment>
+					<Route exact path={"/dashboard/login"} component={Login} />
+					<Route exact path={"/dashboard/logout"} component={Logout} />
 					<Route exact path={"/dashboard/home"} component={Dashboard} />
 					<Route exact path={"/dashboard/survey"} component={Survey} />
 					<Route exact path={"/dashboard/response"} component={Response} />
@@ -29,6 +34,7 @@ export default class Index extends Component {
 					<Route exact path={"/dashboard/survey/:id/logic"} component={SurveyLogic} />
 					<Route exact path={"/dashboard/survey/:id/branching"} component={Branching} />
 					<Route exact path={"/survey/:id"} component={StartSurvey} />
+					<Route exact path={"/survey/welcome/:id"} component={StartSurveyWelcome} />
 				</React.Fragment>
 			</Router>
 		);

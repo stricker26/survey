@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Redirect } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import surveyImage from './images/live-survey.jpg';
@@ -7,16 +8,35 @@ import surveyImage from './images/live-survey.jpg';
 export default class Dashboard extends Component {
 
 	constructor() {
-		super();
-
+		super()
 		this.state = {
-			logo: 'https://picsum.photos/200'
-		} 
+			logo: 'https://picsum.photos/200',
+            token: localStorage.getItem('token')
+		};
+
+		const form = {
+			token: localStorage.getItem('token')
+		};
+
+		axios.post('/api/webmaster/getName', form).then(response => {
+            this.setState({
+                user: response.data.user
+            });
+        }).catch(error => {
+            console.log(error);
+        });
 	}
+
+    renderRedirect = () => {
+        if(!this.state.token) {
+        	return <Redirect to='/dashboard/login' />
+        }
+    }
 
 	render() {
 		return(
 			<React.Fragment>
+                {this.renderRedirect()}
 				<header>
                     <div className="container">
                         <Header />
@@ -28,7 +48,7 @@ export default class Dashboard extends Component {
                 			<div className="col-lg-10">
                 				<div className="row pt-5 pb-5">
                 					<div className="col">
-										<h1>Welcome back, rjhonnas.</h1>
+										<h1>Welcome back, {this.state.user}.</h1>
 									</div>
                 				</div>
                 			</div>
