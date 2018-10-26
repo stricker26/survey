@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
 import axios from 'axios';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
@@ -27,6 +27,7 @@ export default class AddQuestions extends Component {
             warningHeader: '',
             warningContent: '',
             warningTheme: '',
+            request: '',
             circleIcon: './../../../../images/circle-icon.png',
             squareIcon: './../../../../images/square-icon.png',
             starIcon: './../../../../images/star-icon.png',
@@ -76,11 +77,6 @@ export default class AddQuestions extends Component {
         this.setState({ wChoice: !this.state.wChoice });
     }
 
-    componentDidMount() {
-        const { id } = this.props.match.params;
-        this.setState({ surveyID: id });
-    }
-
     toggleWarnigModal() {
         this.setState({
             warningModal: !this.state.warningModal
@@ -89,6 +85,16 @@ export default class AddQuestions extends Component {
 
     closeWarningModal = () => {
         this.toggleWarnigModal();
+    }
+
+    componentDidMount() {
+        const { id } = this.props.match.params;
+        let splitRequest = this.props.location.pathname;
+        let request = splitRequest.split('/');
+        this.setState({ 
+            surveyID: id,
+            request: request[4]
+        });
     }
 
     handleSubmit = (e) => {
@@ -223,7 +229,7 @@ export default class AddQuestions extends Component {
                 <section>
                     <div className="container-fluid">
                         <div className="row">
-                            <div className="col-lg-3 bg-dark">
+                            <div className="col-lg-4 bg-dark">
                                 <div className="sidebar">
                                     <Tools 
                                         passToolvalue = {this.passToolvalue}
@@ -273,7 +279,7 @@ export default class AddQuestions extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-9 content-inner">
+                            <div className="col-lg-8 content-inner">
                                 <div className="row content-inner-head">
                                     <div className="col">
                                         <ul>
@@ -319,7 +325,9 @@ export default class AddQuestions extends Component {
                                                         </div>
                                                     </div>
                                                     <input type="hidden" value={this.state.defaultQtype} />
-                                                    <button className="btn btn-primary mt-5">Save Question</button>
+                                                    <button className="btn btn-primary mt-5">
+                                                        {this.state.request == 'edit' ? 'Update Question' : 'Save Question'}
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

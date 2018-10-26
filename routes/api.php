@@ -21,6 +21,7 @@ Route::prefix('webmaster')->group(function() {
 	Route::resource('survey', 'Api\SurveyController');
 	Route::resource('question', 'Api\QuestionController');
 	Route::get('lists', 'Api\MainSurveyController@lists');
+	Route::get('single-question', 'Api\QuestionController@single');
 });
 
 Route::prefix('front')->group(function() {

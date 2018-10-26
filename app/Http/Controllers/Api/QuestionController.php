@@ -117,4 +117,10 @@ class QuestionController extends Controller
     {
         //
     }
+
+    public function single($id) {
+
+        return response()->json($id);
+
+    }
 }

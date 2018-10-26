@@ -8,6 +8,8 @@ import Response from './components/Response';
 import CreateSurvey from './components/CreateSurvey';
 import AddQuestions from './components/AddQuestions';
 import ViewSurvey from './components/ViewSurvey';
+import SurveyLogic from './components/SurveyLogic';
+import Branching from './components/Branching';
 
 //Frontend
 import StartSurvey from './components/Frontend/StartSurvey';
@@ -23,6 +25,9 @@ export default class Index extends Component {
 					<Route exact path={"/dashboard/survey/add"} component={CreateSurvey} />
 					<Route exact path={"/dashboard/survey/:id/view"} component={ViewSurvey} />
 					<Route exact name="add" path={"/dashboard/survey/:id/add"} component={AddQuestions} />
+					<Route exact name="edit" path={"/dashboard/survey/:id/edit"} component={AddQuestions} />
+					<Route exact path={"/dashboard/survey/:id/logic"} component={SurveyLogic} />
+					<Route exact path={"/dashboard/survey/:id/branching"} component={Branching} />
 					<Route exact path={"/survey/:id"} component={StartSurvey} />
 				</React.Fragment>
 			</Router>
