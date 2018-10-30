@@ -30,6 +30,7 @@ Route::prefix('webmaster')->group(function() {
 	Route::post('emailRespondent', 'Api\RespondentsController@emailRespondent');
 	Route::post('answerRespondent', 'Api\RespondentsController@answerRespondent');
 	Route::get('lists', 'Api\MainSurveyController@lists');
+	Route::get('single-question', 'Api\QuestionController@single');
 });
 
 Route::prefix('response')->group(function() {

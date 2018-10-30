@@ -10604,19 +10604,32 @@ section .container-fluid .content-inner {
   background-color: #efefef;
 }
 
-section .container-fluid .content-inner .content-inner-head {
+section .container-fluid .content-inner .content-inner-head .col ul {
   border-bottom: 1px solid #a7a7a7;
   margin-bottom: 2rem;
+  padding-left: 0;
+}
+
+section .container-fluid .content-inner .content-inner-head .col ul li {
   padding: 1rem;
-}
-
-section .container-fluid .content-inner .content-inner-head ul {
-  padding: 0;
-}
-
-section .container-fluid .content-inner .content-inner-head ul li {
   display: inline-block;
-  padding-right: 50px;
+}
+
+section .container-fluid .content-inner .content-inner-head .col ul li.active {
+  border-bottom: 2px solid #f89937;
+}
+
+section .container-fluid .content-inner .content-inner-head .col ul li:first-child {
+  margin-left: 1rem;
+}
+
+section .container-fluid .content-inner .content-inner-head .col ul li a {
+  color: #000000;
+}
+
+section .container-fluid .content-inner .content-inner-head .col ul li a:hover {
+  color: #000000;
+  text-decoration: none;
 }
 
 section .container-fluid .content-inner .content-inner-body {
@@ -10649,6 +10662,64 @@ section .container-fluid .content-inner .content-inner-body .border .question-to
 
 section .container-fluid .content-inner .content-inner-body .col-lg-11.border .row {
   padding-top: .3rem;
+}
+
+section .container-fluid .content-inner .content-inner-body .question-preview .card {
+  padding: 0;
+}
+
+section .container-fluid .content-inner .content-inner-body .card {
+  padding: 1rem 2rem;
+}
+
+section .container-fluid .content-inner .content-inner-body .card .tool-check-option {
+  margin-bottom: 3rem;
+}
+
+section .container-fluid .content-inner .content-inner-body .card .tool-check-option:last-child {
+  margin-bottom: 2rem;
+}
+
+section .container-fluid .content-inner .content-inner-body .save-settings .btn {
+  padding: 1rem 5rem;
+  font-weight: 700;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching {
+  background-color: #ffffff;
+  border: 1px solid #a7a7a7;
+  overflow: hidden;
+  margin-bottom: 5rem;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row {
+  border-bottom: 1px solid #a7a7a7;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-1 {
+  padding: 1.5rem;
+  border-right: 1px solid #a7a7a7;
+  text-align: center;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-1 label {
+  font-size: 2em;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-11 {
+  padding: 1.5rem;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-11 label {
+  margin-bottom: 0;
+  font-size: 1.3em;
+  line-height: 2.5em;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row:last-child {
+  border-bottom: 0;
 }
 
 section .container-fluid .section-bg-gray {
@@ -10864,8 +10935,8 @@ Checkbox
 }
 
 .tool-check-option .checkbox label::before {
-  height: 16px;
-  width: 16px;
+  height: 20px;
+  width: 20px;
   border: 1px solid;
   left: 0px;
   top: 0px;
@@ -10878,8 +10949,8 @@ Checkbox
   border-bottom: 2px solid;
   -webkit-transform: rotate(-45deg);
           transform: rotate(-45deg);
-  left: 4px;
-  top: 5px;
+  left: 6px;
+  top: 6px;
 }
 
 .tool-check-option .checkbox input[type="checkbox"] + label::after {
