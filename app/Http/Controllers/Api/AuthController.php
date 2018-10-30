@@ -40,7 +40,6 @@ class AuthController extends Controller
     	$usernew->password = $password;
     	$usernew->token = $tokens;
     	$usernew->save();
-
         return response()->json(['success' => $tokens]);
     }
 
