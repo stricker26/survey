@@ -39,7 +39,8 @@ export default class Survey extends Component {
     	e.preventDefault();
         const form = {
             survey_id: this.state.surveyId,
-            respondentEmail: this.state.respondentEmail
+            respondentEmail: this.state.respondentEmail,
+            survey_id: this.state.surveyId
         }
 
         axios.post('/api/webmaster/emailRespondent', form).then(response => {

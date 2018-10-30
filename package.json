@@ -31,6 +31,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
     "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
+    "@fortawesome/free-brands-svg-icons": "^5.4.2",
     "@fortawesome/free-regular-svg-icons": "^5.4.1",
     "@fortawesome/free-solid-svg-icons": "^5.4.1",
     "@fortawesome/react-fontawesome": "0.1.0-11",
@@ -39,7 +40,9 @@
     "ajv": "^6.5.2",
     "babel-cli": "^6.26.0",
     "babel-preset-react-app": "^3.1.2",
+    "chart.js": "^2.7.3",
     "html-react-parser": "^0.4.7",
+    "react-chartjs-2": "^2.7.4",
     "react-copy-to-clipboard": "^5.0.1",
     "react-if-elseif-else-render": "^1.0.2",
     "react-image": "^1.4.1",

@@ -26,7 +26,8 @@ class RespondentsController extends Controller
         } else {
 
         	$respondents = new Respondents;
-        	$respondents->email = $request->get('respondentEmail');
+            $respondents->email = $request->get('respondentEmail');
+        	$respondents->survey_id = $request->get('survey_id');
         	$respondents->save();
 
             return response()->json(['success' => 'Redirect']);

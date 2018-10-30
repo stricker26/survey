@@ -17,9 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('user/login', 'Api\AuthController@login');
-Route::get('user/logout', 'Api\AuthController@logout');
-Route::post('user/register', 'Api\AuthController@register');
+Route::prefix('user')->group(function() {
+	Route::post('login', 'Api\AuthController@login');
+	Route::get('logout', 'Api\AuthController@logout');
+	Route::post('register', 'Api\AuthController@register');
+});
 
 Route::prefix('webmaster')->group(function() {
 	Route::resource('survey', 'Api\SurveyController');
@@ -28,6 +30,11 @@ Route::prefix('webmaster')->group(function() {
 	Route::post('emailRespondent', 'Api\RespondentsController@emailRespondent');
 	Route::post('answerRespondent', 'Api\RespondentsController@answerRespondent');
 	Route::get('lists', 'Api\MainSurveyController@lists');
+});
+
+Route::prefix('response')->group(function() {
+	Route::get('getAll', 'Api\ResponseController@getAll');
+	Route::get('question_summaries/{id}', 'Api\ResponseController@responseView');
 });
 
 Route::prefix('front')->group(function() {

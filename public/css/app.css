@@ -11577,6 +11577,7 @@ ul.startSurvey-page {
 
 .response-section {
   font-family: "Nunito", sans-serif;
+  background-color: #efefef;
 }
 
 .response-section .response-body {
@@ -11586,5 +11587,205 @@ ul.startSurvey-page {
 .response-section .response-body .response-body-header {
   font-size: 1.5rem;
   font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.response-section .response-body .response-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.response-section .response-body .response-content .response-card {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  margin-right: 25px;
+  border: 1px solid #ababab;
+  background-color: #fff;
+  width: 250px;
+}
+
+.response-section .response-body .response-content .response-card .response-card-header {
+  padding: 20px 20px;
+  background-color: #28b449;
+  color: #fff;
+}
+
+.response-section .response-body .response-content .response-card .response-card-header .response-header-status {
+  font-size: 0.7rem;
+  line-height: 1.1rem;
+}
+
+.response-section .response-body .response-content .response-card .response-card-header .response-header-title {
+  font-size: 1rem;
+  line-height: 1.1rem;
+}
+
+.response-section .response-body .response-content .response-card .response-card-body {
+  text-align: center;
+  color: #616161;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  border-bottom: 3px solid #f89937;
+}
+
+.response-section .response-body .response-content .response-card .response-card-body .response-count-ago span {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.response-section .response-body .response-content .response-card .response-card-body .response-count-ago p {
+  line-height: 1.4rem;
+  font-size: 1rem;
+}
+
+.response-section .response-body .response-content .response-card .response-card-body .response-count-today span {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.response-section .response-body .response-content .response-card .response-card-body .response-count-today p {
+  line-height: 1.4rem;
+  font-size: 1rem;
+}
+
+.response-section .response-body .response-content .response-card .response-card-footer {
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.response-section .response-body .response-content .response-card .response-card-footer:hover {
+  cursor: pointer;
+}
+
+.response-qs-section {
+  font-family: "Nunito", sans-serif;
+  background-color: #efefef;
+}
+
+.response-qs-section .response-qs-header {
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.response-qs-section .response-qs-header .response-nav-item {
+  margin: 0px 30px;
+  line-height: 3rem;
+}
+
+.response-qs-section .response-qs-header .response-nav-item:hover {
+  cursor: pointer;
+}
+
+.response-qs-section .response-qs-header .response-nav-item img {
+  height: 28px;
+  width: auto;
+}
+
+.response-qs-section .response-qs-header .qs-active {
+  border-bottom: 3px solid #f89938;
+}
+
+.response-qs-section .response-qs-body .container {
+  max-width: 80%;
+}
+
+.response-qs-section .response-qs-body .response-qs-body-header {
+  margin: 35px 0;
+}
+
+.response-qs-section .response-qs-body .response-qs-body-header h3 {
+  margin-bottom: 0;
+}
+
+.response-qs-section .response-qs-body .response-qs-body-header span {
+  font-size: 0.8rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 40px;
+  padding-right: 15px;
+  border: 1px solid #a7a7a7;
+  background-color: #fff;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .question-count {
+  color: #558ed5;
+  font-size: 0.8rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .question-title {
+  font-size: 1.1rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .page-actions {
+  display: inline-block;
+  font-size: 0.7rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-customize {
+  background-color: #558ed5;
+  color: #fff;
+  padding: 5px 25px;
+  border: 0;
+  margin-right: 15px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-customize:hover {
+  cursor: pointer;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-exportas {
+  background-color: #808080;
+  color: #fff;
+  padding: 5px 25px;
+  border: 0;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-exportas:hover {
+  cursor: pointer;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .graph-part {
+  margin: 30px 0;
+  padding-left: 80px;
+  padding-right: 105px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .answers-part {
+  margin-bottom: 40px;
+  padding-left: 40px;
+  padding-right: 65px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .answers-part .response-table-answers {
+  width: 100%;
+  border-spacing: 5px 0;
+  border-collapse: separate;
+  font-size: 0.7rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .answers-part .response-table-answers th {
+  padding: 2px 10px;
+  background-color: #edeeee;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .answers-part .response-table-answers td {
+  border-bottom: 3px solid #edeeee;
+  padding: 2px 10px;
 }
 

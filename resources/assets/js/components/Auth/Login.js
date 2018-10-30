@@ -13,7 +13,7 @@ export default class Login extends Component {
             username: '',
             password: '',
             redirect: false,
-            token: localStorage.getItem('token')
+            token: sessionStorage.getItem('token')
         }
     }
 
@@ -36,7 +36,7 @@ export default class Login extends Component {
                     redirect: true,
                     token: response.data.success
                 });
-                localStorage.setItem('token', response.data.success);
+                sessionStorage.setItem('token', response.data.success);
                 window.location.reload();
             } else {
                 console.log(response.data.warning);

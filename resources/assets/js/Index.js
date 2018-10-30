@@ -10,6 +10,7 @@ import AddQuestions from './components/AddQuestions';
 import ViewSurvey from './components/ViewSurvey';
 import Login from './components/Auth/Login';
 import Logout from './components/Auth/Logout';
+import QuestionSummaries from './components/Response/QuestionSummaries';
 
 //Frontend
 import StartSurvey from './components/Frontend/StartSurvey';
@@ -25,6 +26,7 @@ export default class Index extends Component {
 					<Route exact path={"/dashboard/home"} component={Dashboard} />
 					<Route exact path={"/dashboard/survey"} component={Survey} />
 					<Route exact path={"/dashboard/response"} component={Response} />
+					<Route exact path={"/dashboard/response/question_summaries/:id"} component={QuestionSummaries} />
 					<Route exact path={"/dashboard/survey/add"} component={CreateSurvey} />
 					<Route exact path={"/dashboard/survey/:id/view"} component={ViewSurvey} />
 					<Route exact name="add" path={"/dashboard/survey/:id/add"} component={AddQuestions} />
