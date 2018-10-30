@@ -11,7 +11,7 @@ class Header extends Component {
         };
 
         const form = {
-            token: localStorage.getItem('token')
+            token: sessionStorage.getItem('token')
         };
 
         axios.post('/api/webmaster/getName', form).then(response => {

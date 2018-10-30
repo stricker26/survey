@@ -9,6 +9,7 @@ import CreateSurvey from './components/CreateSurvey';
 import AddQuestions from './components/AddQuestions';
 import ViewSurvey from './components/ViewSurvey';
 import Login from './components/Auth/Login';
+import Register from './components/Auth/Register';
 import Logout from './components/Auth/Logout';
 import QuestionSummaries from './components/Response/QuestionSummaries';
 
@@ -21,6 +22,7 @@ export default class Index extends Component {
 		return(
 			<Router>
 				<React.Fragment>
+					<Route exact path={"/dashboard/register"} component={Register} />
 					<Route exact path={"/dashboard/login"} component={Login} />
 					<Route exact path={"/dashboard/logout"} component={Logout} />
 					<Route exact path={"/dashboard/home"} component={Dashboard} />
