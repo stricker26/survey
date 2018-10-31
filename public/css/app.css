@@ -11676,6 +11676,10 @@ ul.startSurvey-page {
   background-color: #efefef;
 }
 
+.response-section .container {
+  max-width: 80%;
+}
+
 .response-section .response-body {
   padding: 50px 0;
 }

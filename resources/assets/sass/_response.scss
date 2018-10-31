@@ -8,6 +8,9 @@
 .response-section {
 	font-family: "Nunito", sans-serif;
 	background-color: #efefef;
+	.container {
+	    max-width: 80%;
+	}
 	.response-body {
 		padding: 50px 0;
 		.response-body-header {
