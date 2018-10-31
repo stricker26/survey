@@ -105,6 +105,7 @@ class ResponseController extends Controller
             array_push($dataObj, $dataStore);
         }
 
+
         $rowTable = [
             $dataObj[$request->get('question_no')]['answer'],
             $dataObj[$request->get('question_no')]['answerCount'],
