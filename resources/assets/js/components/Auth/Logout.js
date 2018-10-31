@@ -6,12 +6,12 @@ export default class Login extends Component {
     constructor() {
         super();
         this.state = {
-            token: localStorage.getItem('token')
+            token: sessionStorage.getItem('token')
         }
     }
 
     renderRedirect = () => {
-        localStorage.clear();
+        sessionStorage.clear();
         return <Redirect to='/dashboard/login' />
     }
 

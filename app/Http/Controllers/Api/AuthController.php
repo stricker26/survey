@@ -32,6 +32,7 @@ class AuthController extends Controller
     	//unique username dapat gawa validation
     	$username = $request->get('username');
     	$password = Hash::make($request->get('password'));
+        $name = $request->get('name');
     	$tokens = Hash::make(microtime(true) . random_bytes('16'));
     	$usernew = new User;
     	$usernew->name = $name;
@@ -39,6 +40,7 @@ class AuthController extends Controller
     	$usernew->password = $password;
     	$usernew->token = $tokens;
     	$usernew->save();
+        return response()->json(['success' => $tokens]);
     }
 
     public function getName(Request $request) {

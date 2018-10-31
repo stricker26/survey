@@ -20,7 +20,7 @@ export default class Survey extends Component {
             shareIcon: './../../images/share-default-icon.png',
             moreIcon: './../../images/more-icon.png',
             researcherIcon: './../../images/researcher-icon.png',
-            token: localStorage.getItem('token')
+            token: sessionStorage.getItem('token')
         }
     }
 

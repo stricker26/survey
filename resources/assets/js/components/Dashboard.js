@@ -11,11 +11,11 @@ export default class Dashboard extends Component {
 		super()
 		this.state = {
 			logo: 'https://picsum.photos/200',
-            token: localStorage.getItem('token')
+            token: sessionStorage.getItem('token')
 		};
 
 		const form = {
-			token: localStorage.getItem('token')
+			token: sessionStorage.getItem('token')
 		};
 
 		axios.post('/api/webmaster/getName', form).then(response => {

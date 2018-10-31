@@ -247,6 +247,7 @@ export default class Survey extends Component {
                 index: '',
                 respondentId: response.data.responid
             });
+            console.log(response.data.survey);
         }).catch(error => {
             console.log(error);
         });
