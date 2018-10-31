@@ -36,7 +36,7 @@ class ResponseController extends Controller
     	return response()->json(['success' => $all_survey]);
     }
 
-    public function responseView($id) {
+    public function responseView($id, Request $request) {
         $questions = Question::where('survey_id','=',$id)->get();
         $array_qid = [];
         foreach($questions as $question) {
@@ -45,6 +45,77 @@ class ResponseController extends Controller
         $answers = Answers::whereIn('q_id',$array_qid)->get();
         $title = Survey::where('survey_id', '=', $questions[0]->survey_id)->first()->title;
 
-        return response()->json(['questions' => $questions, 'answers' => $answers, 'title' => $title]);
+        $dataStore = [];
+        $answerArr = [];
+        $countAnswerArr = [];
+        $countAnswerArr2 = [];
+        $dataObj = [];
+        $dataTitle = [];
+        $totalCount = 0;
+        $countAnswer = 0;
+        foreach($questions as $question) {
+            $dataStore['question'] = strip_tags($question->q_title);
+
+            //get all of the answer inside the array
+            $jsondec = json_decode($question->answer);
+            if($jsondec) {
+                foreach($jsondec as $answer_answer) {
+                    array_push($answerArr, $answer_answer->answer);
+                }
+            } else {
+                $dataArr = null;
+            }
+            $dataStore['answer'] = $answerArr;
+            $answerArr = [];
+
+            //total count of the respondents answer
+            foreach($answers as $countTotal){
+                if($countTotal->q_id == $question->id) {
+                    $totalCount++;
+                }
+            }
+            $dataStore['total'] = $totalCount;
+            $totalCount = 0;
+
+            $answerList = Answers::where('q_id','=',$question->id)->get();
+            if($dataStore['answer']) {
+                foreach($dataStore['answer'] as $dataSingle) {
+                    if(!empty($answerList)) {
+                        foreach($answerList as $answerSingle) {
+                            if(strpos($answerSingle['answer'], ',') === false) {
+                                if($dataSingle === $answerSingle['answer']) {
+                                    $countAnswer++;
+                                }
+                            } else {
+                                if(strpos($answerSingle['answer'], $dataSingle) !== false) {
+                                    $countAnswer++;
+                                }
+                            }
+                        }
+                    }
+                    array_push($countAnswerArr, ($countAnswer/count($answerList))*100);
+                    array_push($countAnswerArr2, $countAnswer);
+                    $countAnswer = 0;
+                }
+            }
+            $dataStore['answerCount'] = $countAnswerArr;
+            $dataStore['answerCount2'] = $countAnswerArr2;
+            $countAnswerArr = [];
+
+            array_push($dataObj, $dataStore);
+        }
+
+        $rowTable = [
+            $dataObj[$request->get('question_no')]['answer'],
+            $dataObj[$request->get('question_no')]['answerCount'],
+            $dataObj[$request->get('question_no')]['answerCount2']
+        ];
+
+        return response()->json([
+            'rowTable' => $rowTable,
+            'data' => $dataObj[$request->get('question_no')],
+            'totalCount' => count($questions),
+            'title' => $title
+        ]);
     }
 }

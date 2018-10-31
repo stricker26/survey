@@ -35,7 +35,7 @@ Route::prefix('webmaster')->group(function() {
 
 Route::prefix('response')->group(function() {
 	Route::get('getAll', 'Api\ResponseController@getAll');
-	Route::get('question_summaries/{id}', 'Api\ResponseController@responseView');
+	Route::post('question_summaries/{id}', 'Api\ResponseController@responseView');
 });
 
 Route::prefix('front')->group(function() {

@@ -11663,6 +11663,14 @@ ul.startSurvey-page {
   }
 }
 
+.hidden {
+  display: none;
+}
+
+.shown {
+  display: block;
+}
+
 .response-section {
   font-family: "Nunito", sans-serif;
   background-color: #efefef;
@@ -11800,32 +11808,106 @@ ul.startSurvey-page {
   font-size: 0.8rem;
 }
 
+.response-qs-section .response-qs-body .hover-questions button {
+  background: none;
+  border: 0;
+}
+
+.response-qs-section .response-qs-body .hover-questions button:hover {
+  cursor: pointer;
+}
+
+.response-qs-section .response-qs-body .hover-questions button:focus {
+  outline: 0;
+}
+
 .response-qs-section .response-qs-body .response-qs-card {
   margin-top: 5px;
   margin-bottom: 20px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  padding-left: 40px;
-  padding-right: 15px;
   border: 1px solid #a7a7a7;
   background-color: #fff;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .question-count {
+.response-qs-section .response-qs-body .response-qs-card .header-card {
+  margin-left: 30px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .header-card .customize-nav-item {
+  margin-right: 35px;
+  margin-left: 5px;
+  line-height: 3rem;
+  padding-bottom: 5px;
+  padding-top: 10px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .header-card .customize-nav-item:hover {
+  cursor: pointer;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .header-card .cs-active {
+  border-bottom: 3px solid #f89938;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type {
+  background-color: #ebebeb;
+  padding: 40px 40px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .select-tag {
+  width: 50%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .select-tag select {
+  padding: 5px 10px;
+  width: 100%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel {
+  width: 50%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel button {
+  padding: 5px 0px;
+  width: 30%;
+  border: 0;
+  color: #fff;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel button:hover {
+  cursor: pointer;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel .charttype-save {
+  background-color: #558ed5;
+  margin-right: 15px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel .charttype-cancel {
+  background-color: #808080;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-count {
   color: #558ed5;
   font-size: 0.8rem;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .question-title {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-title {
   font-size: 1.1rem;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .page-actions {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions {
   display: inline-block;
   font-size: 0.7rem;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-customize {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions .page-actions-customize {
   background-color: #558ed5;
   color: #fff;
   padding: 5px 25px;
@@ -11833,46 +11915,51 @@ ul.startSurvey-page {
   margin-right: 15px;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-customize:hover {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions .page-actions-customize:hover {
   cursor: pointer;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-exportas {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions .page-actions-exportas {
   background-color: #808080;
   color: #fff;
   padding: 5px 25px;
   border: 0;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .page-actions .page-actions-exportas:hover {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions .page-actions-exportas:hover {
   cursor: pointer;
+  text-decoration: none;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .graph-part {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions .dropdown-menu {
+  font-size: 0.7rem;
+  min-width: 8rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .graph-part {
   margin: 30px 0;
   padding-left: 80px;
   padding-right: 105px;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .answers-part {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part {
   margin-bottom: 40px;
-  padding-left: 40px;
-  padding-right: 65px;
+  padding: 0 40px;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .answers-part .response-table-answers {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers {
   width: 100%;
   border-spacing: 5px 0;
   border-collapse: separate;
   font-size: 0.7rem;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .answers-part .response-table-answers th {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers th {
   padding: 2px 10px;
   background-color: #edeeee;
 }
 
-.response-qs-section .response-qs-body .response-qs-card .answers-part .response-table-answers td {
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers td {
   border-bottom: 3px solid #edeeee;
   padding: 2px 10px;
 }
