@@ -37,12 +37,12 @@ export default class ShareModal extends Component {
 						  	<div className="input-group-prepend">
 						    	<span className="input-group-text" id="share">URL</span>
 						  	</div>
-						  	<input type="text" className="share-option form-control" value={base_url + "/survey/" + surveyID} onChange={this.handleChange} aria-describedby="share" />
+						  	<input type="text" className="share-option form-control" value={base_url + "/survey/welcome/" + surveyID} onChange={this.handleChange} aria-describedby="share" />
 						</div>
 					</ModalBody>
 					<ModalFooter>
 						<button type="button" className="btn btn-secondary" onClick={closeSurvey}>Close</button>
-						<CopyToClipboard text={base_url + "/survey/" + surveyID} onCopy={this.onCopy}>
+						<CopyToClipboard text={base_url + "/survey/welcome/" + surveyID} onCopy={this.onCopy}>
 							<button type="button" className="btn btn-primary">Copy URL</button>
 						</CopyToClipboard>
 					</ModalFooter>

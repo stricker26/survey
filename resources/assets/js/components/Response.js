@@ -82,7 +82,7 @@ export default class Response extends Component {
                             <div className="row">
                                 <div className="col">
                                     <div className="response-content">
-                                        {cardsResponse}
+                                        
                                     </div>
                                 </div>
                             </div>
