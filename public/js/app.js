@@ -49646,7 +49646,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_Dashboard__ = __webpack_require__(126);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_Survey__ = __webpack_require__(137);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Response__ = __webpack_require__(143);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_Response___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_Response__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_CreateSurvey__ = __webpack_require__(144);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__components_AddQuestions__ = __webpack_require__(145);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__components_ViewSurvey__ = __webpack_require__(163);
@@ -49705,7 +49704,7 @@ var Index = function (_Component) {
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/logout", component: __WEBPACK_IMPORTED_MODULE_12__components_Auth_Logout__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/home", component: __WEBPACK_IMPORTED_MODULE_3__components_Dashboard__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/survey", component: __WEBPACK_IMPORTED_MODULE_4__components_Survey__["a" /* default */] }),
-					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/response", component: __WEBPACK_IMPORTED_MODULE_5__components_Response__["default"] }),
+					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/response", component: __WEBPACK_IMPORTED_MODULE_5__components_Response__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/survey/add", component: __WEBPACK_IMPORTED_MODULE_6__components_CreateSurvey__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, path: "/dashboard/survey/:id/view", component: __WEBPACK_IMPORTED_MODULE_8__components_ViewSurvey__["a" /* default */] }),
 					__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["d" /* Route */], { exact: true, name: 'add', path: "/dashboard/survey/:id/add", component: __WEBPACK_IMPORTED_MODULE_7__components_AddQuestions__["a" /* default */] }),
@@ -73638,9 +73637,123 @@ module.exports = function () {
 
 /***/ }),
 /* 143 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: C:/nginx/docroot/phsurvey.com/resources/assets/js/components/Response.js: Unexpected token (22:31)\n\n\u001b[0m \u001b[90m 20 | \u001b[39m    \n \u001b[90m 21 | \u001b[39m\trender() {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 22 | \u001b[39m        \u001b[36mconst\u001b[39m cardsResponse \u001b[33m=\u001b[39m ()\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 23 | \u001b[39m        \n \u001b[90m 24 | \u001b[39m\t\t\u001b[36mreturn\u001b[39m(\n \u001b[90m 25 | \u001b[39m\t\t\t\u001b[33m<\u001b[39m\u001b[33mReact\u001b[39m\u001b[33m.\u001b[39m\u001b[33mFragment\u001b[39m\u001b[33m>\u001b[39m\u001b[0m\n");
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_dom___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_dom__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react_router_dom__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Layouts_Header__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Layouts_Footer__ = __webpack_require__(11);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+
+
+
+
+var Response = function (_Component) {
+    _inherits(Response, _Component);
+
+    function Response() {
+        _classCallCheck(this, Response);
+
+        var _this = _possibleConstructorReturn(this, (Response.__proto__ || Object.getPrototypeOf(Response)).call(this));
+
+        Object.defineProperty(_this, 'renderRedirect', {
+            enumerable: true,
+            writable: true,
+            value: function value() {
+                if (!_this.state.token) {
+                    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2_react_router_dom__["c" /* Redirect */], { to: '/dashboard/login' });
+                }
+            }
+        });
+
+        _this.state = {
+            token: localStorage.getItem('token')
+        };
+        return _this;
+    }
+
+    _createClass(Response, [{
+        key: 'render',
+        value: function render() {
+            //const cardsResponse = ();
+
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.Fragment,
+                null,
+                this.renderRedirect(),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'header',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'container' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__Layouts_Header__["a" /* default */], null)
+                    )
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'section',
+                    { className: 'response-section' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'container' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                            'div',
+                            { className: 'response-body' },
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'row' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'col' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                        'span',
+                                        { className: 'response-body-header' },
+                                        'Responses Overview'
+                                    )
+                                )
+                            ),
+                            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                'div',
+                                { className: 'row' },
+                                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                                    'div',
+                                    { className: 'col' },
+                                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { className: 'response-content' })
+                                )
+                            )
+                        )
+                    )
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'footer',
+                    null,
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                        'div',
+                        { className: 'container' },
+                        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Layouts_Footer__["a" /* default */], null)
+                    )
+                )
+            );
+        }
+    }]);
+
+    return Response;
+}(__WEBPACK_IMPORTED_MODULE_0_react__["Component"]);
+
+/* harmony default export */ __webpack_exports__["a"] = (Response);
 
 /***/ }),
 /* 144 */

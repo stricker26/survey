@@ -19,7 +19,7 @@ export default class Response extends Component {
     }
     
 	render() {
-        const cardsResponse = ();
+        //const cardsResponse = ();
         
 		return(
 			<React.Fragment>
@@ -40,7 +40,7 @@ export default class Response extends Component {
                             <div className="row">
                                 <div className="col">
                                     <div className="response-content">
-                                        {cardsResponse}
+                                        
                                     </div>
                                 </div>
                             </div>
