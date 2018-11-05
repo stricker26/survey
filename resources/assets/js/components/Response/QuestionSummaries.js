@@ -19,7 +19,7 @@ export default class Response extends Component {
         super();
         this.state = {
             backIcon: './../../../images/back-icon.png',
-            token: localStorage.getItem('token'),
+            token: sessionStorage.getItem('token'),
             dataTable: [],
             title: '',
             question: '',
