@@ -19,13 +19,16 @@ export default class Response extends Component {
         super();
         this.state = {
             backIcon: './../../../images/back-icon.png',
-            token: localStorage.getItem('token'),
+            token: sessionStorage.getItem('token'),
             dataTable: [],
+            id: '',
             title: '',
             question: '',
             answer: '',
             answerCount: '',
             totalCount: '',
+            questionType: '',
+            responseCount: '',
 
             //customize
             display: 'hidden',
@@ -52,7 +55,10 @@ export default class Response extends Component {
                 answer: response.data.data.answer,
                 answerCount: response.data.data.answerCount,
                 totalCount: response.data.totalCount,
-                dataTable: response.data.rowTable
+                dataTable: response.data.rowTable,
+                questionType: response.data.data.questionType,
+                id: id,
+                responseCount: response.data.responseCount
             });
         }).catch(error => {
             console.log(error);
@@ -127,11 +133,17 @@ export default class Response extends Component {
                 answer: response.data.data.answer,
                 answerCount: response.data.data.answerCount,
                 totalCount: response.data.totalCount,
-                dataTable: response.data.rowTable
+                dataTable: response.data.rowTable,
+                questionType: response.data.data.questionType,
+                responseCount: response.data.responseCount
             });
         }).catch(error => {
             console.log(error);
         });
+    }
+
+    responseNav = (e) => {
+        this.props.history.push('/dashboard/response/' + e.target.id + '/' + this.state.id);
     }
     
 	render() {
@@ -368,8 +380,10 @@ export default class Response extends Component {
             </Choose>
         );
 
-        const rowContent = this.state.dataTable.map(list =>
-            <tr>
+        const rowContent = this.state.dataTable.map((list, index) =>
+            <tr key={index}>
+                <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;{list.answer}</td>
+                <td><span>{list.answerPercentage}%</span><span className="float-right">{list.answerCount}&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
             </tr>
         );
 
@@ -387,9 +401,9 @@ export default class Response extends Component {
                             <div className="col">
                                 <div className="d-flex justify-content-start">
                                     <div className="response-nav-item" onClick={this.backResponse}><img src={this.state.backIcon} onClick={this.backResponse} />&nbsp;&nbsp;&nbsp;Back</div>
-                                    <div className="response-nav-item qs-active">Question Summaries</div>
-                                    <div className="response-nav-item">Data Trends</div>
-                                    <div className="response-nav-item">Individual Responses</div>
+                                    <div className="response-nav-item qs-active" id="question_summaries" onClick={this.responseNav}>Question Summaries</div>
+                                    <div className="response-nav-item" id="data_trends" onClick={this.responseNav}>Data Trends</div>
+                                    <div className="response-nav-item" id="individual_responses" onClick={this.responseNav}>Individual Responses</div>
                                 </div>
                             </div>
                         </div>
@@ -472,7 +486,8 @@ export default class Response extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col question-title">
-                                            <span>{this.state.question}</span>
+                                            <span>{this.state.question}</span><br/>
+                                            <span className="question-type">({this.state.questionType})</span>
                                         </div>
                                     </div>
                                     <div className="row">
@@ -496,28 +511,9 @@ export default class Response extends Component {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    {rowContent}
                                                     <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Online Ads</td>
-                                                        <td><span>50.00%</span><span className="float-right">2&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;TV</td>
-                                                        <td><span>0.00%</span><span className="float-right">0&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Referral</td>
-                                                        <td><span>25.00%</span><span className="float-right">1&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Google</td>
-                                                        <td><span>25.00%</span><span className="float-right">1&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Others(Please specify)</td>
-                                                        <td><span>0.00%</span><span className="float-right">0&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colSpan="2">Total Respondents: 4</th>
+                                                        <th colSpan="2">Total Respondents: {this.state.responseCount}</th>
                                                     </tr>
                                                 </tbody>
                                             </table>

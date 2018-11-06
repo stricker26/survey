@@ -19,7 +19,7 @@ export default class Survey extends Component {
     componentWillMount() {
         const { id } = this.props.match.params;
 
-        axios.get('/api/front/' + id).then(response => {
+        axios.get('/api/front/welcome/' + id).then(response => {
             this.setState({
                 title: response.data.title,
                 surveyId: id
@@ -39,13 +39,12 @@ export default class Survey extends Component {
     	e.preventDefault();
         const form = {
             survey_id: this.state.surveyId,
-            respondentEmail: this.state.respondentEmail,
-            survey_id: this.state.surveyId
+            respondentEmail: this.state.respondentEmail
         }
 
         axios.post('/api/webmaster/emailRespondent', form).then(response => {
         	if(response.data.success) {
-                this.props.history.push('/survey/'+ this.state.surveyId);
+                this.props.history.push('/survey/'+ this.state.surveyId + '_' + response.data.id);
         	} else {
         		this.setState({
 		            asteriskClass: 'asterisk-error',

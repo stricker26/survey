@@ -16,6 +16,7 @@ export default class Survey extends Component {
         this.state = {
             survey: [],
             title: '',
+            surveyId: '',
             rating: 1,
             defaultRating: 1,
             defaultSelectValue: 'none',
@@ -220,17 +221,16 @@ export default class Survey extends Component {
             dropdownAnswer: this.state.dropdownAnswer,
             dropdownId: this.state.dropdownId,
             dateAnswer: this.state.dateAnswer,
-            dateId: this.state.dateId
+            dateId: this.state.dateId,
+            respondent_id: this.state.respondent_id
         }
         
         axios.post('/api/webmaster/answerRespondent', form).then(response => {
             if(response.data.success) {
-                
+                alert('Data submitted');
+                this.props.history.push('/survey/welcome/'+ this.state.surveyId);
             } else {
-                this.setState({
-                    asteriskClass: 'asterisk-error',
-                    errorClass: 'error-show'
-                });
+                alert('something went wrong');
             }
         }).catch(error => {
             console.log(error);
@@ -239,13 +239,16 @@ export default class Survey extends Component {
 
     componentWillMount() {
         const { id } = this.props.match.params;
+        var id_pass = id.split("_")[0];
+        var responid = id.split("_")[1];
 
-        axios.get('/api/front/' + id).then(response => {
+        axios.get('/api/front/' + id_pass).then(response => {
             this.setState({
                 survey: response.data.survey,
                 title: response.data.title,
                 index: '',
-                respondentId: response.data.responid
+                respondentId: responid,
+                surveyId: id
             });
             console.log(response.data.survey);
         }).catch(error => {
