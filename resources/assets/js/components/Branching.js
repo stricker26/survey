@@ -33,10 +33,6 @@ export default class Branching extends Component {
         this.setState({
              tools: this.state.tools.filter((s, sidx) => e == sidx)
         });
-
-        // this.setState({
-        //     answers: this.state.answers.filter((s, sidx) => idx !== sidx)
-        // });
     }
 
     componentWillMount() {
@@ -120,18 +116,16 @@ export default class Branching extends Component {
                                                     <div className="col-lg-1">
                                                         <label className="question-label">Q{iterate++}</label>
                                                     </div>
-                                                    <div className="col-lg-11">
+                                                    <div className="col-lg-9">
                                                         <label>{question.q_title.replace(/<\/?[^>]+(>|$)/g, "")}</label>
                                                     </div>
-                                                    {
-                                                        this.state.tools.active ? 
+                                                    <div className="col-lg-2">
                                                         <ul>
                                                             <li>Edit</li>
                                                             <li>Logic</li>
                                                             <li>Delete</li>
                                                         </ul>
-                                                        : null
-                                                    }
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
