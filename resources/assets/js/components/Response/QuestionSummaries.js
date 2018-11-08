@@ -462,7 +462,6 @@ export default class Response extends Component {
                 </When>
                 <Otherwise>
                     <div className="answers-part-2">
-                        <div className="start-line"></div>
                         {this.state.answer.map((list, index) =>
                         <div className="ind-answers">
                             <div className="answers-title">
