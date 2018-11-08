@@ -35,10 +35,15 @@ Route::prefix('webmaster')->group(function() {
 
 Route::prefix('response')->group(function() {
 	Route::get('getAll', 'Api\ResponseController@getAll');
+
 	Route::post('question_summaries/{id}', 'Api\ResponseController@responseView');
+
 	Route::get('data_trends/{id}', 'Api\ResponseController@dataTrendsView');
+	Route::post('data_trends/getTrend/{id}', 'Api\ResponseController@dataTrendsGetTrend');
+
 	Route::get('ir/{id}', 'Api\ResponseController@indResponsesGetAll');
 	Route::post('ir/{id}', 'Api\ResponseController@indResponsesGetid');
+	Route::post('ir/delete/{id}', 'Api\ResponseController@indResponsesDelete');
 });
 
 Route::prefix('front')->group(function() {

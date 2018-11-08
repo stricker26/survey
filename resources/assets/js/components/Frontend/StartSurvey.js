@@ -248,7 +248,7 @@ export default class Survey extends Component {
                 title: response.data.title,
                 index: '',
                 respondentId: responid,
-                surveyId: id
+                surveyId: id_pass
             });
             console.log(response.data.survey);
         }).catch(error => {

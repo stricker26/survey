@@ -3,12 +3,10 @@ import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faStar } from '@fortawesome/free-regular-svg-icons';
 import { HorizontalBar } from 'react-chartjs-2';
 import { Doughnut } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
@@ -32,6 +30,8 @@ export default class Response extends Component {
             respondentLastModified: '',
             respondentTimeSpend: '',
             respondentIP: '',
+            questions: [],
+            answers: [],
 
             //buttons
             backStatBtn: 'blur',
@@ -51,7 +51,9 @@ export default class Response extends Component {
                 respondentStarted: response.data.respondents.created_at,
                 respondentLastModified: response.data.respondents.finished_at,
                 respondentTimeSpend: response.data.respondents.timeSpend,
-                respondentIP: response.data.respondents.ip
+                respondentIP: response.data.respondents.ip,
+                questions: response.data.questions,
+                answers: response.data.answers
             });
 
 
@@ -91,7 +93,8 @@ export default class Response extends Component {
                 respondentStarted: response.data.respondents.created_at,
                 respondentLastModified: response.data.respondents.finished_at,
                 respondentTimeSpend: response.data.respondents.timeSpend,
-                respondentIP: response.data.respondents.ip
+                respondentIP: response.data.respondents.ip,
+                answers: response.data.answers
             });
         }).catch(error => {
             console.log(error);
@@ -144,11 +147,33 @@ export default class Response extends Component {
                     respondentStarted: response.data.respondents.created_at,
                     respondentLastModified: response.data.respondents.finished_at,
                     respondentTimeSpend: response.data.respondents.timeSpend,
-                    respondentIP: response.data.respondents.ip
+                    respondentIP: response.data.respondents.ip,
+                    answers: response.data.answers
                 });
             }).catch(error => {
                 console.log(error);
             });
+        }
+    }
+
+    actionsBtn = (e) => {
+        if(e.target.dataset.name == 'delete') {
+            const data = {
+                respondent_id: e.target.value
+            };
+
+            axios.post('/api/response/ir/delete/' + this.state.id, data).then(response => {
+                if(response.data.success) {
+                    alert(response.data.success);
+                    window.location.reload();
+                } else {
+                    alert(response.data.failed);
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        } else {
+            alert(e.target.dataset.value);
         }
     }
 
@@ -167,6 +192,42 @@ export default class Response extends Component {
         for(var e = 0; e < this.state.respondentsCount; e++) {
             respondentsElement += '<span class="dropdown-item" data-value="'+(e + 1)+'">Respondent #'+(e + 1)+'</span>';
         }
+
+        const questions = this.state.questions.map((list, index) =>
+            <div key={index}>
+                <div className="card-content">
+                    <div className="row">
+                        <div className="col">
+                            <div className="row">
+                                <div className="col question-count">
+                                    <span>Q{index + 1}</span>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col question-title">
+                                    <span>{list.question}</span>
+                                </div>
+                            </div>
+                            <div className="yellow-div"></div>
+                            <div className="row">
+                                <div className="col question-answer">
+                                    <Choose>
+                                        <When condition = {list.q_type == 'Star'}>
+                                            <span><FontAwesomeIcon icon={faStar} />&nbsp;&nbsp;&nbsp;&nbsp;{this.state.answers[list.id]}/5 Stars</span>
+                                        </When>
+                                        <Otherwise>
+                                            <span>{this.state.answers[list.id]}</span>
+                                        </Otherwise>
+                                    </Choose>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="divider"></div>
+            </div>
+        );
+
 		return(
 			<React.Fragment>
                 {this.renderRedirect()}
@@ -230,10 +291,10 @@ export default class Response extends Component {
                                                 </div>
                                                 <div className="actions">
                                                     <div className="delete-btn">
-                                                        <button type="button">Delete</button>
+                                                        <button type="button" data-name="delete" data-value={this.state.respondent_no} onClick={this.actionsBtn}>Delete</button>
                                                     </div>
                                                     <div className="export-btn">
-                                                        <button type="button">Export</button>
+                                                        <button type="button" data-name="export" data-value={this.state.respondent_no} onClick={this.actionsBtn}>Export</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -302,75 +363,7 @@ export default class Response extends Component {
                             </div>
                             <div className="response-ir-question-card">
                                 <div className="response-ir-qcard">
-                                    <div className="card-content">
-                                        <div className="row">
-                                            <div className="col">
-                                                <div className="row">
-                                                    <div className="col question-count">
-                                                        <span>Q1</span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col question-title">
-                                                        <span>How did you first hear about our website</span>
-                                                    </div>
-                                                </div>
-                                                <div className="yellow-div"></div>
-                                                <div className="row">
-                                                    <div className="col question-answer">
-                                                        <span>Online Ads</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="divider"></div>
-                                    <div className="card-content">
-                                        <div className="row">
-                                            <div className="col">
-                                                <div className="row">
-                                                    <div className="col question-count">
-                                                        <span>Q2</span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col question-title">
-                                                        <span>How would you rate our website?</span>
-                                                    </div>
-                                                </div>
-                                                <div className="yellow-div"></div>
-                                                <div className="row">
-                                                    <div className="col question-answer">
-                                                        <span>3/5 Stars</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="divider"></div>
-                                    <div className="card-content">
-                                        <div className="row">
-                                            <div className="col">
-                                                <div className="row">
-                                                    <div className="col question-count">
-                                                        <span>Q3</span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col question-title">
-                                                        <span>What feature do you like the most?</span>
-                                                    </div>
-                                                </div>
-                                                <div className="yellow-div"></div>
-                                                <div className="row">
-                                                    <div className="col question-answer">
-                                                        <span>Motion Feature</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="divider"></div>
+                                    {questions}
                                 </div>
                             </div>
                             <div>&nbsp;</div>

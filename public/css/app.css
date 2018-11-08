@@ -11876,6 +11876,14 @@ ul.startSurvey-page {
   width: 100%;
 }
 
+.response-qs-section .response-qs-body .response-qs-card .chart-type .display-options {
+  padding: 20px 0px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .display-options label {
+  font-size: 1rem;
+}
+
 .response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel {
   width: 50%;
 }
@@ -11970,7 +11978,7 @@ ul.startSurvey-page {
   width: 100%;
   border-spacing: 5px 0;
   border-collapse: separate;
-  font-size: 0.7rem;
+  font-size: 1rem;
 }
 
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers th {
@@ -11989,6 +11997,40 @@ ul.startSurvey-page {
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers td {
   border-bottom: 3px solid #edeeee;
   padding: 2px 10px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 {
+  padding: 30px 20px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .start-line {
+  height: 0.5px;
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .answers-title {
+  padding-top: 40px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .answers-title span {
+  font-size: 1rem;
+  line-height: 1rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .yellow-div {
+  width: 130px;
+  height: 0.75px;
+  border: 1px solid #f89938;
+  margin: 15px 0px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .answers-created {
+  padding-bottom: 40px;
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .answers-created span {
+  font-size: 0.8rem;
 }
 
 .response-ir-section {
@@ -12146,7 +12188,7 @@ ul.startSurvey-page {
 }
 
 .response-ir-section .response-ir-body .response-ir-card .cardBody .row-content {
-  line-height: 2rem;
+  line-height: 2.5rem;
 }
 
 .response-ir-section .response-ir-body .response-ir-card .cardBody .row-content .col-title {
