@@ -19,23 +19,39 @@ export default class Response extends Component {
         super();
         this.state = {
             backIcon: './../../../images/back-icon.png',
+            ddColorIcon: './../../../images/dropdown-color-icon.png',
             token: sessionStorage.getItem('token'),
             dataTable: [],
+            id: '',
             title: '',
             question: '',
-            answer: '',
+            answer: [],
             answerCount: '',
             totalCount: '',
+            questionType: '',
+            responseCount: '',
 
             //customize
             display: 'hidden',
             chart: 'Horizontal Bar',
             selectChart: 'Horizontal Bar',
+            bgColorChart: [],
+            stackedData: [],
 
             //select question
             question_no: 0,
             prevVisibility: 'hidden',
-            nextVisibility: 'shown'
+            nextVisibility: 'shown',
+
+            //card header
+            activeHeader: 'ct',
+
+            //display options header inside card
+            isCheckedC: false,
+            isCheckedDC: false,
+            isCheckedZRAC: false,
+            isCheckedBS: false,
+            isCheckedSS: false,
         }
     }
 
@@ -52,7 +68,12 @@ export default class Response extends Component {
                 answer: response.data.data.answer,
                 answerCount: response.data.data.answerCount,
                 totalCount: response.data.totalCount,
-                dataTable: response.data.rowTable
+                dataTable: response.data.rowTable,
+                questionType: response.data.data.questionType,
+                id: id,
+                responseCount: response.data.responseCount,
+                bgColorChart: response.data.color,
+                stackedData: response.data.data.stackedData
             });
         }).catch(error => {
             console.log(error);
@@ -76,9 +97,15 @@ export default class Response extends Component {
     }
 
     saveCustomize = (e) => {
-        this.setState({
-            chart: this.state.selectChart
-        });
+        if(e.target.dataset.value == 'chartType') {
+            this.setState({
+                chart: this.state.selectChart
+            });
+        } else if(e.target.dataset.value == 'displayOptions') {
+
+        } else {
+
+        }
     }
 
     cancelCustomize = (e) => {
@@ -127,11 +154,46 @@ export default class Response extends Component {
                 answer: response.data.data.answer,
                 answerCount: response.data.data.answerCount,
                 totalCount: response.data.totalCount,
-                dataTable: response.data.rowTable
+                dataTable: response.data.rowTable,
+                questionType: response.data.data.questionType,
+                responseCount: response.data.responseCount,
+                bgColorChart: response.data.color,
+                stackedData: response.data.data.stackedData
             });
         }).catch(error => {
             console.log(error);
         });
+
+        var coloR = [];
+        function colorPicker() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            return "rgb(" + r + "," + g + "," + b + ")";
+        }
+        for(var x = 1; x <= this.state.answerCount.length; x++) {
+            coloR.push(colorPicker());
+        }
+
+        this.setState({
+            bgColorChart: coloR
+        });
+    }
+
+    cardHeaderChange = (e) => {
+        this.setState({
+            activeHeader: e.target.dataset.value
+        });
+    }
+
+    handleCheckChange = (e) => {
+        this.setState({
+            [e.target.dataset.value]: !this.state[e.target.dataset.value]
+        });
+    }
+
+    responseNav = (e) => {
+        this.props.history.push('/dashboard/response/' + e.target.id + '/' + this.state.id);
     }
     
 	render() {
@@ -139,68 +201,15 @@ export default class Response extends Component {
             labels: this.state.answer,
             datasets: [{
                 data: this.state.answerCount,
-                backgroundColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
+                backgroundColor: this.state.bgColorChart,
+                borderColor: this.state.bgColorChart,
                 borderWidth: 1
             }]
         };
 
         const stackedData = {
             labels: ['Answers'],
-            datasets: [
-                {
-                    label: 'Online Ads',
-                    data: [(2/4)*100],
-                    backgroundColor: 'rgba(255,99,132,1)',
-                    borderWidth: 1
-                },{
-                    label: 'TV',
-                    data: [(0/4)*100],
-                    backgroundColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                },{
-                    label: 'Referral',
-                    data: [(1/4)*100],
-                    backgroundColor: 'rgba(255, 206, 86, 1)',
-                    borderWidth: 1
-                },{
-                    label: 'Google',
-                    data: [(1/4)*100],
-                    backgroundColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                },{
-                    label: 'Other (please specify)',
-                    data: [(0/4)*100],
-                    backgroundColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }
-            ]
-        };
-
-        const graphData = {
-            labels: ['Online Ads', 'TV', 'Referral', 'Google', 'Other (please specify)'],
-            datasets: [{
-                data: [(2/4)*100, (0/4)*100, (1/4)*100, (1/4)*100, (0/4)*100],
-                backgroundColor: 'rgba(255,255,255,0)',
-                borderColor: 'rgba(255,99,132,1)',
-                borderWidth: 1,
-                lineTension: 0,
-                pointBorderWidth: 5
-            }]
+            datasets: this.state.stackedData
         };
         
         const graph = (
@@ -224,6 +233,11 @@ export default class Response extends Component {
                                     scaleLabel: {
                                         display: true,
                                         labelString: "Percentage"
+                                    }
+                                }],
+                                yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
                                     }
                                 }]
                             }
@@ -250,6 +264,11 @@ export default class Response extends Component {
                                         display: true,
                                         labelString: "Percentage"
                                     }
+                                }],
+                                xAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    }
                                 }]
                             }
                         }}
@@ -274,6 +293,9 @@ export default class Response extends Component {
                                     stacked: true
                                 }],
                                 yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     stacked: true
                                 }]
                             }
@@ -289,6 +311,9 @@ export default class Response extends Component {
                             },
                             scales: {
                                 xAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     stacked: true
                                 }],
                                 yAxes: [{
@@ -317,13 +342,30 @@ export default class Response extends Component {
                 </When>
                 <When condition = {this.state.chart == 'Line Graph'}>
                     <Line
-                        data={graphData}
+                        data={{
+                            labels: this.state.answer,
+                            datasets: [{
+                                data: this.state.answerCount,
+                                backgroundColor: 'rgba(255,99,132,0)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 3,
+                                lineTension: 0,
+                                borderJoinStyle: 'round',
+                                pointBorderWidth: 1,
+                                pointRadius: 4,
+                                pointHoverBorderWidth: 10,
+                                pointHoverRadius: 2
+                            }]
+                        }}
                         options={{
                             legend: {
                                 display: false
                             },
                             scales: {
                                 yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     ticks: {
                                         min: 0,
                                         max: 100,
@@ -342,13 +384,30 @@ export default class Response extends Component {
                 </When>
                 <When condition = {this.state.chart == 'Area Graph'}>
                     <Line
-                        data={graphData}
+                        data={{
+                            labels: this.state.answer,
+                            datasets: [{
+                                data: this.state.answerCount,
+                                backgroundColor: 'rgba(255,99,132,0.25)',
+                                borderColor: 'rgba(255,99,132,1)',
+                                borderWidth: 3,
+                                lineTension: 0.25,
+                                borderJoinStyle: 'round',
+                                pointBorderWidth: 1,
+                                pointRadius: 4,
+                                pointHoverBorderWidth: 10,
+                                pointHoverRadius: 2
+                            }]
+                        }}
                         options={{
                             legend: {
                                 display: false
                             },
                             scales: {
                                 yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     ticks: {
                                         min: 0,
                                         max: 100,
@@ -368,9 +427,212 @@ export default class Response extends Component {
             </Choose>
         );
 
-        const rowContent = this.state.dataTable.map(list =>
-            <tr>
-            </tr>
+        const tableData = (
+            <Choose>
+                <When condition = {this.state.questionType == 'Checkbox' || this.state.questionType == 'Multiple Choice' || this.state.questionType == 'Dropdown' || this.state.questionType == 'Star'}>
+                    <div className="row">
+                        <div className="col answers-part">
+                            <table className="response-table-answers">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span>ANSWER CHOICES</span>
+                                            <span className="float-right"><FontAwesomeIcon icon={faCaretDown} /></span>
+                                        </th>
+                                        <th>
+                                            <span>RESPONSES</span>
+                                            <span className="float-right"><FontAwesomeIcon icon={faCaretDown} /></span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {this.state.dataTable.map((list, index) =>
+                                        <tr key={index}>
+                                            <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;{list.answer}</td>
+                                            <td><span>{list.answerPercentage}%</span><span className="float-right">{list.answerCount}&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+                                        </tr>
+                                    )}
+                                    <tr>
+                                        <th colSpan="2">Total Respondents: {this.state.responseCount}</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </When>
+                <Otherwise>
+                    <div className="answers-part-2">
+                        {this.state.answer.map((list, index) =>
+                        <div className="ind-answers">
+                            <div className="answers-title">
+                                <span>{list.answer}</span>
+                            </div>
+                            <div className="yellow-div"></div>
+                            <div className="answers-created">
+                                <span>{list.created_at}</span>
+                            </div>
+                        </div>
+                        )}
+                    </div>
+                </Otherwise>
+            </Choose>
+        );
+
+        const cardData = (
+            <Choose>
+                <When condition = {this.state.questionType == 'Checkbox' || this.state.questionType == 'Multiple Choice' || this.state.questionType == 'Dropdown' || this.state.questionType == 'Star'}>
+                    <div className="row">
+                        <div className="col graph-part">
+                            {graph}
+                        </div>
+                    </div>
+                </When>
+            </Choose>
+        );
+
+        const cardHeaderElement = (
+            <Choose>
+                <When condition = {this.state.activeHeader == 'ct'}>
+                    <div className={this.state.display}>
+                        <div className="header-card">
+                            <div className="row">
+                                <div className="col">
+                                    <div className="d-flex justify-content-start">
+                                        <div className="customize-nav-item cs-active" data-value="ct" onClick={this.cardHeaderChange}>Chart Type</div>
+                                        <div className="customize-nav-item" data-value="do" onClick={this.cardHeaderChange}>Display Options</div>
+                                        <div className="customize-nav-item" data-value="c" onClick={this.cardHeaderChange}>Colors</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <div className="chart-type">
+                                    <div className="d-flex justify-content-between">
+                                        <div className="select-tag">
+                                            <select value={this.state.selectChart} onChange={this.selectValue} disabled={this.state.questionType == 'Multiple Choice' ? false : this.state.questionType == 'Checkbox' ? false : this.state.questionType == 'Dropdown' ? false : this.state.questionType == 'Star' ? false : true}>
+                                                <option value="Horizontal Bar">Horizontal Bar</option>
+                                                <option value="Vertical Bar">Vertical Bar</option>
+                                                <option value="Stacked Horizontal Bar">Stacked Horizontal Bar</option>
+                                                <option value="Stacked Vertical Bar">Stacked Vertical Bar</option>
+                                                <option value="Pie Chart">Pie Chart</option>
+                                                <option value="Donut Chart">Donut Chart</option>
+                                                <option value="Line Graph">Line Graph</option>
+                                                <option value="Area Graph">Area Graph</option>
+                                            </select>
+                                        </div>
+                                        <div className="buttons-save-cancel text-right">
+                                            <button type="button" className="charttype-save" data-value="chartType" onClick={this.saveCustomize}>Save</button>
+                                            <button type="button" className="charttype-cancel" data-value="chartType" onClick={this.cancelCustomize}>Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </When>
+                <When condition = {this.state.activeHeader == 'do'}>
+                    <div className={this.state.display}>
+                        <div className="header-card">
+                            <div className="row">
+                                <div className="col">
+                                    <div className="d-flex justify-content-start">
+                                        <div className="customize-nav-item" data-value="ct" onClick={this.cardHeaderChange}>Chart Type</div>
+                                        <div className="customize-nav-item cs-active" data-value="do" onClick={this.cardHeaderChange}>Display Options</div>
+                                        <div className="customize-nav-item" data-value="o" onClick={this.cardHeaderChange}>Colors</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <div className="chart-type">
+                                    <div className="do-header">
+                                        <span>Show</span>
+                                    </div>
+                                    <div className="display-options">
+                                        <div className="row">
+                                            <div className="col">
+                                                <label className="Chart">
+                                                    <input type="checkbox" name="Chart" data-value="isCheckedC" checked={this.state.isCheckedC} onChange={this.handleCheckChange}/>
+                                                    &nbsp;&nbsp;Chart
+                                                </label>
+                                            </div>
+                                            <div className="col">
+                                                <label className="DataInChart">
+                                                    <input type="checkbox" name="DataInChart" data-value="isCheckedDC" checked={this.state.isCheckedDC} onChange={this.handleCheckChange}/>
+                                                    &nbsp;&nbsp;Data in Chart
+                                                </label>
+                                            </div>
+                                            <div className="col">
+                                                <label className="Z-RAnswerChoices">
+                                                    <input type="checkbox" name="Z-RAnswerChoices" data-value="isCheckedZRAC" checked={this.state.isCheckedZRAC} onChange={this.handleCheckChange}/>
+                                                    &nbsp;&nbsp;Zero-Response Answer Choices
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <label className="BasicStatistics">
+                                                    <input type="checkbox" name="BasicStatistics" data-value="isCheckedBS" checked={this.state.isCheckedBS} onChange={this.handleCheckChange}/>
+                                                    &nbsp;&nbsp;Basic Statistics
+                                                </label>
+                                            </div>
+                                            <div className="col">
+                                                <label className="StatisticalSignificance">
+                                                    <input type="checkbox" name="StatisticalSignificance" data-value="isCheckedSS" checked={this.state.isCheckedSS} onChange={this.handleCheckChange}/>
+                                                    &nbsp;&nbsp;Statistical Significance
+                                                </label>
+                                            </div>
+                                            <div className="col"></div>
+                                        </div>
+                                    </div>
+                                    <div className="buttons-save-cancel">
+                                        <button type="button" className="charttype-save" data-value="displayOptions" onClick={this.saveCustomize}>Save</button>
+                                        <button type="button" className="charttype-cancel" data-value="displayOptions" onClick={this.cancelCustomize}>Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </When>
+                <Otherwise>
+                    <div className={this.state.display}>
+                        <div className="header-card">
+                            <div className="row">
+                                <div className="col">
+                                    <div className="d-flex justify-content-start">
+                                        <div className="customize-nav-item" data-value="ct" onClick={this.cardHeaderChange}>Chart Type</div>
+                                        <div className="customize-nav-item" data-value="do" onClick={this.cardHeaderChange}>Display Options</div>
+                                        <div className="customize-nav-item cs-active" data-value="o" onClick={this.cardHeaderChange}>Colors</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <div className="chart-type">
+                                    <div className="d-flex justify-content-between">
+                                        <div className="colors-nav">
+                                            {this.state.bgColorChart.map((list, index) =>
+                                                <div key={index}>
+                                                    <div className="color-div" style={{backgroundColor: this.state.bgColorChart[index]}}>
+                                                        <img src={this.state.ddColorIcon} />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="buttons-save-cancel text-right">
+                                            <button type="button" className="charttype-save" data-value="colors" onClick={this.saveCustomize}>Save</button>
+                                            <button type="button" className="charttype-cancel" data-value="colors" onClick={this.cancelCustomize}>Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Otherwise>
+            </Choose>
         );
 
 		return(
@@ -387,9 +649,9 @@ export default class Response extends Component {
                             <div className="col">
                                 <div className="d-flex justify-content-start">
                                     <div className="response-nav-item" onClick={this.backResponse}><img src={this.state.backIcon} onClick={this.backResponse} />&nbsp;&nbsp;&nbsp;Back</div>
-                                    <div className="response-nav-item qs-active">Question Summaries</div>
-                                    <div className="response-nav-item">Data Trends</div>
-                                    <div className="response-nav-item">Individual Responses</div>
+                                    <div className="response-nav-item qs-active" id="question_summaries" onClick={this.responseNav}>Question Summaries</div>
+                                    <div className="response-nav-item" id="data_trends" onClick={this.responseNav}>Data Trends</div>
+                                    <div className="response-nav-item" id="individual_responses" onClick={this.responseNav}>Individual Responses</div>
                                 </div>
                             </div>
                         </div>
@@ -417,43 +679,7 @@ export default class Response extends Component {
                                 </div>
                             </div>
                             <div className="response-qs-card">
-                                <div className={this.state.display}>
-                                    <div className="header-card">
-                                        <div className="row">
-                                            <div className="col">
-                                                <div className="d-flex justify-content-start">
-                                                    <div className="customize-nav-item cs-active">Chart Type</div>
-                                                    <div className="customize-nav-item">Display Options</div>
-                                                    <div className="customize-nav-item">Colors</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col">
-                                            <div className="chart-type">
-                                                <div className="d-flex justify-content-between">
-                                                    <div className="select-tag">
-                                                        <select value={this.state.selectChart} onChange={this.selectValue}>
-                                                            <option value="Horizontal Bar">Horizontal Bar</option>
-                                                            <option value="Vertical Bar">Vertical Bar</option>
-                                                            <option value="Stacked Horizontal Bar">Stacked Horizontal Bar</option>
-                                                            <option value="Stacked Vertical Bar">Stacked Vertical Bar</option>
-                                                            <option value="Pie Chart">Pie Chart</option>
-                                                            <option value="Donut Chart">Donut Chart</option>
-                                                            <option value="Line Graph">Line Graph</option>
-                                                            <option value="Area Graph">Area Graph</option>
-                                                        </select>
-                                                    </div>
-                                                    <div className="buttons-save-cancel text-right">
-                                                        <button type="button" className="charttype-save" onClick={this.saveCustomize}>Save</button>
-                                                        <button type="button" className="charttype-cancel" onClick={this.cancelCustomize}>Cancel</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                {cardHeaderElement}
                                 <div className="response-qs-card-content">
                                     <div className="row">
                                         <div className="col question-count">
@@ -472,57 +698,12 @@ export default class Response extends Component {
                                     </div>
                                     <div className="row">
                                         <div className="col question-title">
-                                            <span>{this.state.question}</span>
+                                            <span>{this.state.question}</span><br/>
+                                            <span className="question-type">({this.state.questionType})</span>
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col graph-part">
-                                            {graph}
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col answers-part">
-                                            <table className="response-table-answers">
-                                                <thead>
-                                                    <tr>
-                                                        <th>
-                                                            <span>ANSWER CHOICES</span>
-                                                            <span className="float-right"><FontAwesomeIcon icon={faCaretDown} /></span>
-                                                        </th>
-                                                        <th>
-                                                            <span>RESPONSES</span>
-                                                            <span className="float-right"><FontAwesomeIcon icon={faCaretDown} /></span>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Online Ads</td>
-                                                        <td><span>50.00%</span><span className="float-right">2&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;TV</td>
-                                                        <td><span>0.00%</span><span className="float-right">0&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Referral</td>
-                                                        <td><span>25.00%</span><span className="float-right">1&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Google</td>
-                                                        <td><span>25.00%</span><span className="float-right">1&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><FontAwesomeIcon icon={faCaretDown} />&nbsp;&nbsp;&nbsp;&nbsp;Others(Please specify)</td>
-                                                        <td><span>0.00%</span><span className="float-right">0&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th colSpan="2">Total Respondents: 4</th>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                    {cardData}
+                                    {tableData}
                                 </div>
                             </div>
                             <div>&nbsp;</div>

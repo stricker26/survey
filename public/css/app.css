@@ -10782,6 +10782,16 @@ footer .container p {
   padding-left: 15px;
 }
 
+footer .container .footer-sma-icons {
+  margin-top: 1rem;
+}
+
+footer .container .footer-sma-icons img {
+  width: 40px;
+  height: auto;
+  margin-left: 20px;
+}
+
 input,
 input:focus,
 input:active {
@@ -11676,6 +11686,10 @@ ul.startSurvey-page {
   background-color: #efefef;
 }
 
+.response-section .container {
+  max-width: 80%;
+}
+
 .response-section .response-body {
   padding: 50px 0;
 }
@@ -11853,6 +11867,23 @@ ul.startSurvey-page {
   padding: 40px 40px;
 }
 
+.response-qs-section .response-qs-body .response-qs-card .chart-type .do-header {
+  font-size: 1.2rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .colors-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .colors-nav .color-div {
+  margin-right: 10px;
+  display: inline-block;
+}
+
 .response-qs-section .response-qs-body .response-qs-card .chart-type .select-tag {
   width: 50%;
 }
@@ -11860,6 +11891,14 @@ ul.startSurvey-page {
 .response-qs-section .response-qs-body .response-qs-card .chart-type .select-tag select {
   padding: 5px 10px;
   width: 100%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .display-options {
+  padding: 20px 0px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .chart-type .display-options label {
+  font-size: 1rem;
 }
 
 .response-qs-section .response-qs-body .response-qs-card .chart-type .buttons-save-cancel {
@@ -11900,6 +11939,11 @@ ul.startSurvey-page {
 
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-title {
   font-size: 1.1rem;
+  line-height: 1.1rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-title .question-type {
+  font-size: 0.8rem;
 }
 
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions {
@@ -11951,7 +11995,7 @@ ul.startSurvey-page {
   width: 100%;
   border-spacing: 5px 0;
   border-collapse: separate;
-  font-size: 0.7rem;
+  font-size: 1rem;
 }
 
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers th {
@@ -11959,8 +12003,397 @@ ul.startSurvey-page {
   background-color: #edeeee;
 }
 
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers td:first-child {
+  width: 70%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers td:nth-child(2) {
+  width: 30%;
+}
+
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers td {
   border-bottom: 3px solid #edeeee;
   padding: 2px 10px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 {
+  padding: 30px 20px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers {
+  border-bottom: 1px solid #a7a7a7;
+  border-top: 1px solid #a7a7a7;
+  -webkit-transition: 0.2s all;
+  transition: 0.2s all;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers:hover {
+  background-color: #efefef;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+  border: 0;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 23px 0px rgba(0, 0, 0, 0.75);
+          box-shadow: 0px 0px 23px 0px rgba(0, 0, 0, 0.75);
+  padding: 0px 30px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers .answers-title {
+  padding-top: 40px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers .answers-title span {
+  font-size: 1rem;
+  line-height: 1rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers .yellow-div {
+  width: 130px;
+  height: 0.75px;
+  border: 1px solid #f89938;
+  margin: 15px 0px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers .answers-created {
+  padding-bottom: 40px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers .answers-created span {
+  font-size: 0.8rem;
+}
+
+.response-ir-section {
+  font-family: "Nunito", sans-serif;
+  background-color: #efefef;
+}
+
+.response-ir-section .response-ir-header {
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.response-ir-section .response-ir-header .response-nav-item {
+  margin: 0px 30px;
+  line-height: 3rem;
+}
+
+.response-ir-section .response-ir-header .response-nav-item:hover {
+  cursor: pointer;
+}
+
+.response-ir-section .response-ir-header .response-nav-item img {
+  height: 28px;
+  width: auto;
+}
+
+.response-ir-section .response-ir-header .ir-active {
+  border-bottom: 3px solid #f89938;
+}
+
+.response-ir-section .response-ir-body .container {
+  max-width: 80%;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-header {
+  padding: 35px 0;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-header h3 {
+  margin-bottom: 0;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-header span {
+  font-size: 0.8rem;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard {
+  font-size: 0.8rem;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .respondent-dropdown .respondentDdownBtn {
+  background-color: #808080;
+  padding: 5px 10px;
+  border: 0;
+  color: #fff;
+  margin-right: 10px;
+  text-align: center;
+  width: 200px;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .respondent-dropdown .respondentDdownBtn:hover {
+  cursor: pointer;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .respondent-dropdown .dropdown-menu {
+  min-width: 200px;
+  width: 200px;
+  max-height: 142px;
+  overflow-x: auto;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .respondent-dropdown .dropdown-menu span:hover {
+  cursor: pointer;
+  background-color: #3490dc;
+  color: #fff;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .backnext-btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .backnext-btn button {
+  background-color: #808080;
+  padding: 5px 10px;
+  border: 0;
+  color: #fff;
+  margin-right: 2px;
+  text-align: center;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .backnext-btn .blur {
+  opacity: 0.4;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .backnext-btn .blur:hover {
+  cursor: default;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .backnext-btn .show {
+  opacity: 1;
+}
+
+.response-ir-section .response-ir-body .response-ir-body-beforecard .backnext-btn .show:hover {
+  cursor: pointer;
+}
+
+.response-ir-section .response-ir-body .page-count {
+  margin-top: 50px;
+}
+
+.response-ir-section .response-ir-body .response-ir-card {
+  background-color: #ffffff;
+  border: 1px solid #a7a7a7;
+  padding: 20px 40px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .completed-survey {
+  margin-top: 10px;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .completed-survey span {
+  background-color: #28b449;
+  color: #fff;
+  padding: 10px 50px;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 0.8rem;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .actions .delete-btn {
+  margin-right: 5px;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .actions button {
+  background-color: #808080;
+  padding: 5px 30px;
+  border: 0;
+  color: #fff;
+  text-align: center;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .actions button:hover {
+  cursor: pointer;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .cardBody {
+  margin-top: 40px;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .cardBody .row-content {
+  line-height: 2.5rem;
+}
+
+.response-ir-section .response-ir-body .response-ir-card .cardBody .row-content .col-title {
+  font-weight: bold;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card {
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard {
+  background-color: #ffffff;
+  border: 1px solid #a7a7a7;
+  border-bottom: 0;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard .divider {
+  height: 0px;
+  border: 0.5px solid #a7a7a7;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard .card-content {
+  padding: 20px 40px;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard .card-content .question-count {
+  font-size: 0.8em;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard .card-content .question-title {
+  font-size: 1.1rem;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard .card-content .yellow-div {
+  width: 100px;
+  height: 0.75px;
+  border: 1px solid #f89938;
+  margin: 10px 0px;
+}
+
+.response-ir-section .response-ir-body .response-ir-question-card .response-ir-qcard .card-content .question-answer {
+  font-size: 0.8rem;
+}
+
+.response-dt-section {
+  font-family: "Nunito", sans-serif;
+  background-color: #efefef;
+}
+
+.response-dt-section .response-dt-header {
+  border-bottom: 1px solid #a7a7a7;
+}
+
+.response-dt-section .response-dt-header .response-nav-item {
+  margin: 0px 30px;
+  line-height: 3rem;
+}
+
+.response-dt-section .response-dt-header .response-nav-item:hover {
+  cursor: pointer;
+}
+
+.response-dt-section .response-dt-header .response-nav-item img {
+  height: 28px;
+  width: auto;
+}
+
+.response-dt-section .response-dt-header .dt-active {
+  border-bottom: 3px solid #f89938;
+}
+
+.response-dt-section .response-dt-body .container {
+  max-width: 80%;
+}
+
+.response-dt-section .response-dt-body .response-dt-body-header {
+  padding: 35px 0;
+}
+
+.response-dt-section .response-dt-body .response-dt-body-header h3 {
+  margin-bottom: 0;
+}
+
+.response-dt-section .response-dt-body .response-dt-body-header span {
+  font-size: 0.8rem;
+}
+
+.response-dt-section .response-dt-body .page-count {
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card {
+  background-color: #ffffff;
+  border: 1px solid #a7a7a7;
+  padding: 20px 40px;
+  margin-bottom: 10px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons {
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .chartTypeBtn,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .trendBtn,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .zoomBtn {
+  background-color: #808080;
+  padding: 5px 10px;
+  border: 0;
+  color: #fff;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  width: 150px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .chartTypeBtn:hover,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .trendBtn:hover,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .zoomBtn:hover {
+  cursor: pointer;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .chartTypeBtn:focus,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .trendBtn:focus,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .zoomBtn:focus {
+  outline: 0;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .dropdown-menu {
+  min-width: 150px;
+  width: 150px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .card-header-buttons .dropdown-menu span:hover {
+  cursor: pointer;
+  background-color: #3490dc;
+  color: #fff;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .question-count span {
+  font-size: 0.8rem;
+  color: #558ed5;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .question-title span {
+  font-size: 1rem;
+  line-height: 2.3rem;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .questions-data {
+  font-size: 0.7rem;
+  color: #6b787f;
+  margin-bottom: 20px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .questions-data .question-answer-count,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .questions-data .question-skipped-count,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .questions-data .question-first-date,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .questions-data .question-zoom-date {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-header {
+  margin-bottom: 20px;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-header span {
+  font-size: 1.3rem;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-graph {
+  height: auto;
+  width: auto;
+  margin: 0px 80px;
 }
 
