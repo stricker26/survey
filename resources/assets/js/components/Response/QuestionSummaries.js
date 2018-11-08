@@ -19,6 +19,7 @@ export default class Response extends Component {
         super();
         this.state = {
             backIcon: './../../../images/back-icon.png',
+            ddColorIcon: './../../../images/dropdown-color-icon.png',
             token: sessionStorage.getItem('token'),
             dataTable: [],
             id: '',
@@ -74,7 +75,6 @@ export default class Response extends Component {
                 bgColorChart: response.data.color,
                 stackedData: response.data.data.stackedData
             });
-            console.log(response.data.data.stackedData);
         }).catch(error => {
             console.log(error);
         });
@@ -234,6 +234,11 @@ export default class Response extends Component {
                                         display: true,
                                         labelString: "Percentage"
                                     }
+                                }],
+                                yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    }
                                 }]
                             }
                         }}
@@ -259,6 +264,11 @@ export default class Response extends Component {
                                         display: true,
                                         labelString: "Percentage"
                                     }
+                                }],
+                                xAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    }
                                 }]
                             }
                         }}
@@ -283,6 +293,9 @@ export default class Response extends Component {
                                     stacked: true
                                 }],
                                 yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     stacked: true
                                 }]
                             }
@@ -298,6 +311,9 @@ export default class Response extends Component {
                             },
                             scales: {
                                 xAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     stacked: true
                                 }],
                                 yAxes: [{
@@ -347,6 +363,9 @@ export default class Response extends Component {
                             },
                             scales: {
                                 yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     ticks: {
                                         min: 0,
                                         max: 100,
@@ -386,6 +405,9 @@ export default class Response extends Component {
                             },
                             scales: {
                                 yAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     ticks: {
                                         min: 0,
                                         max: 100,
@@ -442,7 +464,7 @@ export default class Response extends Component {
                     <div className="answers-part-2">
                         <div className="start-line"></div>
                         {this.state.answer.map((list, index) =>
-                        <div>
+                        <div className="ind-answers">
                             <div className="answers-title">
                                 <span>{list.answer}</span>
                             </div>
@@ -592,17 +614,14 @@ export default class Response extends Component {
                             <div className="col">
                                 <div className="chart-type">
                                     <div className="d-flex justify-content-between">
-                                        <div className="select-tag">
-                                            <select value={this.state.selectChart} onChange={this.selectValue}>
-                                                <option value="Horizontal Bar">Horizontal Bar</option>
-                                                <option value="Vertical Bar">Vertical Bar</option>
-                                                <option value="Stacked Horizontal Bar">Stacked Horizontal Bar</option>
-                                                <option value="Stacked Vertical Bar">Stacked Vertical Bar</option>
-                                                <option value="Pie Chart">Pie Chart</option>
-                                                <option value="Donut Chart">Donut Chart</option>
-                                                <option value="Line Graph">Line Graph</option>
-                                                <option value="Area Graph">Area Graph</option>
-                                            </select>
+                                        <div className="colors-nav">
+                                            {this.state.bgColorChart.map((list, index) =>
+                                                <div key={index}>
+                                                    <div className="color-div" style={{backgroundColor: this.state.bgColorChart[index]}}>
+                                                        <img src={this.state.ddColorIcon} />
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="buttons-save-cancel text-right">
                                             <button type="button" className="charttype-save" data-value="colors" onClick={this.saveCustomize}>Save</button>

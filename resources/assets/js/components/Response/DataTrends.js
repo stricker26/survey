@@ -125,31 +125,6 @@ export default class Response extends Component {
     }
     
 	render() {
-        var options = {
-            legend:{
-                display:false
-            },
-            responsive: true,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min: 0, // it is for ignoring negative step.
-                        beginAtZero: true,
-                        callback: function(value, index, values) {
-                            if (Math.floor(value) === value) {
-                                return value;
-                            }
-                        }
-                    }
-                }],
-                xAxes: [{
-                    ticks: {
-                        autoSkip: false
-                    }
-                }]
-            }
-        };
-
         var data = {
             labels: this.state.labelsFirstCard,
             datasets: [{
@@ -183,6 +158,9 @@ export default class Response extends Component {
                                     }
                                 }],
                                 xAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
                                     categoryPercentage: 0.95,
                                     barPercentage: 0.95,
                                     ticks: {
@@ -220,7 +198,33 @@ export default class Response extends Component {
                                 pointHoverRadius: 2
                             }]
                         }}
-                        options={options}
+                        options={{
+                            legend:{
+                                display:false
+                            },
+                            responsive: true,
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        min: 0, // it is for ignoring negative step.
+                                        beginAtZero: true,
+                                        callback: function(value, index, values) {
+                                            if (Math.floor(value) === value) {
+                                                return value;
+                                            }
+                                        }
+                                    }
+                                }],
+                                xAxes: [{
+                                    gridLines: {
+                                        color: "rgba(0, 0, 0, 0)",
+                                    },
+                                    ticks: {
+                                        autoSkip: false
+                                    }
+                                }]
+                            }
+                        }}
                     />
                 </When>
             </Choose>
