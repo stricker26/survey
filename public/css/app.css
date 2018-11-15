@@ -10708,13 +10708,28 @@ section .container-fluid .content-inner .content-inner-body .branching .row .col
   font-size: 2em;
 }
 
-section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-11 {
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-8 {
   padding: 1.5rem;
 }
 
-section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-11 label {
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-8 label {
   margin-bottom: 0;
   font-size: 1.3em;
+  line-height: 2.5em;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-3 {
+  padding: 1.5rem;
+  text-align: right;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-3 ul {
+  padding: 0;
+}
+
+section .container-fluid .content-inner .content-inner-body .branching .row .col-lg-3 ul li {
+  display: inline-block;
+  margin: 0 .2rem;
   line-height: 2.5em;
 }
 
@@ -11035,6 +11050,32 @@ Modal
 
 .modal .modal-dialog .success {
   background-color: #28a745;
+}
+
+.modal .modal-dialog.logic-modal {
+  max-width: 1000px;
+}
+
+.modal .modal-dialog.logic-modal .modal-content .modal-body .logic-header {
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+  padding: .5rem 0;
+}
+
+.modal .modal-dialog.logic-modal .modal-content .modal-body .logic-body {
+  padding: 1rem 0 0 0;
+}
+
+.modal .modal-dialog.logic-modal .modal-content .modal-body .logic-body .row {
+  margin-bottom: 1rem;
+}
+
+.modal .modal-dialog.logic-modal .modal-content .modal-body .logic-body .row .col-md-7 select {
+  width: 100%;
+}
+
+.modal .header-primary {
+  background-color: #558ed5;
 }
 
 /************************************************

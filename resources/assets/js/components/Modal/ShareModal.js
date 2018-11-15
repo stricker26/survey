@@ -31,7 +31,7 @@ export default class ShareModal extends Component {
 		return (
 			<React.Fragment>
 				<Modal isOpen={isOpen}>
-					<ModalHeader>Share Survey</ModalHeader>
+					<ModalHeader className="header-primary">Share Survey</ModalHeader>
 					<ModalBody>
 						<div className="input-group mb-3">
 						  	<div className="input-group-prepend">

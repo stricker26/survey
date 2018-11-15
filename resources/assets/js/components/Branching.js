@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
+import LogicModal from './Modal/LogicModal';
 
 export default class Branching extends Component {
     constructor() {
@@ -16,9 +17,9 @@ export default class Branching extends Component {
             questions: [],
             surveysTitle: '',
             surveyID: '',
-            tools: [
-                { id: '', active: false }
-            ]
+            questionID: '',
+            answers: [],
+            logicModal: false
         }
     }
 
@@ -28,10 +29,21 @@ export default class Branching extends Component {
         });
     }
 
-    hoverHandler = (e) => () => {
-        //console.log(e);
+    openLogicModal = (e) => () => {
+        axios.get('/api/webmaster/answers/' + e).then(response => {
+             this.setState({
+                answers: response.data.answers,
+                questionID: e,
+                logicModal: !this.state.logicModal
+            });
+        }).catch(errors => {
+            console.log(errors);
+        });
+    }
+
+    toggleLogicModal = () => {
         this.setState({
-             tools: this.state.tools.filter((s, sidx) => e == sidx)
+            logicModal: !this.state.logicModal
         });
     }
 
@@ -47,17 +59,26 @@ export default class Branching extends Component {
             });
         }).catch(errors => {
             console.log(errors);
-        })
+        });
 
     }
 
     render() {
         let iterate = 1;
+        const isViewModal = this.state.logicModal;
+        let viewModal;
+        if(isViewModal === true) {
+            viewModal = <LogicModal isOpen={this.state.logicModal} closeModal={this.toggleLogicModal} questionList={this.state.questions} answerList={this.state.answers} />
+        } else {
+            viewModal = '';
+        }
+
         return (
             <React.Fragment>
                 <header>
                     <div className="container">
                         <Header />
+                        {viewModal}
                     </div>
                 </header>
                 <section>
@@ -112,18 +133,26 @@ export default class Branching extends Component {
                                     <div className="col">
                                         <div className="branching">
                                             {this.state.questions.map(question => 
-                                                <div className="row" key={question.id} onMouseEnter={this.hoverHandler(question.id)} onMouseLeave={this.hoverHandler(question.id)}>
+                                                <div className="row" key={question.id}>
                                                     <div className="col-lg-1">
                                                         <label className="question-label">Q{iterate++}</label>
                                                     </div>
-                                                    <div className="col-lg-9">
+                                                    <div className="col-lg-8">
                                                         <label>{question.q_title.replace(/<\/?[^>]+(>|$)/g, "")}</label>
                                                     </div>
-                                                    <div className="col-lg-2">
+                                                    <div className="col-lg-3">
                                                         <ul>
-                                                            <li>Edit</li>
-                                                            <li>Logic</li>
-                                                            <li>Delete</li>
+                                                            <li><button type="button" className="btn btn-primary">Edit</button></li>
+                                                            {
+                                                                question.q_type == 'Multiple Choice'
+                                                                    ? <li><button type="button" className="btn btn-warning" onClick = {this.openLogicModal(question.id)}>Logic</button></li>
+                                                                    : ''
+                                                                ||  
+                                                                question.q_type == 'Checkbox'
+                                                                    ? <li><button type="button" className="btn btn-warning" onClick = {this.openLogicModal(question.id)}>Logic</button></li>
+                                                                    : ''
+                                                            }
+                                                            <li><button type="button" className="btn btn-secondary">Delete</button></li>
                                                         </ul>
                                                     </div>
                                                 </div>

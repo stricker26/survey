@@ -216,6 +216,32 @@ Modal
 			background-color: #28a745;
 		}
 	}
+	.modal-dialog.logic-modal {
+		max-width: 1000px;
+		.modal-content {
+			.modal-body {
+				.logic-header {
+					border-top: 1px solid #e9ecef;
+					border-bottom: 1px solid #e9ecef;
+					padding: .5rem 0;
+				}
+				.logic-body {
+					padding: 1rem 0 0 0;
+					.row {
+						margin-bottom: 1rem;
+						.col-md-7  {
+							select {
+								width: 100%;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.header-primary {
+		background-color: #558ed5;
+	}
 }
 
 /************************************************
