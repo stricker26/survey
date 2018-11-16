@@ -514,6 +514,14 @@
 			margin-top: 50px;
 			margin-bottom: 20px;
 		}
+		.card-body-question-prev,
+		.card-body-question-next {
+			font-size: 1rem;
+			padding-bottom: 5px;
+			&:hover {
+				cursor: pointer;
+			}
+		}
 		.response-dt-card {
 			background-color: #ffffff;
 			border: 1px solid #a7a7a7;
@@ -560,6 +568,7 @@
 				.question-title {
 					span {
 						font-size: 1rem;
+						display: block;
 						line-height: 2.3rem;
 					}
 				}
@@ -578,14 +587,20 @@
 			}
 			.dt-card-body {
 				.card-body-header {
-					margin-bottom: 20px;
 					span {
 						font-size: 1.3rem;
 					}
 				}
+				.card-body-graph-prev,
+				.card-body-graph-next {
+					padding-bottom: 3px;
+					font-size: 1rem;
+					&:hover {
+						cursor: pointer;
+						color: #f89938;
+					}
+				}
 				.card-body-graph {
-					height: auto;
-					width: auto;
 					margin: 0px 80px;
 				}
 			}

@@ -12311,6 +12311,17 @@ ul.startSurvey-page {
   margin-bottom: 20px;
 }
 
+.response-dt-section .response-dt-body .card-body-question-prev,
+.response-dt-section .response-dt-body .card-body-question-next {
+  font-size: 1rem;
+  padding-bottom: 5px;
+}
+
+.response-dt-section .response-dt-body .card-body-question-prev:hover,
+.response-dt-section .response-dt-body .card-body-question-next:hover {
+  cursor: pointer;
+}
+
 .response-dt-section .response-dt-body .response-dt-card {
   background-color: #ffffff;
   border: 1px solid #a7a7a7;
@@ -12366,6 +12377,7 @@ ul.startSurvey-page {
 
 .response-dt-section .response-dt-body .response-dt-card .dt-card-header .question-title span {
   font-size: 1rem;
+  display: block;
   line-height: 2.3rem;
 }
 
@@ -12383,17 +12395,23 @@ ul.startSurvey-page {
   margin-right: 10px;
 }
 
-.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-header {
-  margin-bottom: 20px;
-}
-
 .response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-header span {
   font-size: 1.3rem;
 }
 
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-graph-prev,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-graph-next {
+  padding-bottom: 3px;
+  font-size: 1rem;
+}
+
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-graph-prev:hover,
+.response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-graph-next:hover {
+  cursor: pointer;
+  color: #f89938;
+}
+
 .response-dt-section .response-dt-body .response-dt-card .dt-card-body .card-body-graph {
-  height: auto;
-  width: auto;
   margin: 0px 80px;
 }
 

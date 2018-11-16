@@ -54,7 +54,8 @@ class RespondentsController extends Controller
     				$answer = new Answers;
     				$answer->q_id = $request->get(str_replace("Answer", "Id", $key));
     				$answer->answer = $inputone;
-		    		$answer->respondent_id = $respondent_id;
+                    $answer->respondent_id = $respondent_id;
+		    		$answer->created_at = $date_now;
 		    		$answer->save();
     			}
     		}

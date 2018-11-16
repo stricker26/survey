@@ -30,7 +30,11 @@ export default class Response extends Component {
     }
 
     viewResults = (e) => {
-        this.props.history.push('/dashboard/response/question_summaries/'+ e.target.id);
+        if(e.target.dataset.value != 0) { 
+            this.props.history.push('/dashboard/response/question_summaries/'+ e.target.id);
+        } else {
+            alert('No responses!');
+        }
     }
     
 	render() {
@@ -46,7 +50,7 @@ export default class Response extends Component {
                             <span>{list.respondents_ago}</span>
                             <p>
                                 Responses Since<br/>
-                                {list.respondents_days_ago} days ago
+                                {list.respondents_days_ago + (list.respondents_days_ago >= 1 ? " day ago" : " days ago")}
                             </p>
                         </div>
                         <div className="response-count-today">
@@ -54,8 +58,8 @@ export default class Response extends Component {
                             <p>Respondents Today</p>
                         </div>
                     </div>
-                    <div className="response-card-footer" id={list.survey_id} onClick={this.viewResults}>
-                        <span id={list.survey_id}>View Results</span>
+                    <div className="response-card-footer" data-value={list.respondents_ago} id={list.survey_id} onClick={this.viewResults}>
+                        <span data-value={list.respondents_ago} id={list.survey_id}>View Results</span>
                     </div>
                 </div>
             </div>

@@ -186,6 +186,10 @@ export default class Response extends Component {
     responseNav = (e) => {
         this.props.history.push('/dashboard/response/' + e.target.id + '/' + this.state.id);
     }
+
+    backResponse = (e) => {
+        this.props.history.push('/dashboard/response');
+    }
     
 	render() {
         var respondentsElement = '';
@@ -255,7 +259,7 @@ export default class Response extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h3>{this.state.title}</h3>
-                                        <span>Respondents: 4 out of 4</span>
+                                        <span>Respondents: {this.state.respondentsCount + " out of " + this.state.respondentsCount}</span>
                                     </div>
                                 </div>
                             </div>

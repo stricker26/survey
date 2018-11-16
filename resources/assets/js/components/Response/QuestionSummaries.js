@@ -62,19 +62,23 @@ export default class Response extends Component {
         }
 
         axios.post('/api/response/question_summaries/' + id, form).then(response => {
-            this.setState({
-                title: response.data.title,
-                question: response.data.data.question,
-                answer: response.data.data.answer,
-                answerCount: response.data.data.answerCount,
-                totalCount: response.data.totalCount,
-                dataTable: response.data.rowTable,
-                questionType: response.data.data.questionType,
-                id: id,
-                responseCount: response.data.responseCount,
-                bgColorChart: response.data.color,
-                stackedData: response.data.data.stackedData
-            });
+            if(response.data.error) {
+                this.props.history.push('/dashboard/response');
+            } else {
+                this.setState({
+                    title: response.data.title,
+                    question: response.data.data.question,
+                    answer: response.data.data.answer,
+                    answerCount: response.data.data.answerCount,
+                    totalCount: response.data.totalCount,
+                    dataTable: response.data.rowTable,
+                    questionType: response.data.data.questionType,
+                    id: id,
+                    responseCount: response.data.responseCount,
+                    bgColorChart: response.data.color,
+                    stackedData: response.data.data.stackedData
+                });
+            }
         }).catch(error => {
             console.log(error);
         });
@@ -614,13 +618,22 @@ export default class Response extends Component {
                                 <div className="chart-type">
                                     <div className="d-flex justify-content-between">
                                         <div className="colors-nav">
-                                            {this.state.bgColorChart.map((list, index) =>
-                                                <div key={index}>
-                                                    <div className="color-div" style={{backgroundColor: this.state.bgColorChart[index]}}>
+                                            <Choose>
+                                                <When condition = {this.state.selectChart == 'Line Graph' || this.state.selectChart == 'Area Graph'}>
+                                                    <div className="color-div" style={{backgroundColor: 'rgba(255,99,132,1)'}}>
                                                         <img src={this.state.ddColorIcon} />
                                                     </div>
-                                                </div>
-                                            )}
+                                                </When>
+                                                <Otherwise>
+                                                    {this.state.bgColorChart.map((list, index) =>
+                                                        <div key={index}>
+                                                            <div className="color-div" style={{backgroundColor: this.state.bgColorChart[index]}}>
+                                                                <img src={this.state.ddColorIcon} />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </Otherwise>
+                                            </Choose>
                                         </div>
                                         <div className="buttons-save-cancel text-right">
                                             <button type="button" className="charttype-save" data-value="colors" onClick={this.saveCustomize}>Save</button>
@@ -662,7 +675,7 @@ export default class Response extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h3>{this.state.title}</h3>
-                                        <span>Respondents: 4 out of 4</span>
+                                        <span>Respondents: {this.state.responseCount + " out of " + this.state.responseCount}</span>
                                     </div>
                                 </div>
                             </div>

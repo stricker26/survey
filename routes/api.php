@@ -40,6 +40,8 @@ Route::prefix('response')->group(function() {
 
 	Route::get('data_trends/{id}', 'Api\ResponseController@dataTrendsView');
 	Route::post('data_trends/getTrend/{id}', 'Api\ResponseController@dataTrendsGetTrend');
+	Route::post('data_trends/getTrend2/{id}', 'Api\ResponseController@dataTrendsGetTrend2');
+	Route::post('data_trends/nextGraph/{id}', 'Api\ResponseController@dataTrendsNextGraph');
 
 	Route::get('ir/{id}', 'Api\ResponseController@indResponsesGetAll');
 	Route::post('ir/{id}', 'Api\ResponseController@indResponsesGetid');

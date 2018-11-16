@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom';
 import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { Doughnut } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
@@ -29,15 +31,48 @@ export default class Response extends Component {
             token: sessionStorage.getItem('token'),
             id: '',
             title: '',
+            bgColorsFirstCard: coloR,
+            yMax1: '',
+
+            //first card
+            nextGraph: 'show',
+            prevGraph: 'hidden',
+            lengthGraph: '',
+            countGraph: 1,
+            buttonFirstCardDisplay: 'hidden',
+
             chartType: 'Bar',
-            trendBy: 'Month',
+            trendBy: 'Hour',
+
             labelsFirstCard: '',
             dataFirstCard: '',
-            bgColorsFirstCard: coloR,
+
+            //header buttons
+            zoomData: [],
+            zoomData2: [],
 
             //secondcard
+            nextQuestion: 'show',
+            prevQuestion: 'hidden',
+            lengthQuestion: '',
+            countQuestion: 1,
+            buttonSecondCardDisplay: 'hidden',
+
+            chartType2: 'Bar',
+            trendBy2: 'Hour',
+            
+            labelsSecondCard: '',
+            dataSecondCard: '',
+            nextSecondGraph: 'show',
+            prevSecondGraph: 'hidden',
+            lengthSecondGraph: '',
+            countSecondGraph: 1,
+
             firstResponse: '',
-            question: ''
+            respondentCount: '',
+            question: '',
+            answers: '',
+            lengthAnswer: '',
         }
     }
 
@@ -48,11 +83,57 @@ export default class Response extends Component {
             this.setState({
                 title: response.data.title,
                 id: id,
+
+                //first card
                 labelsFirstCard: response.data.labelsFirstCard,
                 dataFirstCard: response.data.dataFirstCard,
+                zoomData: response.data.zoomData,
+                zoomData2: response.data.zoomData,
+                yMax1: response.data.yMax1,
+                lengthGraph: response.data.lengthCard1,
+
+                //second card
                 firstResponse: response.data.firstResponse,
-                question: response.data.question
+
+                question: response.data.secondCard.question[0],
+                respondentCount: response.data.secondCard.answerCount,
+
+                labelsSecondCard: response.data.secondCard.labelsSecondCard,
+                lengthQuestion: response.data.secondCard.questionCount,
+                lengthAnswer: response.data.secondCard.lengthAnswer,
+                dataSecondCard: response.data.secondCard.dataSecondCard,
+                lengthSecondGraph: response.data.lengthCard1,
             });
+
+            if(response.data.lengthCard1 <= 1) {
+                this.setState({
+                    buttonFirstCardDisplay: 'hidden',
+                    nextGraph: 'hidden',
+                    prevGraph: 'hidden',
+
+                    nextSecondGraph: 'hidden',
+                    prevSecondGraph: 'hidden',
+                    buttonSecondCardDisplayGraph: 'hidden'
+                });
+            } else {
+                this.setState({
+                    buttonFirstCardDisplay: 'show',
+                    buttonSecondCardDisplayGraph: 'show'
+                });
+            }
+
+            if(response.data.secondCard.question.length <= 1) {
+                this.setState({
+                    buttonSecondCardDisplay: 'hidden',
+                    nextQuestion: 'hidden',
+                    prevQuestion: 'hidden'
+
+                });
+            } else {
+                this.setState({
+                    buttonSecondCardDisplay: 'show'
+                });
+            }
         }).catch(error => {
             console.log(error);
         });
@@ -65,59 +146,329 @@ export default class Response extends Component {
     }
 
     trendByBtn = (e) => {
-        function colorPicker() {
-            var r = Math.floor(Math.random() * 255);
-            var g = Math.floor(Math.random() * 255);
-            var b = Math.floor(Math.random() * 255);
-            return "rgb(" + r + "," + g + "," + b + ")";
-        }
-        var coloR = [];
-
-        if(e.target.dataset.value == 'Month') {
-            for(var x = 1; x <= 12; x++) {
-                coloR.push(colorPicker());
+        if(this.state.trendBy != e.target.dataset.value) {
+            function colorPicker() {
+                var r = Math.floor(Math.random() * 255);
+                var g = Math.floor(Math.random() * 255);
+                var b = Math.floor(Math.random() * 255);
+                return "rgb(" + r + "," + g + "," + b + ")";
             }
-            this.setState({
-                trendBy: e.target.dataset.value,
-                bgColorsFirstCard: coloR
-            });
-        } else if(e.target.dataset.value == 'Day') {
-            for(var x = 1; x <= 31; x++) {
-                coloR.push(colorPicker());
-            }
-            this.setState({
-                trendBy: e.target.dataset.value,
-                bgColorsFirstCard: coloR
-            });
-        } else {
-            for(var x = 1; x <= 24; x++) {
-                coloR.push(colorPicker());
+            var coloR = [];
+
+            if(e.target.dataset.value == 'Month') {
+                for(var x = 1; x <= 12; x++) {
+                    coloR.push(colorPicker());
+                }
+                this.setState({
+                    trendBy: e.target.dataset.value
+                });
+            } else if(e.target.dataset.value == 'Day') {
+                for(var x = 1; x <= 31; x++) {
+                    coloR.push(colorPicker());
+                }
+                this.setState({
+                    trendBy: e.target.dataset.value
+                });
+            } else {
+                for(var x = 1; x <= 24; x++) {
+                    coloR.push(colorPicker());
+                }
+
+                this.setState({
+                    trendBy: e.target.dataset.value
+                });
             }
 
-            this.setState({
-                trendBy: e.target.dataset.value,
-                bgColorsFirstCard: coloR
+            const form = {
+                trendOption: e.target.dataset.value
+            }
+
+            axios.post('/api/response/data_trends/getTrend/' + this.state.id, form).then(response => {
+                if(response.data.lengthCard1 <= 1) {
+                    this.setState({
+                        labelsFirstCard: response.data.labelsFirstCard,
+                        dataFirstCard: response.data.dataFirstCard,
+                        zoomData: response.data.zoomData,
+                        lengthGraph: 0,
+                        buttonFirstCardDisplay: 'hidden',
+                        countGraph: 1,
+                        nextGraph: 'hidden',
+                        prevGraph: 'hidden',
+                        yMax1: response.data.yMax
+                    });
+                } else if(response.data.lengthCard1 > 1){
+                    this.setState({
+                        labelsFirstCard: response.data.labelsFirstCard,
+                        dataFirstCard: response.data.dataFirstCard,
+                        zoomData: response.data.zoomData,
+                        lengthGraph: response.data.lengthCard1,
+                        buttonFirstCardDisplay: 'show',
+                        countGraph: 1,
+                        prevGraph: 'hidden',
+                        nextGraph: 'show',
+                        yMax1: response.data.yMax
+                    });
+                }
+            }).catch(error => {
+                console.log(error);
             });
         }
+    }
 
-        const form = {
-            trendOption: e.target.dataset.value
-        }
+    trendByBtn2 = (e) => {
+        if(this.state.trendBy2 != e.target.dataset.value) {
+            function colorPicker() {
+                var r = Math.floor(Math.random() * 255);
+                var g = Math.floor(Math.random() * 255);
+                var b = Math.floor(Math.random() * 255);
+                return "rgb(" + r + "," + g + "," + b + ")";
+            }
+            var coloR = [];
 
-        axios.post('/api/response/data_trends/getTrend/' + this.state.id, form).then(response => {
-            this.setState({
-                labelsFirstCard: response.data.labelsFirstCard,
-                dataFirstCard: response.data.dataFirstCard
+            if(e.target.dataset.value == 'Month') {
+                for(var x = 1; x <= 12; x++) {
+                    coloR.push(colorPicker());
+                }
+                this.setState({
+                    trendBy2: e.target.dataset.value,
+                });
+            } else if(e.target.dataset.value == 'Day') {
+                for(var x = 1; x <= 31; x++) {
+                    coloR.push(colorPicker());
+                }
+                this.setState({
+                    trendBy2: e.target.dataset.value,
+                });
+            } else {
+                for(var x = 1; x <= 24; x++) {
+                    coloR.push(colorPicker());
+                }
+
+                this.setState({
+                    trendBy2: e.target.dataset.value,
+                });
+            }
+
+            const form = {
+                trendOption: e.target.dataset.value,
+                q_id: this.state.question['q_id'],
+            }
+            axios.post('/api/response/data_trends/getTrend2/' + this.state.id, form).then(response => {
+                this.setState({
+                    zoomData2: response.data.zoomData,
+                    labelsSecondCard: response.data.labelsSecondCard,
+                    dataSecondCard: response.data.dataSecondCard,
+                    prevSecondGraph: 'hidden',
+                    countSecondGraph: 1,
+                    // dataFirstCard: response.data.dataFirstCard,
+                    // lengthGraph: response.data.lengthCard1,
+                    // prevGraph: 'hidden',
+                    // yMax1: response.data.yMax
+                });
+
+                if(response.data.lengthCard1 <= 1) {
+                    this.setState({
+                        buttonSecondCardDisplayGraph: 'hidden',
+                        nextSecondGraph: 'hidden',
+                    });
+                } else if(response.data.lengthCard1 > 1){
+                    this.setState({
+                        buttonSecondCardDisplayGraph: 'show',
+                        nextSecondGraph: 'show',
+                    });
+                }
+            }).catch(error => {
+                console.log(error);
             });
-        }).catch(error => {
-            console.log(error);
-        });
+        }
+    }
+
+    nextPrevGraph = (e) => {
+        if(e.target.dataset.value == 'graph') {
+            if(e.target.dataset.name == 'prev') {
+                var newCount = this.state.countGraph - 1;
+            } else if(e.target.dataset.name == 'next') {
+                var newCount = this.state.countGraph + 1;
+            }
+
+            if(newCount == 1) {
+                this.setState({
+                    countGraph: newCount,
+                    prevGraph: 'hidden',
+                    nextGraph: 'show'
+                });
+                var passCount = 1;
+            } else if(newCount == this.state.lengthGraph) {
+                this.setState({
+                    countGraph: newCount,
+                    prevGraph: 'show',
+                    nextGraph: 'hidden'
+                });
+                var passCount = this.state.lengthGraph;
+            } else if(newCount > 1 || newCount < this.state.lengthGraph) {
+                this.setState({
+                    countGraph: newCount,
+                    prevGraph: 'show',
+                    nextGraph: 'show'
+                });
+                var passCount = newCount;
+            } else {
+                var passCount = false;
+            }
+
+            if(passCount) {
+                const form = {
+                    count: newCount,
+                    trend: this.state.trendBy,
+                    type: 'firstGraph'
+                };
+
+                axios.post('/api/response/data_trends/nextGraph/' + this.state.id, form).then(response => {
+                    this.setState({
+                        labelsFirstCard: response.data.labelsFirstCard,
+                        dataFirstCard: response.data.dataFirstCard,
+                    });
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        } else if(e.target.dataset.value == 'question'){
+            if(e.target.dataset.name == 'prev') {
+                var newCount = this.state.countQuestion - 1;
+            } else if(e.target.dataset.name == 'next') {
+                var newCount = this.state.countQuestion + 1;
+            }
+
+            if(newCount == 1) {
+                this.setState({
+                    countQuestion: newCount,
+                    prevQuestion: 'hidden',
+                    nextQuestion: 'show'
+                });
+                var passCount = 1;
+            } else if(newCount == this.state.lengthQuestion) {
+                this.setState({
+                    countQuestion: newCount,
+                    prevQuestion: 'show',
+                    nextQuestion: 'hidden'
+                });
+                var passCount = this.state.lengthQuestion;
+            } else if(newCount > 1 || newCount < this.state.lengthQuestion) {
+                this.setState({
+                    countQuestion: newCount,
+                    prevQuestion: 'show',
+                    nextQuestion: 'show'
+                });
+                var passCount = newCount;
+            } else {
+                var passCount = false;
+            }
+
+            if(passCount) {
+                const form = {
+                    count: newCount,
+                    trend: this.state.trendBy2,
+                    type: 'secondQuestion'
+                };
+
+                axios.post('/api/response/data_trends/nextGraph/' + this.state.id, form).then(response => {
+                    if(response.data.isArray) {
+                        if(response.data.lengthCard2 <= 1) {
+                            this.setState({
+                                question: response.data.secondCard.question,
+                                countSecondGraph: 1,
+
+                                dataSecondCard: response.data.secondCard.dataSecondCard,
+                                labelsSecondCard: response.data.secondCard.labelsSecondCard,
+                                buttonSecondCardDisplayGraph: 'hidden',
+                                prevSecondGraph: 'hidden',
+                                nextSecondGraph: 'hidden',
+                            });
+                        } else {
+                            this.setState({
+                                question: response.data.secondCard.question,
+                                countSecondGraph: 1,
+                                prevSecondGraph: 'hidden',
+                                nextSecondGraph: 'show',
+
+                                dataSecondCard: response.data.secondCard.dataSecondCard,
+                                labelsSecondCard: response.data.secondCard.labelsSecondCard,
+                                buttonSecondCardDisplayGraph: 'show',
+                            });
+                        }
+                    } else {
+                        this.setState({
+                            question: response.data.secondCard.question,
+                            countSecondGraph: 1,
+                            prevSecondGraph: 'hidden',
+                            nextSecondGraph: 'show',
+                        });
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        } else if(e.target.dataset.value == 'secondGraph'){
+            if(e.target.dataset.name == 'prev') {
+                var newCount = this.state.countSecondGraph - 1;
+            } else if(e.target.dataset.name == 'next') {
+                var newCount = this.state.countSecondGraph + 1;
+            }
+
+            if(newCount == 1) {
+                this.setState({
+                    countSecondGraph: newCount,
+                    prevSecondGraph: 'hidden',
+                    nextSecondGraph: 'show'
+                });
+                var passCount = 1;
+            } else if(newCount == this.state.lengthSecondGraph) {
+                this.setState({
+                    countSecondGraph: newCount,
+                    prevSecondGraph: 'show',
+                    nextSecondGraph: 'hidden'
+                });
+                var passCount = this.state.lengthSecondGraph;
+            } else if(newCount > 1 || newCount < this.state.lengthSecondGraph) {
+                this.setState({
+                    countSecondGraph: newCount,
+                    prevSecondGraph: 'show',
+                    nextSecondGraph: 'show'
+                });
+                var passCount = newCount;
+            } else {
+                var passCount = false;
+            }
+
+            if(passCount) {
+                const form = {
+                    count: newCount,
+                    trend: this.state.trendBy2,
+                    type: 'secondGraph',
+                    q_type: this.state.question['q_type'],
+                    q_id: this.state.question['q_id']
+                };
+
+                axios.post('/api/response/data_trends/nextGraph/' + this.state.id, form).then(response => {
+                    this.setState({
+                        labelsSecondCard: response.data.labelsSecondCard,
+                        dataSecondCard: response.data.dataSecondCard,
+                    });
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        }
     }
 
     renderRedirect = () => {
         if(!this.state.token) {
             return <Redirect to='/dashboard/login' />
         }
+    }
+
+    backResponse = (e) => {
+        this.props.history.push('/dashboard/response');
     }
 
     responseNav = (e) => {
@@ -149,6 +500,7 @@ export default class Response extends Component {
                                 yAxes: [{
                                     ticks: {
                                         min: 0, // it is for ignoring negative step.
+                                        max: this.state.yMax1,
                                         beginAtZero: true,
                                         callback: function(value, index, values) {
                                             if (Math.floor(value) === value) {
@@ -169,16 +521,6 @@ export default class Response extends Component {
                                 }]
                             }
                         }}
-                    />
-                </When>
-                <When condition = {this.state.chartType == 'Pie'}>
-                    <Pie
-                        data={data}
-                    />
-                </When>
-                <When condition = {this.state.chartType == 'Donut'}>
-                    <Doughnut
-                        data={data}
                     />
                 </When>
                 <When condition = {this.state.chartType == 'Line'}>
@@ -207,6 +549,7 @@ export default class Response extends Component {
                                 yAxes: [{
                                     ticks: {
                                         min: 0, // it is for ignoring negative step.
+                                        max: this.state.yMax1,
                                         beginAtZero: true,
                                         callback: function(value, index, values) {
                                             if (Math.floor(value) === value) {
@@ -228,6 +571,14 @@ export default class Response extends Component {
                     />
                 </When>
             </Choose>
+        );
+
+        const zoomData = this.state.zoomData.map((list, index) =>
+            <span className="dropdown-item" value={index + 1} key={index}>{list}</span>
+        );
+
+        const zoomData2 = this.state.zoomData2.map((list, index) =>
+            <span className="dropdown-item" value={index + 1} key={index}>{list}</span>
         );
 
 		return(
@@ -257,7 +608,7 @@ export default class Response extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h3>{this.state.title}</h3>
-                                        <span>Respondents: 4 out of 4</span>
+                                        <span>Respondents: {this.state.respondentCount + " out of " + this.state.respondentCount}</span>
                                     </div>
                                 </div>
                             </div>
@@ -269,15 +620,13 @@ export default class Response extends Component {
                                                 <button className="chartTypeBtn" type="button" id="chartTypeBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Chart Type<span className="float-right"><FontAwesomeIcon icon={faChevronDown} /></span></button>
                                                 <div className="dropdown-menu" aria-labelledby="chartTypeBtn">
                                                     <span className="dropdown-item" data-value="Bar" onClick={this.chartType}>Bar</span>
-                                                    <span className="dropdown-item" data-value="Pie" onClick={this.chartType}>Pie</span>
-                                                    <span className="dropdown-item" data-value="Donut" onClick={this.chartType}>Donut</span>
                                                     <span className="dropdown-item" data-value="Line" onClick={this.chartType}>Line</span>
                                                 </div>
                                             </div>
                                             <div className="card-header-buttons">
                                                 <button className="trendBtn" type="button" id="trendBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Trend by {this.state.trendBy}<span className="float-right"><FontAwesomeIcon icon={faChevronDown} /></span></button>
                                                 <div className="dropdown-menu" aria-labelledby="trendBtn">
-                                                    <span className="dropdown-item" data-value="Month" onClick={this.trendByBtn}>Month</span>
+                                                    {/*<span className="dropdown-item" data-value="Month" onClick={this.trendByBtn}>Month</span>*/}
                                                     <span className="dropdown-item" data-value="Day" onClick={this.trendByBtn}>Day</span>
                                                     <span className="dropdown-item" data-value="Hour" onClick={this.trendByBtn}>Hour</span>
                                                 </div>
@@ -285,9 +634,7 @@ export default class Response extends Component {
                                             <div className="card-header-buttons">
                                                 <button className="zoomBtn" type="button" id="zoomBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Zoom<span className="float-right"><FontAwesomeIcon icon={faChevronDown} /></span></button>
                                                 <div className="dropdown-menu" aria-labelledby="zoomBtn">
-                                                    <span className="dropdown-item" value="1">Zoom 1</span>
-                                                    <span className="dropdown-item" value="2">Zoom 2</span>
-                                                    <span className="dropdown-item" value="3">Zoom 3</span>
+                                                    {zoomData}
                                                 </div>
                                             </div>
                                         </div>
@@ -297,31 +644,56 @@ export default class Response extends Component {
                                     <div className="card-body-header">
                                         <span>Responses (by {this.state.trendBy})</span>
                                     </div>
+                                    <span><small>Zoom: {this.state.labelsFirstCard[0]} - {this.state.labelsFirstCard[this.state.labelsFirstCard.length - 1]}</small></span>
+                                    <div className={"d-flex justify-content-between pt-2 pr-4 pl-4 " + this.state.buttonFirstCardDisplay}>
+                                        <span className={"card-body-graph-prev " + this.state.prevGraph} data-name="prev" data-value="graph" onClick={this.nextPrevGraph}><FontAwesomeIcon data-name="prev" data-value="graph" icon={faChevronLeft} />&nbsp;&nbsp;&nbsp;Prev</span>
+                                        <span></span>
+                                        <span className={"card-body-graph-prev " + this.state.nextGraph} data-name="next" data-value="graph" onClick={this.nextPrevGraph}>Next&nbsp;&nbsp;&nbsp;<FontAwesomeIcon data-name="next" data-value="graph" icon={faChevronRight} /></span>
+                                    </div>
                                     <div className="card-body-graph">
                                         {chartData}
                                     </div>
                                 </div>
                             </div>
-                            <div className="page-count">
-                                <span>Page 1</span>
+                            <div className="page-count"></div>
+                            <div className={"d-flex justify-content-between " + this.state.buttonSecondCardDisplay}>
+                                <span className={"card-body-question-prev " + this.state.prevQuestion} data-name="prev" data-value="question" onClick={this.nextPrevGraph}><FontAwesomeIcon data-name="prev" data-value="question" icon={faChevronLeft} />&nbsp;&nbsp;&nbsp;Prev Question</span>
+                                <span></span>
+                                <span className={"card-body-question-next " + this.state.nextQuestion} data-name="next" data-value="question" onClick={this.nextPrevGraph}>Next Question&nbsp;&nbsp;&nbsp;<FontAwesomeIcon data-name="next" data-value="question" icon={faChevronRight} /></span>
                             </div>
                             <div className="response-dt-card">
                                 <div className="dt-card-header">
+                                    <div className="float-right">
+                                        <div className="card-header-buttons">
+                                            <button className="trendBtn" type="button" id="trendBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Trend by {this.state.trendBy2}<span className="float-right"><FontAwesomeIcon icon={faChevronDown} /></span></button>
+                                            <div className="dropdown-menu" aria-labelledby="trendBtn">
+                                                {/*<span className="dropdown-item" data-value="Month" onClick={this.trendByBtn}>Month</span>*/}
+                                                <span className="dropdown-item" data-value="Day" onClick={this.trendByBtn2}>Day</span>
+                                                <span className="dropdown-item" data-value="Hour" onClick={this.trendByBtn2}>Hour</span>
+                                            </div>
+                                        </div>
+                                        <div className="card-header-buttons">
+                                            <button className="zoomBtn" type="button" id="zoomBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Zoom<span className="float-right"><FontAwesomeIcon icon={faChevronDown} /></span></button>
+                                            <div className="dropdown-menu" aria-labelledby="zoomBtn">
+                                                {zoomData2}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div className="row">
                                         <div className="col question-count">
-                                            <span>Q1 (by {this.state.trendBy})</span>
+                                            <span>{"Q"+this.state.countQuestion+" (by " +this.state.trendBy2+ ")"}</span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col question-title">
-                                            <span>{this.state.question}</span>
+                                            <span>{this.state.question['q_title'] + " (" +this.state.question['q_type']+ ")"}</span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col">
                                             <div className="questions-data">
                                                 <div className="question-answer-count">
-                                                    <span>Answer: 4</span>
+                                                    <span>Answer: {this.state.respondentCount}</span>
                                                 </div>
                                                 <div className="question-skipped-count">
                                                     <span>Skipped: 0</span>
@@ -330,59 +702,66 @@ export default class Response extends Component {
                                                     <span>First: {this.state.firstResponse}</span>
                                                 </div>
                                                 <div className="question-zoom-date">
-                                                    <span>Zoom: 4 pm 5/1/2018 to 3 pm 5/2/2018</span>
+                                                    <span>Zoom: {this.state.labelsSecondCard[0]} to {this.state.labelsSecondCard[this.state.labelsSecondCard.length - 1]}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="dt-card-body">
-                                    <div className="card-body-graph">
-                                        <Bar
-                                            data={{
-                                                labels: ['hello','hi','howru','uy','yo'],
-                                                datasets: [{
-                                                    data: [5,2,0,3,1],
-                                                    backgroundColor: [
-                                                        'rgba(255,99,132,1)',
-                                                        'rgba(54, 162, 235, 1)',
-                                                        'rgba(255, 206, 86, 1)',
-                                                        'rgba(75, 192, 192, 1)',
-                                                        'rgba(153, 102, 255, 1)',
-                                                        'rgba(255, 159, 64, 1)'
-                                                    ],
-                                                    borderColor: [
-                                                        'rgba(255,99,132,1)',
-                                                        'rgba(54, 162, 235, 1)',
-                                                        'rgba(255, 206, 86, 1)',
-                                                        'rgba(75, 192, 192, 1)',
-                                                        'rgba(153, 102, 255, 1)',
-                                                        'rgba(255, 159, 64, 1)'
-                                                    ],
-                                                    borderWidth: 1
-                                                }]
-                                            }}
-                                            options={{
-                                                legend:{
-                                                    display:false
-                                                },
-                                                responsive: true,
-                                                scales: {
-                                                    yAxes: [{
-                                                        ticks: {
-                                                            min: 0, // it is for ignoring negative step.
-                                                            beginAtZero: true,
-                                                            callback: function(value, index, values) {
-                                                                if (Math.floor(value) === value) {
-                                                                    return value;
+                                    <Choose>
+                                        <When condition = {this.state.question['q_type'] == 'Multiple Choice' || this.state.question['q_type'] == 'Checkbox' || this.state.question['q_type'] == 'Dropdown' || this.state.question['q_type'] == 'Star'}>
+                                            <div className={"d-flex justify-content-between " + this.state.buttonSecondCardDisplayGraph}>
+                                                <span className={"card-body-question-prev " + this.state.prevSecondGraph} data-name="prev" data-value="secondGraph" onClick={this.nextPrevGraph}><FontAwesomeIcon data-name="prev" data-value="secondGraph" icon={faChevronLeft} />&nbsp;&nbsp;&nbsp;Prev</span>
+                                                <span></span>
+                                                <span className={"card-body-question-next " + this.state.nextSecondGraph} data-name="next" data-value="secondGraph" onClick={this.nextPrevGraph}>Next&nbsp;&nbsp;&nbsp;<FontAwesomeIcon data-name="next" data-value="secondGraph" icon={faChevronRight} /></span>
+                                            </div>
+                                            <div className="card-body-graph">
+                                                <Bar
+                                                    data={{
+                                                        labels: this.state.labelsSecondCard,
+                                                        datasets: this.state.dataSecondCard
+                                                    }}
+                                                    options={{
+                                                        tooltips: {
+                                                            mode: 'index',
+                                                            intersect: false
+                                                        },
+                                                        responsive: true,
+                                                        scales: {
+                                                            xAxes: [{
+                                                                gridLines: {
+                                                                    color: "rgba(0, 0, 0, 0)",
+                                                                },
+                                                                stacked: true,
+                                                                ticks: {
+                                                                    autoSkip: false
                                                                 }
-                                                            }
+                                                            }],
+                                                            yAxes: [{
+                                                                stacked: true,
+                                                                ticks: {
+                                                                    min: 0, // it is for ignoring negative step.
+                                                                    //max: 50,
+                                                                    beginAtZero: true,
+                                                                    callback: function(value, index, values) {
+                                                                        if (Math.floor(value) === value) {
+                                                                            return value;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }]
                                                         }
-                                                    }]
-                                                }
-                                            }}
-                                        />
-                                    </div>
+                                                    }}
+                                                />
+                                            </div>
+                                        </When>
+                                        <Otherwise>
+                                            <div className="card-body-otherwise text-center">
+                                                <span>Data trends do not apply here</span>
+                                            </div>
+                                        </Otherwise>
+                                    </Choose>
                                 </div>
                             </div>
                             <div>&nbsp;</div>

@@ -23,15 +23,25 @@ class ResponseController extends Controller
     		if($survey->status == '1') {
     			$survey->status = 'Digital Survey';
     		}
-            if(Respondents::where('survey_id',$survey->survey_id)->count() != 0) {
+            $respondentCount = Respondents::where('survey_id',$survey->survey_id)
+                                          ->where('finished_at','!=',null)
+                                          ->count();
+            if($respondentCount != 0) {
         		$survey->respondents_ago = Respondents::where('survey_id','=',$survey->survey_id)
-    						->count();
+                                                      ->where('finished_at','!=',null)
+    						                          ->count();
         		$survey->respondents_today = Respondents::where('survey_id','=',$survey->survey_id)
-    						->where('created_at','>=',$date_now)
-    						->count();
-                $respondents_dates = new DateTime(Created::where('id','=',$survey->survey_id)
-                            ->first()->created_at);
-    	    	$survey->respondents_days_ago = $respondents_dates->diff(new DateTime($date_for_respon))->format('%a');
+    						                            ->where('created_at','>=',$date_now)
+                                                        ->where('finished_at','!=',null)
+    						                            ->count();
+                $respondents_dates = (
+                    new DateTime(
+                        Created::where('id','=',$survey->survey_id)
+                               ->first()
+                               ->created_at
+                    )
+                )->format("Y-m-d");
+    	    	$survey->respondents_days_ago = (new DateTime($respondents_dates))->diff(new DateTime($date_for_respon))->format('%a');
             } else {
                 $survey->respondents_ago = 0;
                 $survey->respondents_today = 0;
@@ -43,6 +53,13 @@ class ResponseController extends Controller
     }
 
     public function responseView($id, Request $request) {
+        $respondentCount = Respondents::where('survey_id',$id)
+                                      ->where('finished_at','!=',null)
+                                      ->count();
+        if($respondentCount == 0) {
+            return response()->json(['error' => 'No response']);
+        }
+        
         $questions = Question::where('survey_id','=',$id)->get();
         $array_qid = [];
         foreach($questions as $question) {
@@ -174,7 +191,10 @@ class ResponseController extends Controller
                         //get all of the answer inside the array
                         array_push($answerArr, [
                             'answer' => $countTotal->answer,
-                            'created_at' => Respondents::where('id', $countTotal->respondent_id)->first()->created_at
+                            'created_at' => Respondents::where('id', $countTotal->respondent_id)
+                                                       ->where('finished_at','!=',null)
+                                                       ->first()
+                                                       ->created_at
                         ]);
                     }
                 }
@@ -234,60 +254,198 @@ class ResponseController extends Controller
     public function dataTrendsView($id) {
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
         $first_date = new DateTime($dateCreated);
-        $array_month = [$first_date->format("M Y")];
+        $array_hour = [$first_date->format("g a n/j/Y")];
+        $array_hourStock = [$first_date->format("g a n/j/Y")];
 
-        for($x = 1; $x < 12; $x++) {
-            $monthValue = date("M Y", strtotime('+' .$x. ' month', strtotime($dateCreated)));
-            array_push($array_month, $monthValue);
+        $last_date = new DateTime(Respondents::where('survey_id','=',$id)
+                                             ->where('finished_at','!=',null)
+                                             ->orderBy('created_at', 'desc')
+                                             ->first()->created_at);
+        $day_diff = $first_date->diff($last_date);
+        $hour_diff = ($day_diff->days * 24) + $day_diff->h;
+        if($hour_diff < 24) {
+            $hour_diff = 24;
+            $lengthCard1 = 1;
+        } else {
+            if($day_diff->h == 0) {
+                $lengthCard1 = ($hour_diff / 24) + 1;
+            } else {
+                $lengthCard1 = (int)ceil($hour_diff / 24);
+            }
         }
 
-        $respondents_month = Respondents::where('survey_id','=',$id)->get();
-        $array_data = [];
-        $countData = 0;
-        foreach($array_month as $month) {
-            foreach($respondents_month as $respoMonth) {
-                $respo_created = new DateTime($respoMonth['created_at']);
-                if($respo_created->format("M Y") == $month) {
-                    $countData++;
-                }
+        for($x = 1; $x < $hour_diff; $x++) {
+            $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
+            if($x < 24) {
+                array_push($array_hour, $hourValue);
             }
-            array_push($array_data, $countData);
-            $countData = 0;
+
+            array_push($array_hourStock, $hourValue);
+        }
+
+        $array_data = [];
+        $array_biggest = [];
+        foreach($array_hourStock as $key => $hour) {
+            $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+            $toDate = date("Y-m-d H:59:59", strtotime($hour));
+            $countData = Respondents::whereBetween('finished_at', [$fromDate, $toDate])
+                                    ->where('finished_at','!=',null)
+                                    ->where('survey_id','=',$id)
+                                    ->count();
+            if($key < 24) {
+                array_push($array_data, $countData);
+            }
+
+            array_push($array_biggest, $countData);
         }
 
         //question no. 1
-        $question = Question::where('survey_id',$id)
-                            ->orderBy('id', 'asc')
-                            ->first();
-
-        $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
-                            ->orderBy('created_at', 'asc')
-                            ->first()->created_at);
+        $firstResponse = new DateTime(
+            Respondents::where('survey_id','=',$id)
+                       ->where('finished_at','!=',null)
+                       ->orderBy('created_at', 'asc')
+                       ->first()->created_at
+        );
         $returnData = Survey::where('survey_id','=',$id)->first()->title;
+        $zoomData = ['24 Hours'];
+
+        //2nd card
+        $secondCard = [];
+        $questions = Question::where('survey_id',$id)
+                        ->orderBy('id', 'asc')
+                        ->get();
+
+        $array_questions = [];
+        foreach($questions as $question) {
+            array_push($array_questions, [
+                'q_title' => strip_tags($question->q_title),
+                'q_type' => $question->q_type,
+                'q_id' => $question->id
+            ]);
+        }
+        $secondCard['questionCount'] = count($array_questions);
+        $secondCard['question'] = $array_questions;
+
+        if($questions[0]->q_type == 'Multiple Choice' ||
+            $questions[0]->q_type == 'Checkbox' ||
+            $questions[0]->q_type == 'Dropdown'){
+            $choices = [
+                'choices' => json_decode($questions[0]->answer),
+                'q_id' => $questions[0]->id,
+                'q_type' => $questions[0]->q_type
+            ];
+        } elseif($questions[0]->q_type == 'Star') {
+            $choices = [
+                'choices' => [
+                    (object)['answer' => 5],
+                    (object)['answer' => 4],
+                    (object)['answer' => 3],
+                    (object)['answer' => 2],
+                    (object)['answer' => 1]
+                ],
+                'q_id' => $questions[0]->id,
+                'q_type' => $questions[0]->q_type
+            ];
+        } else {
+            $choices = null;
+        }
+        $secondCard['choices'] = $choices;
+
+        $secondCard['answerCount'] = Respondents::where('survey_id','=',$id)
+                                                ->where('finished_at','!=',null)
+                                                ->count();
+
+        $secondCard['labelsSecondCard'] = $array_hour;
+        
+        //data for second card graph
+        if(is_array($choices)) {
+            $array_secondData = [];
+            $array_answer = [];
+            foreach($choices['choices'] as $choice) {
+                if($choices['q_type'] == 'Checkbox') {
+                    //pag checkbox sya
+                    foreach($array_hour as $hour) {
+                        $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                        $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                        $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                        ->where('q_id','=',$choices['q_id'])
+                                        ->where('answer','LIKE','%'.$choice->answer.'%')
+                                        ->count();
+                        array_push($array_answer, $countData);
+                    }
+
+                    array_push($array_secondData, [
+                        'label' => $choice->answer,
+                        'stack' => 'Stack 0',
+                        'data' => $array_answer,
+                        'backgroundColor' => $this->getColor(rand())
+                    ]);
+                    $array_answer = [];
+                } else {
+                    //and pag hindi
+                    foreach($array_hour as $hour) {
+                        $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                        $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                        $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                        ->where('q_id','=',$choices['q_id'])
+                                        ->where('answer','=',$choice->answer)
+                                        ->count();
+                        array_push($array_answer, $countData);
+                    }
+
+                    array_push($array_secondData, [
+                        'label' => $choice->answer,
+                        'stack' => 'Stack 0',
+                        'data' => $array_answer,
+                        'backgroundColor' => $this->getColor(rand())
+                    ]);
+                    $array_answer = [];
+                }
+            }
+
+            $secondCard['dataSecondCard'] = $array_secondData;
+        } else {
+            // graph not applicable
+        
+        }
+
         return response()->json([
             'title' => $returnData,
-            'labelsFirstCard' => $array_month,
+            'labelsFirstCard' => $array_hour,
             'dataFirstCard' => $array_data,
+            'zoomData' => $zoomData,
+            'yMax1' => max($array_biggest),
             'firstResponse' => $firstResponse->format("n/j/Y"),
-            'question' => strip_tags($question->q_title)
+            'lengthCard1' => $lengthCard1,
+            'secondCard' => $secondCard,
         ]);
     }
 
     public function dataTrendsGetTrend($id, Request $request) {
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
         $first_date = new DateTime($dateCreated);
-        $array_month = [$first_date->format("M Y")];
-        $array_day = [$first_date->format("n/j/Y")];
-        $array_hour = [$first_date->format("g a n/j/Y")];
-        $no_days = $first_date->format("t");
+        
+        $last_date = new DateTime(Respondents::where('survey_id','=',$id)
+                                             ->where('finished_at','!=',null)
+                                             ->orderBy('created_at', 'desc')
+                                             ->first()->created_at);
+        $date_diff = $first_date->diff($last_date);
+
+        $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                 ->where('finished_at','!=',null)
+                                                 ->orderBy('created_at', 'asc')
+                                                 ->first()->created_at);
 
         if($request->get('trendOption') == 'Month') {
+            $array_month = [$first_date->format("M Y")];
             for($x = 1; $x < 12; $x++) {
                 $monthValue = date("M Y", strtotime('+' .$x. ' month', strtotime($dateCreated)));
                 array_push($array_month, $monthValue);
             }
 
-            $respondents_month = Respondents::where('survey_id','=',$id)->get();
+            $respondents_month = Respondents::where('survey_id','=',$id)
+                                            ->where('finished_at','!=',null)
+                                            ->get();
             $array_data = [];
             $countData = 0;
             foreach($array_month as $month) {
@@ -301,79 +459,766 @@ class ResponseController extends Controller
                 $countData = 0;
             }
 
-            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
-                            ->orderBy('created_at', 'asc')
-                            ->first()->created_at);
             return response()->json([
                 'labelsFirstCard' => $array_month,
                 'dataFirstCard' => $array_data,
-                'firstResponse' => $firstResponse->format("n/j/Y")
+                'firstResponse' => $firstResponse->format("n/j/Y"),
             ]);
         } elseif($request->get('trendOption') == 'Day') {
-            for($x = 1; $x < $no_days; $x++) {
-                $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
-                array_push($array_day, $dayValue);
+            $array_day = [$first_date->format("n/j/Y")];
+            $array_dayStock = [$first_date->format("n/j/Y")];
+            $days_diff = $date_diff->days;
+            if($days_diff <= 7) {
+                $days_diff = 7;
+                $lengthCard1 = 1;
+            } else {
+                $rem = fmod($days_diff,7);
+                if($rem == 0) {
+                    $lengthCard1 = ($days_diff / 7) + 1;
+                } else {
+                    $lengthCard1 = (int)ceil($days_diff / 7);
+                }
+                $days_diff = $lengthCard1 * 7;
             }
 
-            $respondents_day = Respondents::where('survey_id','=',$id)->get();
+            for($x = 1; $x < $days_diff; $x++) {
+                $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
+                if($x < 7) {
+                    array_push($array_day, $dayValue);
+                }
+                array_push($array_dayStock, $dayValue);
+            }
+
+            $respondents_day = Respondents::where('survey_id','=',$id)
+                                          ->where('finished_at','!=',null)
+                                          ->get();
             $array_data = [];
+            $array_biggest = [];
             $countData = 0;
-            foreach($array_day as $day) {
+            foreach($array_dayStock as $key=>$day) {
                 foreach($respondents_day as $respoDay) {
                     $respo_created = new DateTime($respoDay['created_at']);
                     if($respo_created->format("n/j/Y") == $day) {
                         $countData++;
                     }
                 }
-                array_push($array_data, $countData);
+
+                if($key < 7) {
+                    array_push($array_data, $countData);
+                }
+
+                array_push($array_biggest, $countData);
                 $countData = 0;
             }
 
-            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
-                            ->orderBy('created_at', 'asc')
-                            ->first()->created_at);
+            $zoomData = ['7 Days'];
+
             return response()->json([
                 'labelsFirstCard' => $array_day,
                 'dataFirstCard' => $array_data,
-                'firstResponse' => $firstResponse->format("n/j/Y")
+                'zoomData' => $zoomData,
+                'firstResponse' => $firstResponse->format("n/j/Y"),
+                'yMax' => max($array_biggest),
+                'lengthCard1' => $lengthCard1,
             ]);
-        } else {
-            for($x = 1; $x < 24; $x++) {
-                $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
-                array_push($array_hour, $hourValue);
+        } else { //hours
+            $array_hour = [$first_date->format("g a n/j/Y")];
+            $array_hourStock = [$first_date->format("g a n/j/Y")];
+            $hour_diff = ($date_diff->days * 24) + $date_diff->h;
+            if($hour_diff < 24) {
+                $hour_diff = 24;
+                $lengthCard1 = 1;
+            } else {
+                if($date_diff->h == 0) {
+                    $lengthCard1 = ($hour_diff / 24) + 1;
+                } else {
+                    $lengthCard1 = (int)ceil($hour_diff / 24);
+                }
+                $hour_diff = $lengthCard1 * 24;
             }
 
-            $respondents_hour = Respondents::where('survey_id','=',$id)->get();
+            for($x = 1; $x < $hour_diff; $x++) {
+                $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
+                if($x < 24) {
+                    array_push($array_hour, $hourValue);
+                }
+                array_push($array_hourStock, $hourValue);
+            }
+
+            $respondents_hour = Respondents::where('survey_id','=',$id)
+                                           ->where('finished_at','!=',null)
+                                           ->get();
             $array_data = [];
+            $array_biggest = [];
             $countData = 0;
-            foreach($array_hour as $hour) {
+            foreach($array_hourStock as $key=>$hour) {
                 foreach($respondents_hour as $respoHour) {
                     $respo_created = new DateTime($respoHour['created_at']);
                     if($respo_created->format("g a n/j/Y") == date("g a n/j/Y", strtotime($hour))) {
                         $countData++;
                     }
                 }
-                array_push($array_data, $countData);
+                if($key < 24) {
+                    array_push($array_data, $countData);
+                }
+                array_push($array_biggest, $countData);
                 $countData = 0;
             }
 
-            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
-                            ->orderBy('created_at', 'asc')
-                            ->first()->created_at);
+            $zoomData = ['24 Hours'];
+
             return response()->json([
                 'labelsFirstCard' => $array_hour,
                 'dataFirstCard' => $array_data,
-                'firstResponse' => $firstResponse->format("n/j/Y")
+                'zoomData' => $zoomData,
+                'firstResponse' => $firstResponse->format("n/j/Y"),
+                'yMax' => max($array_biggest),
+                'lengthCard1' => $lengthCard1,
+            ]);
+        }
+    }
+
+    public function dataTrendsGetTrend2($id, Request $request) {
+        $dateCreated = Created::where('id','=',$id)->first()->created_at;
+        $first_date = new DateTime($dateCreated);
+        
+        $last_date = new DateTime(Respondents::where('survey_id','=',$id)
+                                             ->where('finished_at','!=',null)
+                                             ->orderBy('created_at', 'desc')
+                                             ->first()->created_at);
+        $date_diff = $first_date->diff($last_date);
+
+        $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                 ->where('finished_at','!=',null)
+                                                 ->orderBy('created_at', 'asc')
+                                                 ->first()->created_at);
+
+        if($request->get('trendOption') == 'Day') {
+            $array_day = [$first_date->format("n/j/Y")];
+            $days_diff = $date_diff->days;
+            if($days_diff < 7) {
+                $lengthCard = 1;
+            } else {
+                if(fmod($days_diff,7) == 0) {
+                    $lengthCard = ($days_diff / 7) + 1;
+                } else {
+                    $lengthCard = (int)ceil($days_diff / 7);
+                }
+            }
+
+            for($x = 1; $x < 7; $x++) {
+                $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
+                array_push($array_day, $dayValue);
+            }
+            $labelsSecondCard = $array_day;
+
+            //for data
+            $question = Question::where('survey_id',$id)
+                                ->where('id',$request->get('q_id'))
+                                ->first();
+
+            if($question->q_type == 'Star') {
+                $choices = [
+                    'choices' => [
+                        (object)['answer' => 5],
+                        (object)['answer' => 4],
+                        (object)['answer' => 3],
+                        (object)['answer' => 2],
+                        (object)['answer' => 1]
+                    ],
+                    'q_id' => $question->id,
+                    'q_type' => $question->q_type
+                ];
+            } else {
+                $choices = [
+                    'choices' => json_decode($question->answer),
+                    'q_id' => $question->id,
+                    'q_type' => $question->q_type
+                ];
+            }
+
+            $array_secondData = [];
+            $array_answer = [];
+            foreach($choices['choices'] as $choice) {
+                foreach($array_day as $key=>$day) {
+                    $fromDate = date("Y-m-d 00:00:00", strtotime($day));
+                    $toDate = date("Y-m-d 23:59:59", strtotime($day));
+                    if($choices['q_type'] == 'Checkbox') {
+                        $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                        ->where('q_id','=',$choices['q_id'])
+                                        ->where('answer','LIKE','%'.$choice->answer.'%')
+                                        ->count();
+                        array_push($array_answer, $countData);
+                    } else {
+                        $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                        ->where('q_id','=',$choices['q_id'])
+                                        ->where('answer','=',$choice->answer)
+                                        ->count();
+                        array_push($array_answer, $countData);
+                    }
+                }
+
+                array_push($array_secondData, [
+                    'label' => $choice->answer,
+                    'stack' => 'Stack 0',
+                    'data' => $array_answer,
+                    'backgroundColor' => $this->getColor(rand())
+                ]);
+                $array_answer = [];
+            }
+            $dataSecondCard = $array_secondData;
+
+            //for zoom button data
+            $zoomData = ['7 Days'];
+        } elseif($request->get('trendOption') == 'Hour') {
+            //for labels on chart
+            $array_hour = [$first_date->format("g a n/j/Y")];
+            $array_hourStock = [$first_date->format("g a n/j/Y")];
+            $hour_diff = ($date_diff->days * 24) + $date_diff->h;
+            if($hour_diff < 24) {
+                $lengthCard = 1;
+            } else {
+                if($date_diff->h == 0) {
+                    $lengthCard = ($hour_diff / 24) + 1;
+                } else {
+                    $lengthCard = (int)ceil($hour_diff / 24);
+                }
+            }
+
+            for($x = 1; $x < 24; $x++) {
+                $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
+                array_push($array_hour, $hourValue);
+            }
+            $labelsSecondCard = $array_hour;
+
+            //for data
+            $question = Question::where('survey_id',$id)
+                                ->where('id',$request->get('q_id'))
+                                ->first();
+
+            if($question->q_type == 'Star') {
+                $choices = [
+                    'choices' => [
+                        (object)['answer' => 5],
+                        (object)['answer' => 4],
+                        (object)['answer' => 3],
+                        (object)['answer' => 2],
+                        (object)['answer' => 1]
+                    ],
+                    'q_id' => $question->id,
+                    'q_type' => $question->q_type
+                ];
+            } else {
+                $choices = [
+                    'choices' => json_decode($question->answer),
+                    'q_id' => $question->id,
+                    'q_type' => $question->q_type
+                ];
+            }
+
+            $array_secondData = [];
+            $array_answer = [];
+            foreach($choices['choices'] as $choice) {
+                foreach($array_hour as $hour) {
+                    $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                    $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                    if($choices['q_type'] == 'Checkbox') {
+                        $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                        ->where('q_id','=',$choices['q_id'])
+                                        ->where('answer','LIKE','%'.$choice->answer.'%')
+                                        ->count();
+                        array_push($array_answer, $countData);
+                    } else {
+                        $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                        ->where('q_id','=',$choices['q_id'])
+                                        ->where('answer','=',$choice->answer)
+                                        ->count();
+                        array_push($array_answer, $countData);
+                    }
+                }
+
+                array_push($array_secondData, [
+                    'label' => $choice->answer,
+                    'stack' => 'Stack 0',
+                    'data' => $array_answer,
+                    'backgroundColor' => $this->getColor(rand())
+                ]);
+                $array_answer = [];
+            }
+            $dataSecondCard = $array_secondData;
+
+            //for zoom button data
+            $zoomData = ['24 Hours'];
+        }
+
+        return response()->json([
+            'labelsSecondCard' => $labelsSecondCard,
+            'dataSecondCard' => $dataSecondCard,
+            'zoomData' => $zoomData,
+            'lengthCard1' => $lengthCard,
+        ]);
+    }
+
+    public function dataTrendsNextGraph($id, Request $request) {
+        $dateCreated = Created::where('id','=',$id)->first()->created_at;
+        $respondents_data = Respondents::where('survey_id','=',$id)
+                                       ->where('finished_at','!=',null)
+                                       ->get();
+
+        if($request->get('type') == 'firstGraph') {
+            //first graph
+            if($request->get('trend') == "Hour") {
+                $countNo = ($request->get('count') - 1) * 24;
+                $array_hour = [date("g a n/j/Y", strtotime('+'.$countNo.' hour', strtotime($dateCreated)))];
+
+                for($x = ($countNo + 1); $x < ($countNo + 24); $x++) {
+                    $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
+                    array_push($array_hour, $hourValue);
+                }
+
+                $array_data = [];
+                $countData = 0;
+                foreach($array_hour as $key => $hour) {
+                    foreach($respondents_data as $respoHour) {
+                        $respo_created = new DateTime($respoHour['created_at']);
+                        if($respo_created->format("g a n/j/Y") == date("g a n/j/Y", strtotime($hour))) {
+                            $countData++;
+                        }
+                    }
+
+                    array_push($array_data, $countData);
+                    $countData = 0;
+                }
+
+                $array_label = $array_hour;
+            } elseif($request->get('trend') == "Day") {
+                $countNo = ($request->get('count') - 1) * 7;
+                $array_day = [date("n/j/Y", strtotime('+'.$countNo.' day', strtotime($dateCreated)))];
+
+                for($x = ($countNo + 1); $x < ($countNo + 7); $x++) {
+                    $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
+                    array_push($array_day, $dayValue);
+                }
+
+                $array_data = [];
+                $countData = 0;
+                foreach($array_day as $key => $day) {
+                    foreach($respondents_data as $respoDay) {
+                        $respo_created = new DateTime($respoDay['created_at']);
+                        if($respo_created->format("n/j/Y") == date("n/j/Y", strtotime($day))) {
+                            $countData++;
+                        }
+                    }
+
+                    array_push($array_data, $countData);
+                    $countData = 0;
+                }
+
+                $array_label = $array_day;
+            }
+
+            return response()->json([
+                'labelsFirstCard' => $array_label,
+                'dataFirstCard' => $array_data
+            ]);
+        } elseif($request->get('type') == 'secondQuestion') {
+            //second question
+            //2nd card
+            if($request->get('trend') == 'Hour') {
+                $first_date = new DateTime($dateCreated);
+                $last_date = new DateTime(
+                    Respondents::where('survey_id','=',$id)
+                               ->where('finished_at','!=',null)
+                               ->orderBy('created_at', 'desc')
+                               ->first()->created_at
+                );
+                $day_diff = $first_date->diff($last_date);
+                $hour_diff = ($day_diff->days * 24) + $day_diff->h;
+                if($hour_diff < 24) {
+                    $lengthCard2 = 1;
+                } else {
+                    if($day_diff->h == 0) {
+                        $lengthCard2 = ($hour_diff / 24) + 1;
+                    } else {
+                        $lengthCard2 = (int)ceil($hour_diff / 24);
+                    }
+                }
+
+                $secondCard = [];
+                $question = Question::where('survey_id','=',$id)
+                                ->skip($request->get('count') - 1)
+                                ->first();
+
+                $array_questions = [
+                    'q_title' => strip_tags($question->q_title),
+                    'q_type' => $question->q_type,
+                    'q_id' => $question->id
+                ];
+
+                $secondCard['question'] = $array_questions;
+
+                if($question->q_type == 'Multiple Choice' ||
+                    $question->q_type == 'Checkbox' ||
+                    $question->q_type == 'Dropdown'){
+                    $choices = [
+                        'choices' => json_decode($question->answer),
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                } elseif($question->q_type == 'Star') {
+                    $choices = [
+                        'choices' => [
+                            (object)['answer' => 5],
+                            (object)['answer' => 4],
+                            (object)['answer' => 3],
+                            (object)['answer' => 2],
+                            (object)['answer' => 1]
+                        ],
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                } else {
+                    $choices = null;
+                }
+
+                $first_date = new DateTime($dateCreated);
+                $array_hour = [$first_date->format("g a n/j/Y")];
+                for($x = 1; $x < 24; $x++) {
+                    $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
+                    array_push($array_hour, $hourValue);
+                }
+                $secondCard['labelsSecondCard'] = $array_hour;
+                
+                //data for second card graph
+                if(is_array($choices)) {
+                    $array_secondData = [];
+                    $array_answer = [];
+                    foreach($choices['choices'] as $choice) {
+                        if($choices['q_type'] == 'Checkbox') {
+                            //pag checkbox sya
+                            foreach($array_hour as $hour) {
+                                $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                                $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                                $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','LIKE','%'.$choice->answer.'%')
+                                                ->count();
+                                array_push($array_answer, $countData);
+                            }
+
+                            array_push($array_secondData, [
+                                'label' => $choice->answer,
+                                'stack' => 'Stack 0',
+                                'data' => $array_answer,
+                                'backgroundColor' => $this->getColor(rand())
+                            ]);
+                            $array_answer = [];
+                        } else {
+                            //and pag hindi
+                            foreach($array_hour as $hour) {
+                                $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                                $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                                $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','=',$choice->answer)
+                                                ->count();
+                                array_push($array_answer, $countData);
+                            }
+
+                            array_push($array_secondData, [
+                                'label' => $choice->answer,
+                                'stack' => 'Stack 0',
+                                'data' => $array_answer,
+                                'backgroundColor' => $this->getColor(rand())
+                            ]);
+                            $array_answer = [];
+                        }
+                    }
+
+                    $secondCard['dataSecondCard'] = $array_secondData;
+
+                    $isArray = true;
+                } else {
+                    // graph not applicable
+                    $isArray = false;
+                    $secondCard = [];
+                    $question = Question::where('survey_id','=',$id)
+                                    ->skip($request->get('count') - 1)
+                                    ->first();
+
+                    $array_questions = [
+                        'q_title' => strip_tags($question->q_title),
+                        'q_type' => $question->q_type
+                    ];
+
+                    $secondCard['question'] = $array_questions;
+                }
+            } else {//days
+                $first_date = new DateTime($dateCreated);
+                $array_day = [$first_date->format("n/j/Y")];
+                $last_date = new DateTime(
+                    Respondents::where('survey_id','=',$id)
+                               ->where('finished_at','!=',null)
+                               ->orderBy('created_at', 'desc')
+                               ->first()->created_at
+                );
+                $date_diff = $first_date->diff($last_date);
+                $days_diff = $date_diff->days;
+                if($days_diff < 7) {
+                    $lengthCard2 = 1;
+                } else {
+                    if(fmod($days_diff,7) == 0) {
+                        $lengthCard2 = ($days_diff / 7) + 1;
+                    } else {
+                        $lengthCard2 = (int)ceil($days_diff / 7);
+                    }
+                }
+
+                $secondCard = [];
+                $question = Question::where('survey_id','=',$id)
+                                ->skip($request->get('count') - 1)
+                                ->first();
+
+                $array_questions = [
+                    'q_title' => strip_tags($question->q_title),
+                    'q_type' => $question->q_type,
+                    'q_id' => $question->id
+                ];
+
+                $secondCard['question'] = $array_questions;
+
+                if($question->q_type == 'Multiple Choice' ||
+                    $question->q_type == 'Checkbox' ||
+                    $question->q_type == 'Dropdown'){
+                    $choices = [
+                        'choices' => json_decode($question->answer),
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                } elseif($question->q_type == 'Star') {
+                    $choices = [
+                        'choices' => [
+                            (object)['answer' => 5],
+                            (object)['answer' => 4],
+                            (object)['answer' => 3],
+                            (object)['answer' => 2],
+                            (object)['answer' => 1]
+                        ],
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                } else {
+                    $choices = null;
+                }
+
+                for($x = 1; $x < 7; $x++) {
+                    $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
+                    array_push($array_day, $dayValue);
+                }
+                $secondCard['labelsSecondCard'] = $array_day;
+                
+                //data for second card graph
+                if(is_array($choices)) {
+                    $array_secondData = [];
+                    $array_answer = [];
+                    foreach($choices['choices'] as $choice) {
+                        foreach($array_day as $key=>$day) {
+                            $fromDate = date("Y-m-d 00:00:00", strtotime($day));
+                            $toDate = date("Y-m-d 23:59:59", strtotime($day));
+                            if($choices['q_type'] == 'Checkbox') {
+                                $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','LIKE','%'.$choice->answer.'%')
+                                                ->count();
+                                array_push($array_answer, $countData);
+                            } else {
+                                $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','=',$choice->answer)
+                                                ->count();
+                                array_push($array_answer, $countData);
+                            }
+                        }
+
+                        array_push($array_secondData, [
+                            'label' => $choice->answer,
+                            'stack' => 'Stack 0',
+                            'data' => $array_answer,
+                            'backgroundColor' => $this->getColor(rand())
+                        ]);
+                        $array_answer = [];
+                    }
+
+                    $secondCard['dataSecondCard'] = $array_secondData;
+
+                    $isArray = true;
+                } else {
+                    // graph not applicable
+                    $isArray = false;
+                    $secondCard = [];
+                    $question = Question::where('survey_id','=',$id)
+                                    ->skip($request->get('count') - 1)
+                                    ->first();
+
+                    $array_questions = [
+                        'q_title' => strip_tags($question->q_title),
+                        'q_type' => $question->q_type
+                    ];
+
+                    $secondCard['question'] = $array_questions;
+                }
+            }
+
+            return response()->json([
+                'isArray' => $isArray,
+                'secondCard' => $secondCard,
+                'lengthCard2' => $lengthCard2
+            ]);
+        } else {
+            //second graph
+            if($request->get('trend') == "Hour") {
+                $countNo = ($request->get('count') - 1) * 24;
+                $array_hour = [date("g a n/j/Y", strtotime('+'.$countNo.' hour', strtotime($dateCreated)))];
+
+                for($x = ($countNo + 1); $x < ($countNo + 24); $x++) {
+                    $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
+                    array_push($array_hour, $hourValue);
+                }
+
+                $question = Question::where('survey_id',$id)
+                                    ->where('id',$request->get('q_id'))
+                                    ->first();
+                $array_data = [];
+                $array_secondGraph = [];
+                
+                if($request->get('q_type') != 'Star') {
+                    $choices = [
+                        'choices' => json_decode($question->answer),
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                } else {
+                    $choices = [
+                        'choices' => [
+                            (object)['answer' => 5],
+                            (object)['answer' => 4],
+                            (object)['answer' => 3],
+                            (object)['answer' => 2],
+                            (object)['answer' => 1]
+                        ],
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                }
+                foreach($choices['choices'] as $choice) {
+                    foreach($array_hour as $key => $hour) {
+                        $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                        $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                        if($request->get('q_type') == 'Checkbox') {
+                            $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','LIKE','%'.$choice->answer.'%')
+                                                ->count();
+                        } else {
+                            $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','=',$choice->answer)
+                                                ->count();
+                        }
+                        array_push($array_data, $countData);     
+                    }
+
+                    array_push($array_secondGraph, [
+                        'label' => $choice->answer,
+                        'stack' => 'Stack 0',
+                        'data' => $array_data,
+                        'backgroundColor' => $this->getColor(rand())
+                    ]);
+                    $array_data = [];
+                }
+
+                $array_label = $array_hour;
+            } elseif($request->get('trend') == "Day") {
+                $countNo = ($request->get('count') - 1) * 7;
+                $array_day = [date("n/j/Y", strtotime('+'.$countNo.' day', strtotime($dateCreated)))];
+
+                for($x = ($countNo + 1); $x < ($countNo + 7); $x++) {
+                    $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
+                    array_push($array_day, $dayValue);
+                }
+
+                $question = Question::where('survey_id',$id)
+                                    ->where('id',$request->get('q_id'))
+                                    ->first();
+                $array_data = [];
+                $array_secondGraph = [];
+                
+                if($request->get('q_type') != 'Star') {
+                    $choices = [
+                        'choices' => json_decode($question->answer),
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                } else {
+                    $choices = [
+                        'choices' => [
+                            (object)['answer' => 5],
+                            (object)['answer' => 4],
+                            (object)['answer' => 3],
+                            (object)['answer' => 2],
+                            (object)['answer' => 1]
+                        ],
+                        'q_id' => $question->id,
+                        'q_type' => $question->q_type
+                    ];
+                }
+                foreach($choices['choices'] as $choice) {
+                    foreach($array_day as $key => $day) {
+                        $fromDate = date("Y-m-d H:00:00", strtotime($day));
+                        $toDate = date("Y-m-d H:59:59", strtotime($day));
+                        if($request->get('q_type') == 'Checkbox') {
+                            $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','LIKE','%'.$choice->answer.'%')
+                                                ->count();
+                        } else {
+                            $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
+                                                ->where('q_id','=',$choices['q_id'])
+                                                ->where('answer','=',$choice->answer)
+                                                ->count();
+                        }
+                        array_push($array_data, $countData);     
+                    }
+
+                    array_push($array_secondGraph, [
+                        'label' => $choice->answer,
+                        'stack' => 'Stack 0',
+                        'data' => $array_data,
+                        'backgroundColor' => $this->getColor(rand())
+                    ]);
+                    $array_data = [];
+                }
+
+                $array_label = $array_day;
+            }
+
+            return response()->json([
+                'labelsSecondCard' => $array_label,
+                'dataSecondCard' => $array_secondGraph
             ]);
         }
     }
 
     public function indResponsesGetAll($id) {
         $title = Survey::where('survey_id','=',$id)->first()->title;
-        $respondents_count = Respondents::where('survey_id','=',$id)->count();
+        $respondents_count = Respondents::where('survey_id','=',$id)
+                                        ->where('finished_at','!=',null)
+                                        ->count();
         
         //respondent data
-        $respondents = Respondents::where('survey_id','=',$id)->first();
+        $respondents = Respondents::where('survey_id','=',$id)
+                                  ->where('finished_at','!=',null)
+                                  ->first();
         $createdAtTime = new DateTime($respondents->created_at);
         $respondents['timeSpend'] = $createdAtTime->diff(new DateTime($respondents->finished_at))->format('%H:%I:%S');
 
@@ -406,8 +1251,9 @@ class ResponseController extends Controller
 
     public function indResponsesGetid($id, Request $request) {
         $respondents = Respondents::where('survey_id','=',$id)
-                                ->skip($request->get('respondent_no') - 1)
-                                ->first();
+                                  ->where('finished_at','!=',null)
+                                  ->skip($request->get('respondent_no') - 1)
+                                  ->first();
         $createdAtTime = new DateTime($respondents->created_at);
         $respondents['timeSpend'] = $createdAtTime->diff(new DateTime($respondents->finished_at))->format('%H:%I:%S');
 
@@ -437,10 +1283,12 @@ class ResponseController extends Controller
 
     public function indResponsesDelete($id, Request $request) {
         $respondent_id = Respondents::where('survey_id','=',$id)
-                                ->skip($request->get('respondent_no') - 1)
-                                ->first()->id;
+                                    ->where('finished_at','!=',null)
+                                    ->skip($request->get('respondent_no') - 1)
+                                    ->first()->id;
         $deleted_response = Respondents::where('id','=',$respondent_id)
-                                ->delete();
+                                       ->where('finished_at','!=',null)
+                                       ->delete();
         if($deleted_response) {
             $deleted_answer = Answers::where('respondent_id','=',$respondent_id)->delete();
             if($deleted_answer) {
