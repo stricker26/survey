@@ -53,6 +53,7 @@ class ResponseController extends Controller
     }
 
     public function responseView($id, Request $request) {
+        //check if the survey has respondents
         $respondentCount = Respondents::where('survey_id',$id)
                                       ->where('finished_at','!=',null)
                                       ->count();
