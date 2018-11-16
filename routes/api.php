@@ -27,6 +27,7 @@ Route::prefix('webmaster')->group(function() {
 	Route::resource('survey', 'Api\SurveyController');
 	Route::post('getName', 'Api\AuthController@getName');
 	Route::resource('question', 'Api\QuestionController');
+	Route::get('/answers/{id}', 'Api\AnswerController@view');
 	Route::post('emailRespondent', 'Api\RespondentsController@emailRespondent');
 	Route::post('answerRespondent', 'Api\RespondentsController@answerRespondent');
 	Route::get('lists', 'Api\MainSurveyController@lists');

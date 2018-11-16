@@ -175,12 +175,24 @@ section {
 								font-size: 2em;
 							}
 						}
-						.col-lg-11 {
+						.col-lg-8 {
 							padding: 1.5rem;
 							label {
 								margin-bottom: 0;
 								font-size: 1.3em;
     							line-height: 2.5em;
+							}
+						}
+						.col-lg-3 {
+							padding: 1.5rem;
+							text-align: right;
+							ul {
+								padding: 0;
+								li {
+									display: inline-block;
+									margin: 0 .2rem;
+									line-height: 2.5em;
+								}
 							}
 						}
 						&:last-child {
