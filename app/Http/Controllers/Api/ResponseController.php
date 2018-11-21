@@ -52,7 +52,7 @@ class ResponseController extends Controller
     	return response()->json(['success' => $all_survey]);
     }
 
-    public function responseView($id, Request $request) {
+    public function questionSummaryView($id, Request $request) {
         $respondentCount = Respondents::where('survey_id',$id)
                                       ->where('finished_at','!=',null)
                                       ->count();
@@ -252,28 +252,41 @@ class ResponseController extends Controller
     }
 
     public function dataTrendsView($id) {
+        //first date
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
-        $first_date = new DateTime($dateCreated);
-        $array_hour = [$first_date->format("g a n/j/Y")];
-        $array_hourStock = [$first_date->format("g a n/j/Y")];
+        $firstDate = date("Y-m-d H:00:00", strtotime($dateCreated));
+        $first_date = new DateTime($firstDate);
 
-        $last_date = new DateTime(Respondents::where('survey_id','=',$id)
-                                             ->where('finished_at','!=',null)
-                                             ->orderBy('created_at', 'desc')
-                                             ->first()->created_at);
+        //last date
+        $dateRespondents = Respondents::where('survey_id','=',$id)
+                             ->where('finished_at','!=',null)
+                             ->orderBy('created_at', 'desc')
+                             ->first()->created_at;
+        $seconds = (int)(new DateTime($dateRespondents))->format("s");
+        $minutes = (int)(new DateTime($dateRespondents))->format("i");
+        if($seconds == 0 && $minutes == 0) {
+            $lastDate = date("Y-m-d H:00:00", strtotime($dateRespondents));
+        } else {
+            $lastDate = date("Y-m-d H:00:00", strtotime("+1 hour", strtotime($dateRespondents)));
+        }
+        $last_date = new DateTime($lastDate);
+        
         $day_diff = $first_date->diff($last_date);
         $hour_diff = ($day_diff->days * 24) + $day_diff->h;
         if($hour_diff < 24) {
             $hour_diff = 24;
             $lengthCard1 = 1;
         } else {
-            if($day_diff->h == 0) {
+            if(fmod($hour_diff, 24) == 0) {
                 $lengthCard1 = ($hour_diff / 24) + 1;
             } else {
                 $lengthCard1 = (int)ceil($hour_diff / 24);
             }
+            $hour_diff = $lengthCard1 * 24;
         }
 
+        $array_hour = [$first_date->format("g a n/j/Y")];
+        $array_hourStock = [$first_date->format("g a n/j/Y")];
         for($x = 1; $x < $hour_diff; $x++) {
             $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
             if($x < 24) {
@@ -324,7 +337,7 @@ class ResponseController extends Controller
             ]);
         }
         $secondCard['questionCount'] = count($array_questions);
-        $secondCard['question'] = $array_questions;
+        $secondCard['question'] = [$array_questions[0]];
 
         if($questions[0]->q_type == 'Multiple Choice' ||
             $questions[0]->q_type == 'Checkbox' ||
@@ -351,9 +364,15 @@ class ResponseController extends Controller
         }
         $secondCard['choices'] = $choices;
 
-        $secondCard['answerCount'] = Respondents::where('survey_id','=',$id)
-                                                ->where('finished_at','!=',null)
-                                                ->count();
+        //respondent answered
+        $total_respondents = Respondents::where('survey_id','=',$id)
+                                        ->where('finished_at','!=',null)
+                                        ->count();
+        $overall_respondents = Respondents::where('survey_id','=',$id)
+                                        ->count();
+        $secondCard['skippedCount'] = $total_respondents - Answers::where('q_id',$array_questions[0]['q_id'])->count();
+
+        $secondCard['answerCount'] = $total_respondents - $secondCard['skippedCount'];
 
         $secondCard['labelsSecondCard'] = $array_hour;
         
@@ -418,53 +437,42 @@ class ResponseController extends Controller
             'firstResponse' => $firstResponse->format("n/j/Y"),
             'lengthCard1' => $lengthCard1,
             'secondCard' => $secondCard,
+            'respondentsOverall' => $overall_respondents,
+            'respondentsTotal' => $total_respondents,
         ]);
     }
 
     public function dataTrendsGetTrend($id, Request $request) {
+        //first date
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
-        $first_date = new DateTime($dateCreated);
-        
-        $last_date = new DateTime(Respondents::where('survey_id','=',$id)
-                                             ->where('finished_at','!=',null)
-                                             ->orderBy('created_at', 'desc')
-                                             ->first()->created_at);
-        $date_diff = $first_date->diff($last_date);
+        $firstDate = date("Y-m-d H:00:00", strtotime($dateCreated));
+        $first_date = new DateTime($firstDate);
 
-        $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
-                                                 ->where('finished_at','!=',null)
-                                                 ->orderBy('created_at', 'asc')
-                                                 ->first()->created_at);
+        //last date
+        $dateRespondents = Respondents::where('survey_id','=',$id)
+                             ->where('finished_at','!=',null)
+                             ->orderBy('created_at', 'desc')
+                             ->first()->created_at;
 
-        if($request->get('trendOption') == 'Month') {
-            $array_month = [$first_date->format("M Y")];
-            for($x = 1; $x < 12; $x++) {
-                $monthValue = date("M Y", strtotime('+' .$x. ' month', strtotime($dateCreated)));
-                array_push($array_month, $monthValue);
+        if($request->get('trendOption') == 'Day') {
+            $hours = (int)(new DateTime($dateRespondents))->format("H");
+            $seconds = (int)(new DateTime($dateRespondents))->format("s");
+            $minutes = (int)(new DateTime($dateRespondents))->format("i");
+            if($seconds == 0 && $minutes == 0 && $hours === 0) {
+                $lastDate = date("Y-m-d H:00:00", strtotime($dateRespondents));
+            } else {
+                $lastDate = date("Y-m-d H:00:00", strtotime("+1 day", strtotime($dateRespondents)));
             }
+            $last_date = new DateTime($lastDate);
 
-            $respondents_month = Respondents::where('survey_id','=',$id)
-                                            ->where('finished_at','!=',null)
-                                            ->get();
-            $array_data = [];
-            $countData = 0;
-            foreach($array_month as $month) {
-                foreach($respondents_month as $respoMonth) {
-                    $respo_created = new DateTime($respoMonth['created_at']);
-                    if($respo_created->format("M Y") == $month) {
-                        $countData++;
-                    }
-                }
-                array_push($array_data, $countData);
-                $countData = 0;
-            }
+            //difference between two dates
+            $date_diff = $first_date->diff($last_date);
 
-            return response()->json([
-                'labelsFirstCard' => $array_month,
-                'dataFirstCard' => $array_data,
-                'firstResponse' => $firstResponse->format("n/j/Y"),
-            ]);
-        } elseif($request->get('trendOption') == 'Day') {
+            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                     ->where('finished_at','!=',null)
+                                                     ->orderBy('created_at', 'asc')
+                                                     ->first()->created_at);
+
             $array_day = [$first_date->format("n/j/Y")];
             $array_dayStock = [$first_date->format("n/j/Y")];
             $days_diff = $date_diff->days;
@@ -522,6 +530,22 @@ class ResponseController extends Controller
                 'lengthCard1' => $lengthCard1,
             ]);
         } else { //hours
+            $seconds = (int)(new DateTime($dateRespondents))->format("s");
+            $minutes = (int)(new DateTime($dateRespondents))->format("i");
+            if($seconds == 0 && $minutes == 0) {
+                $lastDate = date("Y-m-d H:00:00", strtotime($dateRespondents));
+            } else {
+                $lastDate = date("Y-m-d H:00:00", strtotime("+1 hour", strtotime($dateRespondents)));
+            }
+            $last_date = new DateTime($lastDate);
+
+            //difference between two dates
+            $date_diff = $first_date->diff($last_date);
+
+            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                     ->where('finished_at','!=',null)
+                                                     ->orderBy('created_at', 'asc')
+                                                     ->first()->created_at);
             $array_hour = [$first_date->format("g a n/j/Y")];
             $array_hourStock = [$first_date->format("g a n/j/Y")];
             $hour_diff = ($date_diff->days * 24) + $date_diff->h;
@@ -579,21 +603,27 @@ class ResponseController extends Controller
     }
 
     public function dataTrendsGetTrend2($id, Request $request) {
+        //first date
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
-        $first_date = new DateTime($dateCreated);
-        
-        $last_date = new DateTime(Respondents::where('survey_id','=',$id)
-                                             ->where('finished_at','!=',null)
-                                             ->orderBy('created_at', 'desc')
-                                             ->first()->created_at);
-        $date_diff = $first_date->diff($last_date);
 
-        $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
-                                                 ->where('finished_at','!=',null)
-                                                 ->orderBy('created_at', 'asc')
-                                                 ->first()->created_at);
+        //last date
+        $dateRespondents = Answers::where('q_id',$request->get('q_id'))
+                             ->orderBy('created_at', 'desc')
+                             ->first()->created_at;
 
         if($request->get('trendOption') == 'Day') {
+            $firstDate = date("Y-m-d 00:00:00", strtotime($dateCreated));
+            $first_date = new DateTime($firstDate);
+            $lastDate = date("Y-m-d 00:00:00", strtotime($dateRespondents));
+            $last_date = new DateTime($lastDate);
+
+            //difference between two dates
+            $date_diff = $first_date->diff($last_date);
+            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                     ->where('finished_at','!=',null)
+                                                     ->orderBy('created_at', 'asc')
+                                                     ->first()->created_at);
+
             $array_day = [$first_date->format("n/j/Y")];
             $days_diff = $date_diff->days;
             if($days_diff < 7) {
@@ -672,6 +702,25 @@ class ResponseController extends Controller
             $zoomData = ['7 Days'];
         } elseif($request->get('trendOption') == 'Hour') {
             //for labels on chart
+            $firstDate = date("Y-m-d H:00:00", strtotime($dateCreated));
+            $first_date = new DateTime($firstDate);
+            $seconds = (int)(new DateTime($dateRespondents))->format("s");
+            $minutes = (int)(new DateTime($dateRespondents))->format("i");
+            if($seconds == 0 && $minutes == 0) {
+                $lastDate = date("Y-m-d H:00:00", strtotime($dateRespondents));
+            } else {
+                $lastDate = date("Y-m-d H:00:00", strtotime("+1 hour", strtotime($dateRespondents)));
+            }
+            $last_date = new DateTime($lastDate);
+
+            //difference between two dates
+            $date_diff = $first_date->diff($last_date);
+
+            $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                     ->where('finished_at','!=',null)
+                                                     ->orderBy('created_at', 'asc')
+                                                     ->first()->created_at);
+
             $array_hour = [$first_date->format("g a n/j/Y")];
             $array_hourStock = [$first_date->format("g a n/j/Y")];
             $hour_diff = ($date_diff->days * 24) + $date_diff->h;
@@ -760,13 +809,16 @@ class ResponseController extends Controller
     }
 
     public function dataTrendsNextGraph($id, Request $request) {
+        //first date
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
-        $respondents_data = Respondents::where('survey_id','=',$id)
-                                       ->where('finished_at','!=',null)
-                                       ->get();
 
         if($request->get('type') == 'firstGraph') {
             //first graph
+
+            //respondents data 
+            $respondents_data = Respondents::where('survey_id','=',$id)
+                                           ->where('finished_at','!=',null)
+                                           ->get();
             if($request->get('trend') == "Hour") {
                 $countNo = ($request->get('count') - 1) * 24;
                 $array_hour = [date("g a n/j/Y", strtotime('+'.$countNo.' hour', strtotime($dateCreated)))];
@@ -823,21 +875,40 @@ class ResponseController extends Controller
             ]);
         } elseif($request->get('type') == 'secondQuestion') {
             //second question
-            //2nd card
+
+            $question = Question::where('survey_id','=',$id)
+                            ->skip($request->get('count') - 1)
+                            ->first();
+
+            //last date
+            $dateRespondents = Answers::where('q_id',$question->id)
+                                 ->orderBy('created_at', 'desc')
+                                 ->first()->created_at;
+
+            //respondents data 
+            $respondents_data = Respondents::where('survey_id','=',$id)
+                                           ->where('finished_at','!=',null)
+                                           ->get();
+            
+            //total respondent who skipped
+            $respondent_skipped = count($respondents_data) - Answers::where('q_id',$question->id)->count();
+
+            //total respondent who answered
+            $respondent_answered = count($respondents_data) - $respondent_skipped;
+
             if($request->get('trend') == 'Hour') {
-                $first_date = new DateTime($dateCreated);
-                $last_date = new DateTime(
-                    Respondents::where('survey_id','=',$id)
-                               ->where('finished_at','!=',null)
-                               ->orderBy('created_at', 'desc')
-                               ->first()->created_at
-                );
-                $day_diff = $first_date->diff($last_date);
-                $hour_diff = ($day_diff->days * 24) + $day_diff->h;
+                $firstDate = date("Y-m-d H:00:00", strtotime($dateCreated));
+                $first_date = new DateTime($firstDate);
+                $lastDate = date("Y-m-d H:00:00", strtotime($dateRespondents));
+                $last_date = new DateTime($lastDate);
+
+                //difference between two dates
+                $date_diff = $first_date->diff($last_date);
+                $hour_diff = ($date_diff->days * 24) + $date_diff->h;
                 if($hour_diff < 24) {
                     $lengthCard2 = 1;
                 } else {
-                    if($day_diff->h == 0) {
+                    if($date_diff->h == 0) {
                         $lengthCard2 = ($hour_diff / 24) + 1;
                     } else {
                         $lengthCard2 = (int)ceil($hour_diff / 24);
@@ -881,7 +952,6 @@ class ResponseController extends Controller
                     $choices = null;
                 }
 
-                $first_date = new DateTime($dateCreated);
                 $array_hour = [$first_date->format("g a n/j/Y")];
                 for($x = 1; $x < 24; $x++) {
                     $hourValue = date("g a n/j/Y", strtotime('+' .$x. ' hour', strtotime($dateCreated)));
@@ -954,15 +1024,18 @@ class ResponseController extends Controller
                     $secondCard['question'] = $array_questions;
                 }
             } else {//days
-                $first_date = new DateTime($dateCreated);
-                $array_day = [$first_date->format("n/j/Y")];
-                $last_date = new DateTime(
-                    Respondents::where('survey_id','=',$id)
-                               ->where('finished_at','!=',null)
-                               ->orderBy('created_at', 'desc')
-                               ->first()->created_at
-                );
+                $firstDate = date("Y-m-d 00:00:00", strtotime($dateCreated));
+                $first_date = new DateTime($firstDate);
+                $lastDate = date("Y-m-d 00:00:00", strtotime($dateRespondents));
+                $last_date = new DateTime($lastDate);
+
+                //difference between two dates
                 $date_diff = $first_date->diff($last_date);
+                $firstResponse = new DateTime(Respondents::where('survey_id','=',$id)
+                                                         ->where('finished_at','!=',null)
+                                                         ->orderBy('created_at', 'asc')
+                                                         ->first()->created_at);
+                
                 $days_diff = $date_diff->days;
                 if($days_diff < 7) {
                     $lengthCard2 = 1;
@@ -975,10 +1048,6 @@ class ResponseController extends Controller
                 }
 
                 $secondCard = [];
-                $question = Question::where('survey_id','=',$id)
-                                ->skip($request->get('count') - 1)
-                                ->first();
-
                 $array_questions = [
                     'q_title' => strip_tags($question->q_title),
                     'q_type' => $question->q_type,
@@ -1011,6 +1080,7 @@ class ResponseController extends Controller
                     $choices = null;
                 }
 
+                $array_day = [$first_date->format("n/j/Y")];
                 for($x = 1; $x < 7; $x++) {
                     $dayValue = date("n/j/Y", strtotime('+' .$x. ' day', strtotime($dateCreated)));
                     array_push($array_day, $dayValue);
@@ -1072,7 +1142,9 @@ class ResponseController extends Controller
             return response()->json([
                 'isArray' => $isArray,
                 'secondCard' => $secondCard,
-                'lengthCard2' => $lengthCard2
+                'lengthCard2' => $lengthCard2,
+                'respondentCount' => $respondent_answered,
+                'respondentSkipped' => $respondent_skipped,
             ]);
         } else {
             //second graph
@@ -1174,8 +1246,8 @@ class ResponseController extends Controller
                 }
                 foreach($choices['choices'] as $choice) {
                     foreach($array_day as $key => $day) {
-                        $fromDate = date("Y-m-d H:00:00", strtotime($day));
-                        $toDate = date("Y-m-d H:59:59", strtotime($day));
+                        $fromDate = date("Y-m-d 00:00:00", strtotime($day));
+                        $toDate = date("Y-m-d 23:59:59", strtotime($day));
                         if($request->get('q_type') == 'Checkbox') {
                             $countData = Answers::whereBetween('created_at', [$fromDate, $toDate])
                                                 ->where('q_id','=',$choices['q_id'])

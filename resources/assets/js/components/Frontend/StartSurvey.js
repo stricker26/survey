@@ -15,10 +15,11 @@ export default class Survey extends Component {
         super();
         this.state = {
             survey: [],
+            surveyLength: '',
             title: '',
             surveyId: '',
-            rating: 1,
-            defaultRating: 1,
+            rating: 0,
+            defaultRating: 0,
             defaultSelectValue: 'none',
             selectValue: 'none',
             submitShow: 'hideSubmit',
@@ -26,6 +27,7 @@ export default class Survey extends Component {
             rightHide: '',
             pageCount: 1,
             liActive: 'list-1',
+            currentSurvey: false,
 
             //answers
             respondentId: '',
@@ -48,6 +50,25 @@ export default class Survey extends Component {
         };
     }
 
+    componentWillMount() {
+        const { id } = this.props.match.params;
+        var id_pass = id.split("_")[0];
+        var responid = id.split("_")[1];
+
+        axios.get('/api/front/' + id_pass).then(response => {
+            this.setState({
+                survey: response.data.survey,
+                surveyLength: response.data.surveyLength,
+                title: response.data.title,
+                index: '',
+                respondentId: responid,
+                surveyId: id_pass
+            });
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
     //star hover functions
     onStarHover(nextValue, prevValue, name) {
         if(nextValue > this.state.defaultRating) {
@@ -60,54 +81,81 @@ export default class Survey extends Component {
     }
 
     //right left arrow click function
-    leftArrowClick = (e) => {
-        var newPageCount = this.state.pageCount;
-        newPageCount--;
-        if(newPageCount == 1) {
-            this.setState({
-                leftHide: 'hideArrow',
-                rightHide: '',
-                pageCount: newPageCount,
-                submitShow: 'hideSubmit',
-                liActive: 'list-' + newPageCount.toString()
-            });
-        } else {
-            this.setState({
-                leftHide: '',
-                rightHide: '',
-                pageCount: newPageCount,
-                submitShow: 'hideSubmit',
-                liActive: 'list-' + newPageCount.toString()
-            });
-        }
-    }
+    //leftArrowClick = (e) => {
+        // var newPageCount = this.state.pageCount;
+        // newPageCount--;
+        // if(newPageCount == 1) {
+        //     this.setState({
+        //         leftHide: 'hideArrow',
+        //         rightHide: '',
+        //         pageCount: newPageCount,
+        //         submitShow: 'hideSubmit',
+        //         liActive: 'list-' + newPageCount.toString()
+        //     });
+        // } else {
+        //     this.setState({
+        //         leftHide: '',
+        //         rightHide: '',
+        //         pageCount: newPageCount,
+        //         submitShow: 'hideSubmit',
+        //         liActive: 'list-' + newPageCount.toString()
+        //     });
+        // }
+    //}
 
     rightArrowClick = (e) => {
-        var newPageCount = this.state.pageCount;
-        newPageCount++;
-        if(newPageCount == this.state.survey.length) {
-            this.setState({
-                leftHide: '',
-                rightHide: 'hideArrow',
-                pageCount: newPageCount,
-                submitShow: '',
-                liActive: 'list-' + newPageCount.toString()
+        if(this.state.currentSurvey) {
+            var newPageCount = this.state.pageCount;
+            newPageCount++;
+
+            const form = {
+                questionId: this.state.currentSurvey.split("*,*")[0],
+                answer: this.state.currentSurvey.split("*,*")[1],
+                questionType: this.state.currentSurvey.split("*,*")[2],
+                questionCount: newPageCount
+            };
+            const { id } = this.props.match.params;
+            var id_pass = id.split("_")[0];
+            axios.post('/api/front/logic/' + id_pass, form).then(response => {
+                if(response.data.logic == 'popup') {
+                    alert('popup');
+                } else if(response.data.logic == 'end') {
+                    alert('end');
+                } else {
+                    this.setState({
+                        survey: response.data.survey,
+                        pageCount: response.data.newPageCount
+                    });
+
+                    if(newPageCount == this.state.surveyLength) {
+                        this.setState({
+                            //leftHide: '',
+                            currentSurvey: false,
+                            rightHide: 'hideArrow',
+                            submitShow: '',
+                        });
+                    } else {
+                        this.setState({
+                            //leftHide: '',
+                            currentSurvey: false,
+                            rightHide: '',
+                            submitShow: 'hideSubmit',
+                        });
+                    }
+                }
+            }).catch(error => {
+                console.log(error);
             });
         } else {
-            this.setState({
-                leftHide: '',
-                rightHide: '',
-                submitShow: 'hideSubmit',
-                pageCount: newPageCount,
-                liActive: 'list-' + newPageCount.toString()
-            });
+            alert('Please answer the survey');
         }
     }
 
     //set values for submitting results
     radioClick = (e) => {
-        var targetId = parseInt(e.target.name, 10);
+        var targetId = e.target.name;
         this.setState({
+            currentSurvey: targetId + "*,*" + e.target.value + "*,*radio",
             multipleChoiceAnswer: e.target.value,
             multipleChoiceId: targetId
         });
@@ -119,12 +167,14 @@ export default class Survey extends Component {
             if(checkboxArray.length == 0) {
                 checkboxArray = e.target.value;
                 this.setState({
+                    currentSurvey: e.target.name + "*,*" + checkboxArray + "*,*checkbox",
                     checkboxAnswer: checkboxArray,
                     checkboxId: e.target.name
                 });
             } else {
                 checkboxArray = checkboxArray + "," + e.target.value;
                 this.setState({
+                    currentSurvey: e.target.name + "*,*" + checkboxArray + "*,*checkbox",
                     checkboxAnswer: checkboxArray,
                     checkboxId: e.target.name
                 });
@@ -134,12 +184,14 @@ export default class Survey extends Component {
                 if(checkboxArray.indexOf(",") !== -1) {
                     checkboxArray = checkboxArray.replace(e.target.value + ",", "");
                     this.setState({
+                        currentSurvey: e.target.name + "*,*" + checkboxArray + "*,*checkbox",
                         checkboxAnswer: checkboxArray,
                         checkboxId: e.target.name
                     });
                 } else {
                     checkboxArray = checkboxArray.replace(e.target.value, "");
                     this.setState({
+                        currentSurvey: false,
                         checkboxAnswer: checkboxArray,
                         checkboxId: e.target.name
                     });
@@ -147,6 +199,7 @@ export default class Survey extends Component {
             } else {
                 checkboxArray = checkboxArray.replace("," + e.target.value, "");
                 this.setState({
+                    currentSurvey: e.target.name + "*,*" + checkboxArray + "*,*checkbox",
                     checkboxAnswer: checkboxArray,
                     checkboxId: e.target.name
                 });
@@ -156,6 +209,7 @@ export default class Survey extends Component {
 
     onStarClick(nextValue, prevValue, name) {
         this.setState({
+            currentSurvey: name + "*,*" + nextValue + "*,*star",
             rating: nextValue,
             defaultRating: nextValue,
             starRatingAnswer: nextValue,
@@ -166,11 +220,13 @@ export default class Survey extends Component {
     essayCommentChange = (e) => {
         if(e.target.classList.contains("Comment")) {
             this.setState({
+                currentSurvey: e.target.name + "*,*" + e.target.value + "*,*comment",
                 commentAnswer: e.target.value,
                 commentId: e.target.name
             });
         } else {
             this.setState({
+                currentSurvey: e.target.name + "*,*" + e.target.value + "*,*essay",
                 essayAnswer: e.target.value,
                 essayId: e.target.name
             });
@@ -179,6 +235,7 @@ export default class Survey extends Component {
 
     textboxChange = (e) => {
         this.setState({
+            currentSurvey: e.target.name + "*,*" + e.target.value + "*,*textbox",
             textboxAnswer: e.target.value,
             textboxId: e.target.name
         });
@@ -186,6 +243,7 @@ export default class Survey extends Component {
 
     dropdownChange = (e) => {
         this.setState({
+            currentSurvey: e.target.name + "*,*" + e.target.value + "*,*dropdown",
             dropdownAnswer: e.target.value,
             dropdownId: e.target.name,
             selectValue: e.target.value
@@ -193,8 +251,9 @@ export default class Survey extends Component {
     }
 
     dateChange = (e) => {
-        var targetId = parseInt(e.target.name, 10);
+        var targetId = e.target.name;
         this.setState({
+            currentSurvey: targetId + "*,*" + e.target.value + "*,*comment",
             dateAnswer: e.target.value,
             dateId: targetId
         });
@@ -203,6 +262,8 @@ export default class Survey extends Component {
     //submit form
     submitAnswer = (e) => {
         e.preventDefault();
+        const { id } = this.props.match.params;
+        var id_pass = id.split("_")[0];
         const form = {
             respondentId: this.state.respondentId,
             //answers
@@ -225,7 +286,7 @@ export default class Survey extends Component {
             respondent_id: this.state.respondent_id
         }
         
-        axios.post('/api/webmaster/answerRespondent', form).then(response => {
+        axios.post('/api/webmaster/answerRespondent/' + id_pass, form).then(response => {
             if(response.data.success) {
                 alert('Data submitted');
                 this.props.history.push('/survey/welcome/'+ this.state.surveyId);
@@ -237,39 +298,13 @@ export default class Survey extends Component {
         });
     }
 
-    componentWillMount() {
-        const { id } = this.props.match.params;
-        var id_pass = id.split("_")[0];
-        var responid = id.split("_")[1];
-
-        axios.get('/api/front/' + id_pass).then(response => {
-            this.setState({
-                survey: response.data.survey,
-                title: response.data.title,
-                index: '',
-                respondentId: responid,
-                surveyId: id_pass
-            });
-            console.log(response.data.survey);
-        }).catch(error => {
-            console.log(error);
-        });
-    }
-
     render() {
         var liCount = 1;
         var iterator = 1;
         const { rating } = this.state;
-        const { liActive } = this.state;
-        function checkActive(active) {
-            if(active === liActive) {
-                return "li-active";
-            } else {
-                return "li-hidden";
-            }
-        }
+
         const renderQuestion = this.state.survey.map(list =>
-            <li key={list.id} className={checkActive("list-" + liCount++)}>
+            <li key={list.id} /*className={checkActive("list-" + liCount++)}*/>
                 <div className="question-wrapper">
                     <div className="row">
                         <div className="col">

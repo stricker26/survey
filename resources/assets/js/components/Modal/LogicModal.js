@@ -1,36 +1,81 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import axios from 'axios';
 
 export default class LogicModal extends Component {
 	constructor() {
 		super();
 		this.state = {
-			answers: []
-		}
+			choice: [],
+			action: [],
+			question_id: '',
+		};
 	}
 
-	handleChange(event) {
-        console.log(event.target.value);
-        console.log(event.target.dataset.value);
+	handleChange = (e) => {
+        //e.target.value = skip to
+        //e.target.dataset.value = choice
+        if(e.target.value == '') {
+        	//remove "choices" and "skip to" to the array
+        	var choice = this.state.choice;
+        	var action = this.state.action;
+        	var arrayPos = choice.indexOf(e.target.dataset.value);
+        	choice.splice(arrayPos, 1);
+        	action.splice(arrayPos, 1);
+        } else {
+        	var choice = this.state.choice;
+        	var action = this.state.action;
+        	var arrayPos = choice.indexOf(e.target.dataset.value);
+        	if(arrayPos == -1) {
+	        	choice.push(e.target.dataset.value);
+	        	action.push(e.target.value);
+        	} else {
+        		choice[arrayPos] = e.target.dataset.value;
+        		action[arrayPos] = e.target.value;
+        	}
+        }
+
+    	this.setState({
+    		choice: choice,
+    		action: action,
+    		question_id: e.target.dataset.id
+    	});
 	}
 
 	saveLogic = () => {
-		console.log(this.state.answers);
+		const form = {
+			choice: this.state.choice,
+			action: this.state.action,
+			q_id: this.state.question_id,
+		};
+
+		axios.post('/api/webmaster/logic', form).then(response => {
+            if(response.data.success) {
+            	alert('saving success');
+            }
+        }).catch(errors => {
+            console.log(errors);
+        });
 	}
 
 	render() {
 
 		const { isOpen, closeModal, questionList, answerList } = this.props;
-		let iterator, qId = 0;
-		const question = (e) => questionList.map(questions => {
-			return <option 
-				key={questions.id}
-				data-value={e}
-				value={questions.id}>
-					Q{qId = qId + 1}
-			</option>
+		let iterator = 0;
+		const question = (id) => questionList.map((questions, key) => {
+			return (
+				<Choose>
+					<When condition = {id != questions.id ? true : false}>
+						<option 
+							key={questions.id}
+							value={questions.id}>
+								Q{key + 1}
+						</option>
+					</When>
+				</Choose>
+			)
 		});
 
 		return (
@@ -54,11 +99,12 @@ export default class LogicModal extends Component {
 											<label>{theAnswers.answer}</label>
 										</div>
 										<div className="col-md-7">
-											<select className="form-control" onChange={this.handleChange}>
+											<select data-value={theAnswers.answer} data-id={answers.id} className="form-control" onChange={this.handleChange}>
 												<option value="">--Select--</option>
-												{question(theAnswers.answer)}
-												<option data-value={theAnswers.answer} value="popup">Popup</option>
-												<option data-value={theAnswers.answer} value="end">End Survey</option>
+												{question(answers.id)}
+												<option value="popup">Popup</option>
+												<option value="end">End Survey</option>
+												<option value="removeLogic">Remove Logic</option>
 											</select>
 										</div>
 									</div>
@@ -68,7 +114,7 @@ export default class LogicModal extends Component {
 					</ModalBody>
 					<ModalFooter>
 						<button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
-						<button type="button" className="btn btn-primary" onClick={this.saveLogic}>Save</button>
+						<button type="button" className="btn btn-primary" onClick={this.state.choice.length == 0 ? closeModal : this.saveLogic}>Save</button>
 					</ModalFooter>
 				</Modal>
 			</React.Fragment>	

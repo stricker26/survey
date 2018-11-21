@@ -70,6 +70,7 @@ export default class Response extends Component {
 
             firstResponse: '',
             respondentCount: '',
+            respondentSkipped: 0,
             question: '',
             answers: '',
             lengthAnswer: '',
@@ -97,6 +98,9 @@ export default class Response extends Component {
 
                 question: response.data.secondCard.question[0],
                 respondentCount: response.data.secondCard.answerCount,
+                respondentsTotalCount: response.data.respondentsOverall,
+                respondentsCount: response.data.respondentsTotal,
+                respondentSkipped: response.data.secondCard.skippedCount,
 
                 labelsSecondCard: response.data.secondCard.labelsSecondCard,
                 lengthQuestion: response.data.secondCard.questionCount,
@@ -189,7 +193,7 @@ export default class Response extends Component {
                         labelsFirstCard: response.data.labelsFirstCard,
                         dataFirstCard: response.data.dataFirstCard,
                         zoomData: response.data.zoomData,
-                        lengthGraph: 0,
+                        lengthGraph: response.data.lengthCard1,
                         buttonFirstCardDisplay: 'hidden',
                         countGraph: 1,
                         nextGraph: 'hidden',
@@ -260,10 +264,7 @@ export default class Response extends Component {
                     dataSecondCard: response.data.dataSecondCard,
                     prevSecondGraph: 'hidden',
                     countSecondGraph: 1,
-                    // dataFirstCard: response.data.dataFirstCard,
-                    // lengthGraph: response.data.lengthCard1,
-                    // prevGraph: 'hidden',
-                    // yMax1: response.data.yMax
+                    lengthSecondGraph: response.data.lengthCard1
                 });
 
                 if(response.data.lengthCard1 <= 1) {
@@ -377,12 +378,15 @@ export default class Response extends Component {
                             this.setState({
                                 question: response.data.secondCard.question,
                                 countSecondGraph: 1,
+                                respondentCount: response.data.respondentCount,
+                                respondentSkipped: response.data.respondentSkipped,
 
                                 dataSecondCard: response.data.secondCard.dataSecondCard,
                                 labelsSecondCard: response.data.secondCard.labelsSecondCard,
                                 buttonSecondCardDisplayGraph: 'hidden',
                                 prevSecondGraph: 'hidden',
                                 nextSecondGraph: 'hidden',
+                                lengthSecondGraph: response.data.lengthCard2,
                             });
                         } else {
                             this.setState({
@@ -390,15 +394,20 @@ export default class Response extends Component {
                                 countSecondGraph: 1,
                                 prevSecondGraph: 'hidden',
                                 nextSecondGraph: 'show',
+                                respondentCount: response.data.respondentCount,
+                                respondentSkipped: response.data.respondentSkipped,
 
                                 dataSecondCard: response.data.secondCard.dataSecondCard,
                                 labelsSecondCard: response.data.secondCard.labelsSecondCard,
                                 buttonSecondCardDisplayGraph: 'show',
+                                lengthSecondGraph: response.data.lengthCard2,
                             });
                         }
                     } else {
                         this.setState({
                             question: response.data.secondCard.question,
+                            respondentCount: response.data.respondentCount,
+                            respondentSkipped: response.data.respondentSkipped,
                             countSecondGraph: 1,
                             prevSecondGraph: 'hidden',
                             nextSecondGraph: 'show',
@@ -608,7 +617,7 @@ export default class Response extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h3>{this.state.title}</h3>
-                                        <span>Respondents: {this.state.respondentCount + " out of " + this.state.respondentCount}</span>
+                                        <span>Respondents: {this.state.respondentsCount + " out of " + this.state.respondentsTotalCount}</span>
                                     </div>
                                 </div>
                             </div>
@@ -696,7 +705,7 @@ export default class Response extends Component {
                                                     <span>Answer: {this.state.respondentCount}</span>
                                                 </div>
                                                 <div className="question-skipped-count">
-                                                    <span>Skipped: 0</span>
+                                                    <span>Skipped: {this.state.respondentSkipped}</span>
                                                 </div>
                                                 <div className="question-first-date">
                                                     <span>First: {this.state.firstResponse}</span>

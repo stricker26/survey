@@ -39,27 +39,26 @@ class RespondentsController extends Controller
         }
     }
 
-    public function answerRespondent(Request $request) {
+    public function answerRespondent($id, Request $request) {
     	$inputall = Input::all();
     	$respondent_id = $request->get('respondentId');
-
         date_default_timezone_set("Asia/Manila");
         $date_now = date("Y-m-d H:i:s");
         $respondents = Respondents::where('id','=',$respondent_id)
                                 ->update(['finished_at' => $date_now]);
 
-    	foreach($inputall as $key => $inputone) {
-    		if(strpos($key, "Answer") !== false) {
-    			if($inputone) {
-    				$answer = new Answers;
-    				$answer->q_id = $request->get(str_replace("Answer", "Id", $key));
-    				$answer->answer = $inputone;
+        foreach($inputall as $key => $inputone) {
+            if(strpos($key, "Answer") !== false) {
+                if($inputone) {
+                    $answer = new Answers;
+                    $answer->q_id = $request->get(str_replace("Answer", "Id", $key));
+                    $answer->answer = $inputone;
                     $answer->respondent_id = $respondent_id;
-		    		$answer->created_at = $date_now;
-		    		$answer->save();
-    			}
-    		}
-    	}
+                    $answer->created_at = $date_now;
+                    $answer->save();
+                }
+            }
+        }
 
         return response()->json(['success' => 'success']);
     }
