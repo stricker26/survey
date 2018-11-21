@@ -256,7 +256,6 @@ class ResponseController extends Controller
         $dateCreated = Created::where('id','=',$id)->first()->created_at;
         $firstDate = date("Y-m-d H:00:00", strtotime($dateCreated));
         $first_date = new DateTime($firstDate);
-
         //last date
         $dateRespondents = Respondents::where('survey_id','=',$id)
                              ->where('finished_at','!=',null)
