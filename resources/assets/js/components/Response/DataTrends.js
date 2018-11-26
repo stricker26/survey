@@ -126,7 +126,7 @@ export default class Response extends Component {
                 });
             }
 
-            if(response.data.secondCard.question.length <= 1) {
+            if(response.data.secondCard.questionCount <= 1) {
                 this.setState({
                     buttonSecondCardDisplay: 'hidden',
                     nextQuestion: 'hidden',

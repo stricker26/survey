@@ -9,6 +9,7 @@ import { faArrowAltCircleRight } from '@fortawesome/free-regular-svg-icons';
 import { faArrowAltCircleLeft } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farFaStar } from '@fortawesome/free-regular-svg-icons';
+import FrontEndPopup from '../Modal/FrontEndPopup';
 
 export default class Survey extends Component {
     constructor() {
@@ -31,22 +32,52 @@ export default class Survey extends Component {
 
             //answers
             respondentId: '',
+
+            multipleChoiceStorage: [],
+            multipleChoiceStorageId: [],
             multipleChoiceAnswer: '',
             multipleChoiceId: '',
+
+            checkboxStorage: [],
+            checkboxStorageId: [],
             checkboxAnswer: '',
             checkboxId: '',
+            
+            starRatingStorage: [],
+            starRatingStorageId: [],
             starRatingAnswer: '',
             starRatingId: '',
+            
+            essayStorage: [],
+            essayStorageId: [],
             essayAnswer: '',
             essayId: '',
+            
+            commentStorage: [],
+            commentStorageId: [],
             commentAnswer: '',
             commentId: '',
+            
+            textboxStorage: [],
+            textboxStorageId: [],
             textboxAnswer: '',
             textboxId: '',
+            
+            dropdownStorage: [],
+            dropdownStorageId: [],
             dropdownAnswer: '',
             dropdownId: '',
+            
+            dateStorage: [],
+            dateStorageId: [],
             dateAnswer: '',
-            dateId: ''
+            dateId: '',
+
+            //question logic
+            popup: false,
+            logicModal: false,
+            logicAnswer: '',
+            logicModalContent: [],
         };
     }
 
@@ -62,7 +93,7 @@ export default class Survey extends Component {
                 title: response.data.title,
                 index: '',
                 respondentId: responid,
-                surveyId: id_pass
+                surveyId: id_pass,
             });
         }).catch(error => {
             console.log(error);
@@ -80,72 +111,65 @@ export default class Survey extends Component {
         this.setState({rating: this.state.defaultRating});
     }
 
-    //right left arrow click function
-    //leftArrowClick = (e) => {
-        // var newPageCount = this.state.pageCount;
-        // newPageCount--;
-        // if(newPageCount == 1) {
-        //     this.setState({
-        //         leftHide: 'hideArrow',
-        //         rightHide: '',
-        //         pageCount: newPageCount,
-        //         submitShow: 'hideSubmit',
-        //         liActive: 'list-' + newPageCount.toString()
-        //     });
-        // } else {
-        //     this.setState({
-        //         leftHide: '',
-        //         rightHide: '',
-        //         pageCount: newPageCount,
-        //         submitShow: 'hideSubmit',
-        //         liActive: 'list-' + newPageCount.toString()
-        //     });
-        // }
-    //}
-
     rightArrowClick = (e) => {
         if(this.state.currentSurvey) {
             var newPageCount = this.state.pageCount;
+            var q_Id = this.state.currentSurvey.split("*,*")[0];
+            var ans = this.state.currentSurvey.split("*,*")[1];
+            var q_type = this.state.currentSurvey.split("*,*")[2];
             newPageCount++;
 
-            const form = {
-                questionId: this.state.currentSurvey.split("*,*")[0],
-                answer: this.state.currentSurvey.split("*,*")[1],
-                questionType: this.state.currentSurvey.split("*,*")[2],
-                questionCount: newPageCount
-            };
-            const { id } = this.props.match.params;
-            var id_pass = id.split("_")[0];
-            axios.post('/api/front/logic/' + id_pass, form).then(response => {
-                if(response.data.logic == 'popup') {
-                    alert('popup');
-                } else if(response.data.logic == 'end') {
-                    alert('end');
-                } else {
-                    this.setState({
-                        survey: response.data.survey,
-                        pageCount: response.data.newPageCount
-                    });
-
-                    if(newPageCount == this.state.surveyLength) {
+            if(newPageCount == (this.state.surveyLength + 1)) { //submitted
+                this.submitAnswer(q_type);
+            } else {
+                const form = {
+                    questionId: q_Id,
+                    answer: ans,
+                    questionType: q_type,
+                    questionCount: newPageCount
+                };
+                const { id } = this.props.match.params;
+                var id_pass = id.split("_")[0];
+                axios.post('/api/front/logic/' + id_pass, form).then(response => {
+                    if(response.data.logic[0] == 'popup') {
                         this.setState({
-                            //leftHide: '',
-                            currentSurvey: false,
-                            rightHide: 'hideArrow',
-                            submitShow: '',
+                            popup: true,
+                            logicModal: !this.state.logicModal,
+                            logicModalContent: response.data.logicContent,
+                            logicAnswer: response.data.logic[1],
                         });
+                    } else if(response.data.logic[0] == 'end') {
+                        this.submitAnswer(q_type);
                     } else {
                         this.setState({
-                            //leftHide: '',
-                            currentSurvey: false,
-                            rightHide: '',
-                            submitShow: 'hideSubmit',
+                            survey: response.data.survey,
+                            pageCount: response.data.newPageCount,
+                            popup: false,
                         });
+
+                        if(response.data.newPageCount == this.state.surveyLength) {
+                            this.setState({
+                                //leftHide: '',
+                                currentSurvey: false,
+                                rightHide: 'hideArrow',
+                                submitShow: '',
+                            });
+                        } else {
+                            this.setState({
+                                //leftHide: '',
+                                currentSurvey: false,
+                                rightHide: '',
+                                submitShow: 'hideSubmit',
+                            });
+                        }
+
+                        this.switchFunction(q_type);
                     }
-                }
-            }).catch(error => {
-                console.log(error);
-            });
+
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
         } else {
             alert('Please answer the survey');
         }
@@ -253,38 +277,273 @@ export default class Survey extends Component {
     dateChange = (e) => {
         var targetId = e.target.name;
         this.setState({
-            currentSurvey: targetId + "*,*" + e.target.value + "*,*comment",
+            currentSurvey: targetId + "*,*" + e.target.value + "*,*date",
             dateAnswer: e.target.value,
             dateId: targetId
         });
     }
 
-    //submit form
-    submitAnswer = (e) => {
-        e.preventDefault();
+    toggleLogicModal = (toggle, action) => {
+        this.setState({
+            logicModal: !this.state.logicModal
+        });
+
+        if(toggle == 'yes') {
+            var popupAnswer = this.state.logicModalContent['answer'];
+            var popupQuestionId = this.state.logicModalContent['q_id'].toString();
+            var popupQuestionType = this.state.logicModalContent['q_type'];
+            var q_type = this.state.currentSurvey.split("*,*")[2];
+
+            switch(popupQuestionType) {
+                case 'Multiple Choice':
+                    var arrayPos = this.state.multipleChoiceStorageId.indexOf(popupQuestionId);
+                    var arrayContent = this.state.multipleChoiceStorage[arrayPos];
+                    break;
+
+                case 'Checkbox':
+                    var arrayPos = this.state.checkboxStorageId.indexOf(popupQuestionId);
+                    var arrayContent = this.state.checkboxStorage[arrayPos];
+                    break;
+
+                case 'Star':
+                    var arrayPos = this.state.starRatingStorageId.indexOf(popupQuestionId);
+                    var arrayContent = this.state.starRatingStorage[arrayPos];
+                    break;
+                case 'Dropdown':
+                    var arrayPos = this.state.dropdownStorageId.indexOf(popupQuestionId);
+                    var arrayContent = this.state.dropdownStorage[arrayPos];
+                    break;
+            }
+
+            if(arrayContent == popupAnswer && action == 'end') {
+                this.submitAnswer(q_type);
+            } else {
+                var questionNo = action + "_" + (this.state.pageCount + 1) + "_" + this.state.surveyId;
+                
+                axios.get('/api/front/logic/getPopup/' + questionNo).then(response => {
+                    if(response.data.survey){
+                        this.setState({
+                            survey: response.data.survey,
+                            pageCount: response.data.newPageCount,
+                            popup: false,
+                        });
+
+                        if(response.data.newPageCount == this.state.surveyLength) {
+                            this.setState({
+                                //leftHide: '',
+                                currentSurvey: false,
+                                rightHide: 'hideArrow',
+                                submitShow: '',
+                            });
+                        } else {
+                            this.setState({
+                                //leftHide: '',
+                                currentSurvey: false,
+                                rightHide: '',
+                                submitShow: 'hideSubmit',
+                            });
+                        }
+
+                        this.switchFunction(q_type);
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        }
+    }
+
+    switchFunction = (q_type) => {
+        switch(q_type) {
+            case 'radio':
+                var storageAnswer = this.state.multipleChoiceStorage;
+                var storageId = this.state.multipleChoiceStorageId;
+                storageAnswer.push(this.state.multipleChoiceAnswer);
+                storageId.push(this.state.multipleChoiceId);
+                this.setState({
+                    multipleChoiceStorage: storageAnswer,
+                    multipleChoiceStorageId: storageId,
+                    multipleChoiceAnswer: '',
+                    multipleChoiceId: '',
+                });
+                break;
+                
+            case 'checkbox':
+                var storageAnswer = this.state.checkboxStorage;
+                var storageId = this.state.checkboxStorageId;
+                storageAnswer.push(this.state.checkboxAnswer);
+                storageId.push(this.state.checkboxId);
+                this.setState({
+                    checkboxStorage: storageAnswer,
+                    checkboxStorageId: storageId,
+                    checkboxAnswer: '',
+                    checkboxId: '',
+                });
+                break;
+                
+            case 'star':
+                var storageAnswer = this.state.starRatingStorage;
+                var storageId = this.state.starRatingStorageId;
+                storageAnswer.push(this.state.starRatingAnswer);
+                storageId.push(this.state.starRatingId);
+                this.setState({
+                    starRatingStorage: storageAnswer,
+                    starRatingStorageId: storageId,
+                    starRatingAnswer: '',
+                    starRatingId: '',
+                });
+                break;
+                
+            case 'comment':
+                var storageAnswer = this.state.commentStorage;
+                var storageId = this.state.commentStorageId;
+                storageAnswer.push(this.state.commentAnswer);
+                storageId.push(this.state.commentId);
+                this.setState({
+                    commentStorage: storageAnswer,
+                    commentStorageId: storageId,
+                    commentAnswer: '',
+                    commentId: '',
+                });
+                break;
+                
+            case 'essay':
+                var storageAnswer = this.state.essayStorage;
+                var storageId = this.state.essayStorageId;
+                storageAnswer.push(this.state.essayAnswer);
+                storageId.push(this.state.essayId);
+                this.setState({
+                    essayStorage: storageAnswer,
+                    essayStorageId: storageId,
+                    essayAnswer: '',
+                    essayId: '',
+                });
+                break;
+                
+            case 'textbox':
+                var storageAnswer = this.state.textboxStorage;
+                var storageId = this.state.textboxStorageId;
+                storageAnswer.push(this.state.textboxAnswer);
+                storageId.push(this.state.textboxId);
+                this.setState({
+                    textboxStorage: storageAnswer,
+                    textboxStorageId: storageId,
+                    textboxAnswer: '',
+                    textboxId: '',
+                });
+                break;
+                
+            case 'dropdown':
+                var storageAnswer = this.state.dropdownStorage;
+                var storageId = this.state.dropdownStorageId;
+                storageAnswer.push(this.state.dropdownAnswer);
+                storageId.push(this.state.dropdownId);
+                this.setState({
+                    dropdownStorage: storageAnswer,
+                    dropdownStorageId: storageId,
+                    dropdownAnswer: '',
+                    dropdownId: '',
+                });
+                break;
+                
+            case 'date':
+                var storageAnswer = this.state.dateStorage;
+                var storageId = this.state.dateStorageId;
+                storageAnswer.push(this.state.dateAnswer);
+                storageId.push(this.state.dateId);
+                this.setState({
+                    dateStorage: storageAnswer,
+                    dateStorageId: storageId,
+                    dateAnswer: '',
+                    dateId: '',
+                });
+                break;
+        }
+    }
+
+    submitAnswer = (q_type) => {
+        var mc_a = this.state.multipleChoiceStorage;
+        var mc_id = this.state.multipleChoiceStorageId;
+        var cb_a = this.state.checkboxStorage;
+        var cb_id = this.state.checkboxStorageId;
+        var sr_a = this.state.starRatingStorage;
+        var sr_id = this.state.starRatingStorageId;
+        var es_a = this.state.essayStorage;
+        var es_id = this.state.essayStorageId;
+        var co_a = this.state.commentStorage;
+        var co_id = this.state.commentStorageId;
+        var tb_a = this.state.textboxStorage;
+        var tb_id = this.state.textboxStorageId;
+        var dd_a = this.state.dropdownStorage;
+        var dd_id = this.state.dropdownStorageId;
+        var da_a = this.state.dateStorage;
+        var da_id = this.state.dateStorageId;
+
+        switch(q_type) {
+            case 'radio':
+                mc_a.push(this.state.multipleChoiceAnswer);
+                mc_id.push(this.state.multipleChoiceId);
+                break;
+                
+            case 'checkbox':
+                cb_a.push(this.state.checkboxAnswer);
+                cb_id.push(this.state.checkboxId);
+                break;
+                
+            case 'star':
+                sr_a.push(this.state.starRatingAnswer);
+                sr_id.push(this.state.starRatingId);
+                break;
+                
+            case 'comment':
+                co_a.push(this.state.commentAnswer);
+                co_id.push(this.state.commentId);
+                break;
+                
+            case 'essay':
+                es_a.push(this.state.essayAnswer);
+                es_id.push(this.state.essayId);
+                break;
+                
+            case 'textbox':
+                tb_a.push(this.state.textboxAnswer);
+                tb_id.push(this.state.textboxId);
+                break;
+                
+            case 'dropdown':
+                dd_a.push(this.state.dropdownAnswer);
+                dd_id.push(this.state.dropdownId);
+                break;
+                
+            case 'date':
+                da_a.push(this.state.dateAnswer);
+                da_id.push(this.state.dateId);
+                break;
+        }
+
         const { id } = this.props.match.params;
         var id_pass = id.split("_")[0];
         const form = {
             respondentId: this.state.respondentId,
             //answers
-            multipleChoiceAnswer: this.state.multipleChoiceAnswer,
-            multipleChoiceId: this.state.multipleChoiceId,
-            checkboxAnswer: this.state.checkboxAnswer,
-            checkboxId: this.state.checkboxId,
-            starRatingAnswer: this.state.starRatingAnswer,
-            starRatingId: this.state.starRatingId,
-            essayAnswer: this.state.essayAnswer,
-            essayId: this.state.essayId,
-            commentAnswer: this.state.commentAnswer,
-            commentId: this.state.commentId,
-            textboxAnswer: this.state.textboxAnswer,
-            textboxId: this.state.textboxId,
-            dropdownAnswer: this.state.dropdownAnswer,
-            dropdownId: this.state.dropdownId,
-            dateAnswer: this.state.dateAnswer,
-            dateId: this.state.dateId,
-            respondent_id: this.state.respondent_id
-        }
+            multipleChoiceAnswer: mc_a,
+            multipleChoiceId: mc_id,
+            checkboxAnswer: cb_a,
+            checkboxId: cb_id,
+            starRatingAnswer: sr_a,
+            starRatingId: sr_id,
+            essayAnswer: es_a,
+            essayId: es_id,
+            commentAnswer: co_a,
+            commentId: co_id,
+            textboxAnswer: tb_a,
+            textboxId: tb_id,
+            dropdownAnswer: dd_a,
+            dropdownId: dd_id,
+            dateAnswer: da_a,
+            dateId: da_id,
+        };
+        console.log(form);
         
         axios.post('/api/webmaster/answerRespondent/' + id_pass, form).then(response => {
             if(response.data.success) {
@@ -299,6 +558,7 @@ export default class Survey extends Component {
     }
 
     render() {
+        let viewModal
         var liCount = 1;
         var iterator = 1;
         const { rating } = this.state;
@@ -438,6 +698,15 @@ export default class Survey extends Component {
                 </div>
             </li>
         );
+
+        if(this.state.popup) {
+            viewModal = <FrontEndPopup
+                            isOpen={this.state.logicModal}
+                            closeModal={this.toggleLogicModal}
+                            answer={this.state.logicAnswer}
+                            logicContent={this.state.logicModalContent}
+                        />
+        }
         
         return(
             <React.Fragment>
@@ -446,6 +715,7 @@ export default class Survey extends Component {
                         <Header 
                             title = {this.state.title}
                         />
+                        {viewModal}
                     </div>
                 </header>
                 <section>
@@ -469,7 +739,7 @@ export default class Survey extends Component {
                             <div className="row">
                                 <div className="col">
                                     <div className="submit-answer text-center">
-                                        <button type="submit" className={"btn-submit-answer " + this.state.submitShow} onClick={this.submitAnswer}>Submit</button>
+                                        <button type="submit" className={"btn-submit-answer " + this.state.submitShow} onClick={this.rightArrowClick}>Submit</button>
                                     </div>
                                 </div>
                             </div>

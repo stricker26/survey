@@ -30,6 +30,7 @@ export default class Response extends Component {
             totalCount: '',
             questionType: '',
             responseCount: '',
+            respondentsOverall: '',
 
             //customize
             display: 'hidden',
@@ -76,7 +77,8 @@ export default class Response extends Component {
                     id: id,
                     responseCount: response.data.responseCount,
                     bgColorChart: response.data.color,
-                    stackedData: response.data.data.stackedData
+                    stackedData: response.data.data.stackedData,
+                    respondentsOverall: response.data.respondentsOverall
                 });
             }
         }).catch(error => {
@@ -675,7 +677,7 @@ export default class Response extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h3>{this.state.title}</h3>
-                                        <span>Respondents: {this.state.responseCount + " out of " + this.state.responseCount}</span>
+                                        <span>Respondents: {this.state.responseCount + " out of " + this.state.respondentsOverall}</span>
                                     </div>
                                 </div>
                             </div>

@@ -11066,6 +11066,14 @@ Modal
   padding: 1rem 0 0 0;
 }
 
+.modal .modal-dialog.logic-modal .modal-content .modal-body .logic-body .hidden-popup {
+  display: none;
+}
+
+.modal .modal-dialog.logic-modal .modal-content .modal-body .logic-body .show-popup {
+  display: block;
+}
+
 .modal .modal-dialog.logic-modal .modal-content .modal-body .logic-body .row {
   margin-bottom: 1rem;
 }

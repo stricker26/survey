@@ -18,6 +18,7 @@ export default class Branching extends Component {
             surveysTitle: '',
             surveyID: '',
             questionID: '',
+            question_iterate: '',
             answers: [],
             logicModal: false
         }
@@ -29,12 +30,14 @@ export default class Branching extends Component {
         });
     }
 
-    openLogicModal = (e) => () => {
-        axios.get('/api/webmaster/answers/' + e).then(response => {
+    openLogicModal = (e) => {
+        var q_iterate = e.target.dataset.qnumber;
+        axios.get('/api/webmaster/answers/' + e.target.dataset.id).then(response => {
              this.setState({
                 answers: response.data.answers,
                 questionID: e,
-                logicModal: !this.state.logicModal
+                logicModal: !this.state.logicModal,
+                question_iterate: q_iterate
             });
         }).catch(errors => {
             console.log(errors);
@@ -68,7 +71,7 @@ export default class Branching extends Component {
         const isViewModal = this.state.logicModal;
         let viewModal;
         if(isViewModal === true) {
-            viewModal = <LogicModal isOpen={this.state.logicModal} closeModal={this.toggleLogicModal} questionList={this.state.questions} answerList={this.state.answers} />
+            viewModal = <LogicModal isOpen={this.state.logicModal} closeModal={this.toggleLogicModal} questionList={this.state.questions} answerList={this.state.answers} q_no={this.state.question_iterate} surveyId={this.state.surveyID} />
         } else {
             viewModal = '';
         }
@@ -145,11 +148,11 @@ export default class Branching extends Component {
                                                             <li><button type="button" className="btn btn-primary">Edit</button></li>
                                                             {
                                                                 question.q_type == 'Multiple Choice'
-                                                                    ? <li><button type="button" className="btn btn-warning" onClick = {this.openLogicModal(question.id)}>Logic</button></li>
+                                                                    ? <li><button type="button" className="btn btn-warning" data-qnumber={iterate - 1} data-id={question.id} onClick = {this.openLogicModal}>Logic</button></li>
                                                                     : ''
                                                                 ||  
                                                                 question.q_type == 'Checkbox'
-                                                                    ? <li><button type="button" className="btn btn-warning" onClick = {this.openLogicModal(question.id)}>Logic</button></li>
+                                                                    ? <li><button type="button" className="btn btn-warning" data-qnumber={iterate - 1} data-id={question.id} onClick = {this.openLogicModal}>Logic</button></li>
                                                                     : ''
                                                             }
                                                             <li><button type="button" className="btn btn-secondary">Delete</button></li>

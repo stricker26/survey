@@ -25,6 +25,7 @@ export default class Response extends Component {
             id: '',
             respondent_no: 1,
             respondentsCount: '',
+            respondentsOverall: '',
             respondentSource: '',
             respondentStarted: '',
             respondentLastModified: '',
@@ -53,7 +54,8 @@ export default class Response extends Component {
                 respondentTimeSpend: response.data.respondents.timeSpend,
                 respondentIP: response.data.respondents.ip,
                 questions: response.data.questions,
-                answers: response.data.answers
+                answers: response.data.answers,
+                respondentsOverall: response.data.respondentsOverall,
             });
 
 
@@ -259,7 +261,7 @@ export default class Response extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h3>{this.state.title}</h3>
-                                        <span>Respondents: {this.state.respondentsCount + " out of " + this.state.respondentsCount}</span>
+                                        <span>Respondents: {this.state.respondentsCount + " out of " + this.state.respondentsOverall}</span>
                                     </div>
                                 </div>
                             </div>

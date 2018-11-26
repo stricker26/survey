@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Survey;
 use App\Created;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
@@ -50,6 +51,8 @@ class SurveyController extends Controller
             return response()->json(['warning' => 'Survey name is required!']);
 
         } else {
+            $user_token = $request->get('token');
+            $user_id = User::where('token', '=', $user_token)->first()->id;
 
             $created = new Created;
             $uniqueID = strftime(time());
@@ -58,6 +61,7 @@ class SurveyController extends Controller
             $survey->title = $request->get('title');
             $survey->status = 1;
             $survey->survey_id = $uniqueID;
+            $survey->user_id = $user_id;
             $survey->save();
 
             $created->id = $uniqueID;

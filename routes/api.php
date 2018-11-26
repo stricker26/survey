@@ -30,15 +30,16 @@ Route::prefix('webmaster')->group(function() {
 	Route::get('/answers/{id}', 'Api\AnswerController@view');
 	Route::post('emailRespondent', 'Api\RespondentsController@emailRespondent');
 	Route::post('answerRespondent/{id}', 'Api\RespondentsController@answerRespondent');
-	Route::get('lists', 'Api\MainSurveyController@lists');
+	Route::post('lists', 'Api\MainSurveyController@lists');
 	Route::get('single-question', 'Api\QuestionController@single');
 
 	//logic
 	Route::post('logic', 'Api\LogicController@logic');
+	Route::post('logic/getAnswer', 'Api\LogicController@getAnswer');
 });
 
 Route::prefix('response')->group(function() {
-	Route::get('getAll', 'Api\ResponseController@getAll');
+	Route::post('getAll', 'Api\ResponseController@getAll');
 
 	Route::post('question_summaries/{id}', 'Api\ResponseController@questionSummaryView');
 
@@ -56,4 +57,5 @@ Route::prefix('front')->group(function() {
 	Route::get('/{id}', 'Api\FrontController@survey');
 	Route::get('/welcome/{id}', 'Api\FrontController@surveyWelcome');
 	Route::post('/logic/{id}', 'Api\FrontController@surveyLogic');
+	Route::get('logic/getPopup/{q_no}', 'Api\LogicController@getPopup');
 });

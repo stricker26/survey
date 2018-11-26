@@ -9,45 +9,51 @@ use App\Answers;
 use App\Question;
 use App\Respondents;
 use App\Created;
+use App\User;
 use DateTime;
 
 class ResponseController extends Controller
 {
-    public function getAll() {
+    public function getAll(Request $request) {
+        $token = $request->get('token');
+        $user_id = User::where('token', '=', $token)->first()->id;
+
         date_default_timezone_set("Asia/Manila");
         $date_now = date("Y-m-d 00:00:00");
         $date_for_respon = date("Y-m-d");
 
-    	$all_survey = Survey::select('id','title','status','survey_id')->get();
-    	foreach($all_survey as $survey) {
-    		if($survey->status == '1') {
-    			$survey->status = 'Digital Survey';
-    		}
-            $respondentCount = Respondents::where('survey_id',$survey->survey_id)
-                                          ->where('finished_at','!=',null)
-                                          ->count();
-            if($respondentCount != 0) {
-        		$survey->respondents_ago = Respondents::where('survey_id','=',$survey->survey_id)
-                                                      ->where('finished_at','!=',null)
-    						                          ->count();
-        		$survey->respondents_today = Respondents::where('survey_id','=',$survey->survey_id)
-    						                            ->where('created_at','>=',$date_now)
-                                                        ->where('finished_at','!=',null)
-    						                            ->count();
-                $respondents_dates = (
-                    new DateTime(
-                        Created::where('id','=',$survey->survey_id)
-                               ->first()
-                               ->created_at
-                    )
-                )->format("Y-m-d");
-    	    	$survey->respondents_days_ago = (new DateTime($respondents_dates))->diff(new DateTime($date_for_respon))->format('%a');
-            } else {
-                $survey->respondents_ago = 0;
-                $survey->respondents_today = 0;
-                $survey->respondents_days_ago = 0;
-            }
-    	}
+    	$all_survey = Survey::select('id','title','status','survey_id')->where('user_id','=',$user_id)->get();
+        if(count($all_survey) != 0) {
+        	foreach($all_survey as $survey) {
+        		if($survey->status == '1') {
+        			$survey->status = 'Digital Survey';
+        		}
+                $respondentCount = Respondents::where('survey_id',$survey->survey_id)
+                                              ->where('finished_at','!=',null)
+                                              ->count();
+                if($respondentCount != 0) {
+            		$survey->respondents_ago = Respondents::where('survey_id','=',$survey->survey_id)
+                                                          ->where('finished_at','!=',null)
+        						                          ->count();
+            		$survey->respondents_today = Respondents::where('survey_id','=',$survey->survey_id)
+        						                            ->where('created_at','>=',$date_now)
+                                                            ->where('finished_at','!=',null)
+        						                            ->count();
+                    $respondents_dates = (
+                        new DateTime(
+                            Created::where('id','=',$survey->survey_id)
+                                   ->first()
+                                   ->created_at
+                        )
+                    )->format("Y-m-d");
+        	    	$survey->respondents_days_ago = (new DateTime($respondents_dates))->diff(new DateTime($date_for_respon))->format('%a');
+                } else {
+                    $survey->respondents_ago = 0;
+                    $survey->respondents_today = 0;
+                    $survey->respondents_days_ago = 0;
+                }
+        	}
+        }
 
     	return response()->json(['success' => $all_survey]);
     }
@@ -55,6 +61,8 @@ class ResponseController extends Controller
     public function questionSummaryView($id, Request $request) {
         $respondentCount = Respondents::where('survey_id',$id)
                                       ->where('finished_at','!=',null)
+                                      ->count();
+        $respondentsOverall = Respondents::where('survey_id',$id)
                                       ->count();
         if($respondentCount == 0) {
             return response()->json(['error' => 'No response']);
@@ -125,7 +133,11 @@ class ResponseController extends Controller
                         if($question->q_type == 'Checkbox') {
                             $checkboxTotal += $countAnswer;
                         } else {
-                            array_push($countAnswerArr, number_format((float)($countAnswer/count($answerList))*100, 2, '.', ''));
+                            if(count($answerList) == 0) {
+                                array_push($countAnswerArr, 0);
+                            } else {
+                                array_push($countAnswerArr, number_format((float)($countAnswer/count($answerList))*100, 2, '.', ''));
+                            }
                         }
                         array_push($countAnswerArr2, $countAnswer);
                         $countAnswer = 0;
@@ -240,14 +252,23 @@ class ResponseController extends Controller
             $rowTable = null;
             $dataObj[$request->get('question_no')]['stackedData'] = null;
         }
+
+        //get the total respo
+        $q = Question::where('survey_id','=',$id)
+                            ->skip($request->get('question_no'))
+                            ->first();
+        $r_total = Answers::where('q_id','=',$q->id)
+                            ->count();
+
         return response()->json([
             'test' => $dataObj,
             'rowTable' => $rowTable,
-            'responseCount' => count($answerList),
+            'responseCount' => $r_total,
             'data' => $dataObj[$request->get('question_no')],
             'totalCount' => count($questions),
             'title' => $title,
-            'color' => $coloR
+            'color' => $coloR,
+            'respondentsOverall' => $respondentsOverall,
         ]);
     }
 
@@ -504,7 +525,7 @@ class ResponseController extends Controller
             $countData = 0;
             foreach($array_dayStock as $key=>$day) {
                 foreach($respondents_day as $respoDay) {
-                    $respo_created = new DateTime($respoDay['created_at']);
+                    $respo_created = new DateTime($respoDay['finished_at']);
                     if($respo_created->format("n/j/Y") == $day) {
                         $countData++;
                     }
@@ -576,7 +597,7 @@ class ResponseController extends Controller
             $countData = 0;
             foreach($array_hourStock as $key=>$hour) {
                 foreach($respondents_hour as $respoHour) {
-                    $respo_created = new DateTime($respoHour['created_at']);
+                    $respo_created = new DateTime($respoHour['finished_at']);
                     if($respo_created->format("g a n/j/Y") == date("g a n/j/Y", strtotime($hour))) {
                         $countData++;
                     }
@@ -813,11 +834,6 @@ class ResponseController extends Controller
 
         if($request->get('type') == 'firstGraph') {
             //first graph
-
-            //respondents data 
-            $respondents_data = Respondents::where('survey_id','=',$id)
-                                           ->where('finished_at','!=',null)
-                                           ->get();
             if($request->get('trend') == "Hour") {
                 $countNo = ($request->get('count') - 1) * 24;
                 $array_hour = [date("g a n/j/Y", strtotime('+'.$countNo.' hour', strtotime($dateCreated)))];
@@ -828,17 +844,13 @@ class ResponseController extends Controller
                 }
 
                 $array_data = [];
-                $countData = 0;
                 foreach($array_hour as $key => $hour) {
-                    foreach($respondents_data as $respoHour) {
-                        $respo_created = new DateTime($respoHour['created_at']);
-                        if($respo_created->format("g a n/j/Y") == date("g a n/j/Y", strtotime($hour))) {
-                            $countData++;
-                        }
-                    }
-
+                    $fromDate = date("Y-m-d H:00:00", strtotime($hour));
+                    $toDate = date("Y-m-d H:59:59", strtotime($hour));
+                    $countData = Respondents::whereBetween('finished_at', [$fromDate, $toDate])
+                                    ->where('survey_id','=',$id)
+                                    ->count();
                     array_push($array_data, $countData);
-                    $countData = 0;
                 }
 
                 $array_label = $array_hour;
@@ -852,17 +864,13 @@ class ResponseController extends Controller
                 }
 
                 $array_data = [];
-                $countData = 0;
-                foreach($array_day as $key => $day) {
-                    foreach($respondents_data as $respoDay) {
-                        $respo_created = new DateTime($respoDay['created_at']);
-                        if($respo_created->format("n/j/Y") == date("n/j/Y", strtotime($day))) {
-                            $countData++;
-                        }
-                    }
-
+                foreach($array_day as $key => $hour) {
+                    $fromDate = date("Y-m-d 00:00:00", strtotime($hour));
+                    $toDate = date("Y-m-d 23:59:59", strtotime($hour));
+                    $countData = Respondents::whereBetween('finished_at', [$fromDate, $toDate])
+                                    ->where('survey_id','=',$id)
+                                    ->count();
                     array_push($array_data, $countData);
-                    $countData = 0;
                 }
 
                 $array_label = $array_day;
@@ -1285,6 +1293,8 @@ class ResponseController extends Controller
         $respondents_count = Respondents::where('survey_id','=',$id)
                                         ->where('finished_at','!=',null)
                                         ->count();
+        $respondentsOverall = Respondents::where('survey_id','=',$id)
+                                        ->count();
         
         //respondent data
         $respondents = Respondents::where('survey_id','=',$id)
@@ -1316,7 +1326,8 @@ class ResponseController extends Controller
             'respondents_count' => $respondents_count,
             'respondents' => $respondents,
             'questions' => $questionsArr,
-            'answers' => $answersArr
+            'answers' => $answersArr,
+            'respondentsOverall' => $respondentsOverall,
         ]);
     }
 

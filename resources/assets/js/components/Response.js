@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
+import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 
@@ -14,7 +15,11 @@ export default class Response extends Component {
     }
 
     componentWillMount() {
-        axios.get('/api/response/getAll').then(response => {
+        const form = {
+            token: this.state.token
+        }
+
+        axios.post('/api/response/getAll', form).then(response => {
             this.setState({
                 surveySummary: response.data.success
             });
@@ -38,31 +43,44 @@ export default class Response extends Component {
     }
     
 	render() {
-        const cardsResponse = this.state.surveySummary.map(list => 
-            <div key={list.id}>
-                <div className="response-card">
-                    <div className="response-card-header">
-                        <div className="response-header-status"><span>{list.status}</span></div>
-                        <div className="response-header-title"><span>{list.title}</span></div>
+        const cardsResponse = (
+            <Choose>
+                <When condition = {this.state.surveySummary.length != 0}>
+                    {
+                        this.state.surveySummary.map(list => 
+                            <div key={list.id}>
+                                <div className="response-card">
+                                    <div className="response-card-header">
+                                        <div className="response-header-status"><span>{list.status}</span></div>
+                                        <div className="response-header-title"><span>{list.title}</span></div>
+                                    </div>
+                                    <div className="response-card-body">
+                                        <div className="response-count-ago">
+                                            <span>{list.respondents_ago}</span>
+                                            <p>
+                                                Responses Since<br/>
+                                                {list.respondents_days_ago + (list.respondents_days_ago >= 1 ? " day ago" : " days ago")}
+                                            </p>
+                                        </div>
+                                        <div className="response-count-today">
+                                            <span>{list.respondents_today}</span>
+                                            <p>Respondents Today</p>
+                                        </div>
+                                    </div>
+                                    <div className="response-card-footer" data-value={list.respondents_ago} id={list.survey_id} onClick={this.viewResults}>
+                                        <span data-value={list.respondents_ago} id={list.survey_id}>View Results</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    }
+                </When>
+                <Otherwise>
+                    <div>
+                        <h5>No Data..</h5>
                     </div>
-                    <div className="response-card-body">
-                        <div className="response-count-ago">
-                            <span>{list.respondents_ago}</span>
-                            <p>
-                                Responses Since<br/>
-                                {list.respondents_days_ago + (list.respondents_days_ago >= 1 ? " day ago" : " days ago")}
-                            </p>
-                        </div>
-                        <div className="response-count-today">
-                            <span>{list.respondents_today}</span>
-                            <p>Respondents Today</p>
-                        </div>
-                    </div>
-                    <div className="response-card-footer" data-value={list.respondents_ago} id={list.survey_id} onClick={this.viewResults}>
-                        <span data-value={list.respondents_ago} id={list.survey_id}>View Results</span>
-                    </div>
-                </div>
-            </div>
+                </Otherwise>
+            </Choose>
         );
         
 		return(

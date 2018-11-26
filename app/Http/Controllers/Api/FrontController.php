@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Input;
 
 use App\Logics;
 use App\Question;
+use App\Popup;
 
 class FrontController extends Controller
 {
@@ -19,7 +20,6 @@ class FrontController extends Controller
 
     public function surveyWelcome($id) {
         $query = $this->getQuestions($id);
-        dd(DB::table('answers')->where('q_id',16)->orderBy('respondent_id','asc')->get());
         return response()->json(['survey' => [$query[0]], 'title' => $query[0]->title]);
     }
 
@@ -36,14 +36,19 @@ class FrontController extends Controller
             //check if the logic is popup or end
             if($logic_query->logic == 'popup') {
                 $query = [];
-                $logic = $logic_query->logic;
+                $logic = [
+                    $logic_query->logic,
+                    $logic_query->answer
+                ];
                 $newPageCount = $pageCount;
                 $hasLogic = true;
+                $logicContent = Popup::where('logic_id','=',$logic_query->id)->first();
             } elseif($logic_query->logic == 'end') {
                 $query = [];
                 $logic = $logic_query->logic;
                 $newPageCount = count($this->getQuestions($id));
                 $hasLogic = true;
+                $logicContent = false;
             } else { //skip to question
                 $query = DB::table('questions')
                             ->select('answer','id','q_title','q_type')
@@ -52,6 +57,7 @@ class FrontController extends Controller
                 $logic = $logic_query->logic;
                 $newPageCount = $this->newPageCount($id, $logic_query->action);
                 $hasLogic = true;
+                $logicContent = false;
             }
         } else {
             $query = $this->getQuestions($id);
@@ -59,8 +65,15 @@ class FrontController extends Controller
             $newPageCount = $pageCount;
             $logic = 'no logic';
             $hasLogic = false;
+            $logicContent = false;
         }
-        return response()->json(['hasLogic' => true, 'logic' => $logic, 'survey' => [$query], 'newPageCount' => $newPageCount]);
+        return response()->json([
+            'hasLogic' => true,
+            'logic' => $logic,
+            'survey' => [$query],
+            'newPageCount' => $newPageCount,
+            'logicContent' => $logicContent
+        ]);
     }
 
     public function newPageCount($id, $q_id) {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import Header from './Layouts/Header';
@@ -44,7 +45,11 @@ export default class Survey extends Component {
     }
 
     componentWillMount() {
-        axios.get('/api/webmaster/lists').then(response => {
+        const form = {
+            token: this.state.token
+        }
+
+        axios.post('/api/webmaster/lists', form).then(response => {
             this.setState({
                 surveyLists: response.data
             });
@@ -99,22 +104,35 @@ export default class Survey extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {this.state.surveyLists.map(list => 
-                                                    <tr key={list.id}>
-                                                        <td className="pl-4">
-                                                            <div className="text-success">DIGITAL SURVEY</div>
-                                                            <div>{list.title}</div>
-                                                            <div className="">Created on {list.created_at}.</div>
-                                                        </td>
-                                                        <td><div>{list.updated_at}</div></td>
-                                                        <td><div>0</div></td>
-                                                        <td><Link to={'/dashboard/survey/'+ list.survey_id +'/view'}><img src={this.state.editIcon} alt="Edit" /></Link></td>
-                                                        <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                        <td><img src={this.state.shareIcon} alt="Share" onClick={this.shareSurvey(list.survey_id)} /></td>
-                                                        <td><img src={this.state.moreIcon} alt="More" /></td>
-                                                        <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
-                                                    </tr>
-                                                )}
+                                                <Choose>
+                                                    <When condition = {this.state.surveyLists.length != 0}>
+                                                        {this.state.surveyLists.map(list => 
+                                                            <tr key={list.id}>
+                                                                <td className="pl-4">
+                                                                    <div className="text-success">DIGITAL SURVEY</div>
+                                                                    <div>{list.title}</div>
+                                                                    <div className="">Created on {list.created_at}.</div>
+                                                                </td>
+                                                                <td><div>{list.updated_at}</div></td>
+                                                                <td><div>0</div></td>
+                                                                <td><Link to={'/dashboard/survey/'+ list.survey_id +'/view'}><img src={this.state.editIcon} alt="Edit" /></Link></td>
+                                                                <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
+                                                                <td><img src={this.state.shareIcon} alt="Share" onClick={this.shareSurvey(list.survey_id)} /></td>
+                                                                <td><img src={this.state.moreIcon} alt="More" /></td>
+                                                                <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
+                                                            </tr>
+                                                        )}
+                                                    </When>
+                                                    <Otherwise>
+                                                        <tr>
+                                                            <td colSpan="8" align="center" className="border-bottom">
+                                                                <div>
+                                                                    <span>No data..</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </Otherwise>
+                                                </Choose>
                                             </tbody>
                                         </table>
                                     </div>

@@ -227,6 +227,12 @@ Modal
 				}
 				.logic-body {
 					padding: 1rem 0 0 0;
+					.hidden-popup {
+						display: none;
+					}
+					.show-popup {
+						display: block;
+					}
 					.row {
 						margin-bottom: 1rem;
 						.col-md-7  {

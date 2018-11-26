@@ -29,7 +29,8 @@ export default class CreateSurvey extends Component {
     addSurveyTitle = (e) => {
         e.preventDefault();
         const form = {
-            title: this.state.sTitle
+            title: this.state.sTitle,
+            token: sessionStorage.getItem('token')
         }
 
         axios.post('/api/webmaster/survey', form).then(response => {
