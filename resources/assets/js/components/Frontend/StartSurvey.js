@@ -318,7 +318,7 @@ export default class Survey extends Component {
             if(arrayContent == popupAnswer && action == 'end') {
                 this.submitAnswer(q_type);
             } else {
-                var questionNo = action + "_" + (this.state.pageCount + 1) + "_" + this.state.surveyId;
+                var questionNo = action + "_" + (this.state.pageCount + 1) + "_" + this.state.surveyId + "_" + (arrayContent == popupAnswer ? 'equal' : 'notEqual');
                 
                 axios.get('/api/front/logic/getPopup/' + questionNo).then(response => {
                     if(response.data.survey){

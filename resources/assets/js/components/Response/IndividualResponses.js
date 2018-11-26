@@ -219,10 +219,10 @@ export default class Response extends Component {
                                 <div className="col question-answer">
                                     <Choose>
                                         <When condition = {list.q_type == 'Star'}>
-                                            <span><FontAwesomeIcon icon={faStar} />&nbsp;&nbsp;&nbsp;&nbsp;{this.state.answers[list.id]}/5 Stars</span>
+                                            {this.state.answers[list.id] ? <span><FontAwesomeIcon icon={faStar} />&nbsp;&nbsp;&nbsp;&nbsp;{this.state.answers[list.id]}/5 Stars</span> : <span>(skipped)</span>}
                                         </When>
                                         <Otherwise>
-                                            <span>{this.state.answers[list.id]}</span>
+                                            {this.state.answers[list.id] ? <span>{this.state.answers[list.id]}</span> : <span>(skipped)</span>}
                                         </Otherwise>
                                     </Choose>
                                 </div>

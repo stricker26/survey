@@ -154,9 +154,10 @@ class LogicController extends Controller
     	$q_no = $explode[0];
     	$q_count = $explode[1];
     	$survey_id = $explode[2];
+    	$equal = $explode[3];
 
     	//get question
-    	if($q_no != 'end') {
+    	if($q_no != 'end' && $equal == 'equal') {
 	    	$question = DB::table('questions')
 	    				->select('id','q_type','q_title','answer')
 	    				->where('id','=',$q_no)
