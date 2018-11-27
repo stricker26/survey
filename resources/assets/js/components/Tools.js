@@ -21,8 +21,8 @@ export default class Tools extends Component {
                     </div>
                 </div>
                 <div className="row tools">
-                    <div className="col">
-                        <p>Question Type</p>
+                    <div className="col pt-2">
+                        <h3>Question Type</h3>
                     </div>
                 </div>
                 <div className="row tools">

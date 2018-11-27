@@ -17,7 +17,7 @@ export default class AddQuestions extends Component {
         this.state = {
             name: '',
             answers: [{ answer: '' }],
-            defaultQtype: '',
+            defaultQtype: 'Multiple Choice',
             passToolvalue: '',
             qTitle: '',
             random: 0, 
@@ -55,14 +55,16 @@ export default class AddQuestions extends Component {
     }
 
     handleRemoveAnswer = (idx) => () => {
-        this.setState({
-            answers: this.state.answers.filter((s, sidx) => idx !== sidx)
-        });
+        if(this.state.answers.length > 1) {
+            this.setState({
+                answers: this.state.answers.filter((s, sidx) => idx !== sidx)
+            });
+        }
     }
 
     passToolvalue = (e) => {
         if(e != this.defaultQtype) {
-            if(e == 'Ranking' || e == 'Multiple Choice' || e == 'Checkbox' || e == 'Textboxes') {
+            if(e == 'Ranking' || e == 'Multiple Choice' || e == 'Checkbox' || e == 'Textboxes' || e == 'Dropdown') {
                 this.setState({
                     defaultQtype: e,
                     qTitle: '',
@@ -171,14 +173,11 @@ export default class AddQuestions extends Component {
                 </div>
             ));
         } else if(toolType == 'Star') {
-            tool = this.state.answers.map((answer, idx) => (
-                <div className="form-group" key={idx}>
-                    <div className="tool-option">
-                        <img src={this.state.starIcon} alt="Rate" />
-                        <label htmlFor={idx}><span>{answer.answer}</span></label>
-                    </div>
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <img src={this.state.starIcon} alt="Rate" />
                 </div>
-            ));
+            </div>
         } else if(toolType == 'Essay') {
             tool = <div className="form-group">
                 <div className="tool-option">
@@ -246,7 +245,7 @@ export default class AddQuestions extends Component {
         //         <div className="form-group" key={idx}>
         //             <div className="tool-option pb-2">
         //                 <div style={{display: "flex"}}>
-        //                     <div style={{width: 120 + "px", paddingRight: 15 + "px"}}>
+        //                     <div style={{width: 140 + "px", paddingRight: 15 + "px"}}>
         //                         <span>{answer.answer}</span>
         //                     </div>
         //                     <div>
@@ -271,7 +270,38 @@ export default class AddQuestions extends Component {
         // } else if(toolType == 'Image'){
 
         // } else if(toolType == 'Contact'){
-
+        //     tool = <div className="form-group">
+        //         <div className="tool-option">
+        //             <table>
+        //                 <thead>
+        //                     <tr>
+        //                         <th>
+        //                             <h4>Type</h4>
+        //                         </th>
+        //                     </tr>
+        //                     <tr>
+        //                         <th>Label</th>
+        //                     </tr>
+        //                     <tr>
+        //                         <th>Visible</th>
+        //                     </tr>
+        //                 </thead>
+        //                 <tbody>
+        //                     <tr>
+        //                         <td>
+        //                             <span>Name</span>
+        //                         </td>
+        //                     </tr>
+        //                     <tr>
+        //                         <td>Name</td>
+        //                     </tr>
+        //                     <tr>
+        //                         <td>Name</td>
+        //                     </tr>
+        //                 </tbody>
+        //             </table>
+        //         </div>
+        //     </div>
         // }
 
         return (
@@ -313,7 +343,7 @@ export default class AddQuestions extends Component {
                                                     <button type="button" onClick={this.handleRemoveAnswer(idx)} className="small">–</button>
                                                 </div>
                                             ))}
-                                            <button type="button" onClick={this.handleAddAnswer} className="btn btn-light">Add an answer</button>
+                                            {this.state.answers.length != 0 ? <button type="button" onClick={this.handleAddAnswer} className="btn btn-light">Add an answer</button> : '' }
                                         </div>
                                     </div>
                                     <div className="row tool-check-option">
@@ -356,6 +386,12 @@ export default class AddQuestions extends Component {
                                     <form onSubmit={this.handleSubmit}>
                                         <div className="col-lg-12">
                                             <div className="text-success">{this.state.result}</div>
+                                            <div className="row">
+                                                <div className="col">
+                                                    <h3>{toolType}</h3>
+                                                </div>
+                                            </div>
+                                            <br/>
                                             <div className="row">
                                                 <div className="col">
                                                     <p>Question Title</p>
