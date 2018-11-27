@@ -8,6 +8,7 @@ import Tools from './Tools';
 import ValidateModal from './Modal/ValidateModal';
 import { Editor } from '@tinymce/tinymce-react';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default class AddQuestions extends Component {
 
@@ -32,6 +33,9 @@ export default class AddQuestions extends Component {
             squareIcon: './../../../../images/square-icon.png',
             starIcon: './../../../../images/star-icon.png',
             datetime: './../../../../images/date-time-icon.png',
+            sliders: './../../../../images/sliders-icon.png',
+            textboxIcon: './../../../../images/textbox-icon.png',
+            rankingIcon: './../../../../images/ranking-icon.png',
         };
     }
 
@@ -57,16 +61,27 @@ export default class AddQuestions extends Component {
     }
 
     passToolvalue = (e) => {
-        this.setState({
-            defaultQtype: e
-        });
+        if(e != this.defaultQtype) {
+            if(e == 'Ranking' || e == 'Multiple Choice' || e == 'Checkbox' || e == 'Textboxes') {
+                this.setState({
+                    defaultQtype: e,
+                    qTitle: '',
+                    answers: [{ answer: '' }],
+                });
+            } else {
+                this.setState({
+                    defaultQtype: e,
+                    qTitle: '',
+                    answers: [],
+                });
+            }
+        }
     }
 
     handleQtitle = (e) => {
         this.setState({
             qTitle: e.target.getContent()
         });
-
     }
 
     selectRandom = () => {
@@ -114,6 +129,8 @@ export default class AddQuestions extends Component {
                     warningHeader: 'Success!',
                     warningContent: 'Successfully Added!',
                     warningTheme: 'success',
+                    qTitle: '',
+                    answers: [],
                 });
                 this.toggleWarnigModal();
             } else {
@@ -206,8 +223,56 @@ export default class AddQuestions extends Component {
                 </div>
             ));
         } else {
-            
+
         }
+
+        //  else if(toolType == 'Slider') {
+        //     tool = <div className="form-group">
+        //         <div className="tool-option">
+        //             <div>
+        //                 <img src={this.state.sliders} alt="Sliders" />
+        //             </div>
+        //             <br/>
+        //             <div>
+        //                 <span>Min: 0</span>
+        //             </div>
+        //             <div>
+        //                 <span>Max: 100</span>
+        //             </div>
+        //         </div>
+        //     </div>
+        // } else if(toolType == 'Textboxes'){
+        //     tool = this.state.answers.map((answer, idx) => (
+        //         <div className="form-group" key={idx}>
+        //             <div className="tool-option pb-2">
+        //                 <div style={{display: "flex"}}>
+        //                     <div style={{width: 120 + "px", paddingRight: 15 + "px"}}>
+        //                         <span>{answer.answer}</span>
+        //                     </div>
+        //                     <div>
+        //                         <img src={this.state.textboxIcon} alt="Textbox" />
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     ));
+        // } else if(toolType == 'Ranking'){
+        //     tool = this.state.answers.map((answer, idx) => (
+        //         <div className="form-group" key={idx}>
+        //             <div className="tool-option pb-2">
+        //                 <img src={this.state.rankingIcon} alt="Ranking" />
+        //                 <span style={{marginLeft: -40 + "px", marginRight: 30 + "px"}}>{idx + 1}</span>
+        //                 <label htmlFor={idx}><span>{answer.answer ? answer.answer : '(Enter text..)'}</span></label>
+        //             </div>
+        //         </div>
+        //     ));
+        // } else if(toolType == 'Rating') {
+
+        // } else if(toolType == 'Image'){
+
+        // } else if(toolType == 'Contact'){
+
+        // }
 
         return (
 
@@ -310,6 +375,7 @@ export default class AddQuestions extends Component {
                                                             toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media"
                                                         }}
                                                         onChange={this.handleQtitle}
+                                                        value={this.state.qTitle}
                                                     />
                                                 </div>
                                             </div>

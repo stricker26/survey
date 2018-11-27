@@ -70,7 +70,7 @@ export default class Tools extends Component {
                         <span className="tool" onClick={(e) => passToolvalue('Textboxes')}><FontAwesomeIcon icon="bars" /> Multiple Textboxes</span>
                     </div>
                     <div className="col">
-                        <span className="tool"><FontAwesomeIcon icon="user-check" /> Contact Info</span>
+                        <span className="tool" onClick={(e) => passToolvalue('Contact')}><FontAwesomeIcon icon="user-check" /> Contact Info</span>
                     </div>
                 </div>
                 <div className="row tools">
@@ -80,12 +80,6 @@ export default class Tools extends Component {
                     <div className="col">
                         <span className="tool" onClick={(e) => passToolvalue('Image')}><FontAwesomeIcon icon="image" /> Image Choice</span>
                     </div>
-                </div>
-                <div className="row tools">
-                    <div className="col">
-                        <span className="tool" onClick={(e) => passToolvalue('Upload Image')}><FontAwesomeIcon icon="cloud-upload-alt" /> Image Upload</span>
-                    </div>
-                    <div className="col"></div>
                 </div>
                 <div className="row">
                     <div className="col">
