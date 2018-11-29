@@ -52,7 +52,11 @@ class RespondentsController extends Controller
                     foreach($inputone as $key=>$input) {
                         $answer = new Answers;
                         $answer->q_id = $inputone_id[$key];
-                        $answer->answer = $input;
+                        if(is_array($input)) {
+                            $answer->answer = json_encode($input);
+                        } else {
+                            $answer->answer = $input;
+                        }
                         $answer->respondent_id = $respondent_id;
                         $answer->created_at = $date_now;
                         $answer->save();

@@ -47,24 +47,6 @@ export default class LogicModal extends Component {
 			var popup = parseInt(e.target.dataset.row,10);
     	} else {
 			popup = '';
-
-			//remove the data on popup
-			// var popupQuestion = this.state.popupQuestion;
-			// var popupAnswer = this.state.popupAnswer;
-			// var popupAction = this.state.popupAction;
-
-			// popupQuestion[e.target.dataset.count] = null;
-			// popupAnswer[e.target.dataset.count] = null;
-			// popupAction[e.target.dataset.count] = null;
-
-			// var arrayPos = arrayCount.indexOf(e.target.dataset.count);
-			// arrayCount.splice(arrayPos, 1);
-
-			// this.setState({
-			// 	popupQuestion: popupQuestion,
-			// 	popupAnswer: popupAnswer,
-			// 	popupAction: popupAction
-			// });
     	}
 
     	this.setState({

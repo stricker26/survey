@@ -133,7 +133,7 @@
 		}
 		.response-qs-card {
 			margin-top: 5px;
-			margin-bottom: 20px;
+			margin-bottom: 60px;
 			border: 1px solid #a7a7a7;
 			background-color: #fff;
 			.header-card {
@@ -215,6 +215,18 @@
 						font-size: 0.8rem;
 					}
 				}
+				.question-ans-skip {
+					span {
+						color: #808080;
+						font-size: 0.9rem;
+					}
+					.qs-answered {
+						color: #28a745;
+					}
+					.qs-skipped {
+						color: #dc3545;
+					}
+				}
 				.page-actions {
 					display: inline-block;
 					font-size: 0.7rem;
@@ -271,6 +283,27 @@
 							padding: 2px 10px;
 						}
 					}
+					.response-table-answers-slider {
+						width: 100%;
+						border-spacing: 5px 0;
+						border-collapse: separate;
+						font-size: 1rem;
+						th {
+							padding: 2px 10px;
+							background-color: #edeeee;
+						}
+						td:first-child {
+							width: 60%;
+						}
+						td:nth-child(2),
+						td:nth-child(3) {
+							width: 20%;
+						}
+						td {
+							border-bottom: 3px solid #edeeee;
+							padding: 2px 10px;
+						}
+					}
 				}
 				.answers-part-2 {
 					padding: 30px 20px;
@@ -304,6 +337,20 @@
 							//border-bottom: 1px solid #a7a7a7;
 							span {
 								font-size: 0.8rem;
+							}
+						}
+					}
+					.btn-view-question {
+						padding-top: 30px;
+						button {
+							border: 0;
+							padding: 20px 55px;
+							background-color: rgba(85,142,213,0.8);
+							color: #ffffff;
+							transition: all 0.3s;
+							&:hover {
+								cursor: pointer;
+								background-color: rgba(85,142,213,1);
 							}
 						}
 					}
@@ -566,10 +613,12 @@
 					}
 				}
 				.question-title {
+					padding-top: 5px; 
+					padding-bottom:5px; 
 					span {
 						font-size: 1rem;
 						display: block;
-						line-height: 2.3rem;
+						line-height: 1.3rem;
 					}
 				}
 				.questions-data {

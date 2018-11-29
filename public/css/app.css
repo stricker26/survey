@@ -10524,7 +10524,7 @@ section .container-fluid .sidebar .row .survey-name {
   border-bottom: 1px solid #f89937;
   background-color: transparent;
   padding: .5em 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   color: #ffffff;
 }
 
@@ -11052,6 +11052,10 @@ Modal
   background-color: #28a745;
 }
 
+.modal .modal-dialog .warning {
+  background-color: #d43f3a;
+}
+
 .modal .modal-dialog.logic-modal {
   max-width: 1000px;
 }
@@ -11284,6 +11288,15 @@ Switch Button
   transition: .25s all ease;
 }
 
+.dashboard-survey .survey-list th {
+  text-align: center;
+}
+
+.dashboard-survey .survey-list td {
+  background-color: #f1f1f1;
+  vertical-align: middle !important;
+}
+
 .dashboard-survey .survey-list td img {
   cursor: pointer;
 }
@@ -11298,6 +11311,32 @@ Switch Button
 
 .content-inner-body .form-group .tool-option .border-bottom p {
   color: #9f9f9f;
+}
+
+.content-inner-body .form-group .tool-option table {
+  width: 100%;
+}
+
+.content-inner-body .form-group .tool-option table th:first-child {
+  width: 20%;
+}
+
+.content-inner-body .form-group .tool-option table th:last-child {
+  width: 10%;
+  text-align: center;
+}
+
+.content-inner-body .form-group .tool-option table td:last-child {
+  width: 10%;
+}
+
+.content-inner-body .form-group .tool-option table td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.content-inner-body .form-group .tool-option table th {
+  font-weight: bold;
 }
 
 .starImageDiv svg {
@@ -11374,6 +11413,86 @@ Switch Button
   width: 100%;
   padding: 10px 10px;
   border: 1.5px solid #558ed5;
+}
+
+.answer-text .slider-header {
+  display: inline-block;
+  width: 90%;
+}
+
+.answer-text .slider-header .slider-input {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  margin: 10px 0 25px 0;
+  border-radius: 10px;
+  background: #d3d3d3;
+  opacity: 0.8;
+}
+
+.answer-text .slider-header .slider-input:hover {
+  opacity: 1;
+}
+
+.answer-text .slider-header .slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 8px solid #558ed5;
+  background: #f89937;
+  cursor: pointer;
+}
+
+.answer-text .slider-header .slider-input::-moz-range-thumb {
+  width: 40px;
+  height: 40px;
+  border: 8px solid #558ed5;
+  border-radius: 20px;
+  background: #f89937;
+  cursor: pointer;
+}
+
+.answer-text .slider-value {
+  display: inline-block;
+  width: 10%;
+  height: 73px;
+  margin-left: 20px;
+  text-align: center;
+}
+
+.answer-text .slider-value input {
+  width: 100%;
+  padding: 8px 0 8px 10px;
+}
+
+.answer-text table {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.answer-text table td:first-child {
+  width: 20%;
+  padding-left: 10px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.answer-text table td:last-child {
+  width: 80%;
+  padding-right: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.answer-text table td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.answer-text table tr:nth-child(even) {
+  background-color: #cccccc;
 }
 
 .top-image-welcomeSurvey {
@@ -11886,7 +12005,7 @@ ul.startSurvey-page {
 
 .response-qs-section .response-qs-body .response-qs-card {
   margin-top: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 60px;
   border: 1px solid #a7a7a7;
   background-color: #fff;
 }
@@ -11995,6 +12114,19 @@ ul.startSurvey-page {
   font-size: 0.8rem;
 }
 
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-ans-skip span {
+  color: #808080;
+  font-size: 0.9rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-ans-skip .qs-answered {
+  color: #28a745;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .question-ans-skip .qs-skipped {
+  color: #dc3545;
+}
+
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .page-actions {
   display: inline-block;
   font-size: 0.7rem;
@@ -12065,6 +12197,32 @@ ul.startSurvey-page {
   padding: 2px 10px;
 }
 
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers-slider {
+  width: 100%;
+  border-spacing: 5px 0;
+  border-collapse: separate;
+  font-size: 1rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers-slider th {
+  padding: 2px 10px;
+  background-color: #edeeee;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers-slider td:first-child {
+  width: 60%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers-slider td:nth-child(2),
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers-slider td:nth-child(3) {
+  width: 20%;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part .response-table-answers-slider td {
+  border-bottom: 3px solid #edeeee;
+  padding: 2px 10px;
+}
+
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 {
   padding: 30px 20px;
 }
@@ -12109,6 +12267,24 @@ ul.startSurvey-page {
 
 .response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .ind-answers .answers-created span {
   font-size: 0.8rem;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .btn-view-question {
+  padding-top: 30px;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .btn-view-question button {
+  border: 0;
+  padding: 20px 55px;
+  background-color: rgba(85, 142, 213, 0.8);
+  color: #ffffff;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.response-qs-section .response-qs-body .response-qs-card .response-qs-card-content .answers-part-2 .btn-view-question button:hover {
+  cursor: pointer;
+  background-color: #558ed5;
 }
 
 .response-ir-section {
@@ -12424,10 +12600,15 @@ ul.startSurvey-page {
   color: #558ed5;
 }
 
+.response-dt-section .response-dt-body .response-dt-card .dt-card-header .question-title {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 .response-dt-section .response-dt-body .response-dt-card .dt-card-header .question-title span {
   font-size: 1rem;
   display: block;
-  line-height: 2.3rem;
+  line-height: 1.3rem;
 }
 
 .response-dt-section .response-dt-body .response-dt-card .dt-card-header .questions-data {

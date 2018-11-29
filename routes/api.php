@@ -26,11 +26,17 @@ Route::prefix('user')->group(function() {
 Route::prefix('webmaster')->group(function() {
 	Route::resource('survey', 'Api\SurveyController');
 	Route::post('getName', 'Api\AuthController@getName');
+
 	Route::resource('question', 'Api\QuestionController');
+	Route::post('editSurveyQuestion', 'Api\QuestionController@editSurveyQuestion');
+
 	Route::get('/answers/{id}', 'Api\AnswerController@view');
 	Route::post('emailRespondent', 'Api\RespondentsController@emailRespondent');
 	Route::post('answerRespondent/{id}', 'Api\RespondentsController@answerRespondent');
+
 	Route::post('lists', 'Api\MainSurveyController@lists');
+	Route::get('checkResponses/{id}', 'Api\MainSurveyController@getAnalyzeResult');
+
 	Route::get('single-question', 'Api\QuestionController@single');
 
 	//logic

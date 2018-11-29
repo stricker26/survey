@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Doughnut } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
@@ -81,33 +82,64 @@ export default class Response extends Component {
         const { id } = this.props.match.params;
 
         axios.get('/api/response/data_trends/' + id).then(response => {
-            this.setState({
-                title: response.data.title,
-                id: id,
+            if(response.data.isArray) {
+                this.setState({
+                    title: response.data.title,
+                    id: id,
 
-                //first card
-                labelsFirstCard: response.data.labelsFirstCard,
-                dataFirstCard: response.data.dataFirstCard,
-                zoomData: response.data.zoomData,
-                zoomData2: response.data.zoomData,
-                yMax1: response.data.yMax1,
-                lengthGraph: response.data.lengthCard1,
+                    //first card
+                    labelsFirstCard: response.data.labelsFirstCard,
+                    dataFirstCard: response.data.dataFirstCard,
+                    zoomData: response.data.zoomData,
+                    zoomData2: response.data.zoomData,
+                    yMax1: response.data.yMax1,
+                    lengthGraph: response.data.lengthCard1,
 
-                //second card
-                firstResponse: response.data.firstResponse,
+                    //second card
+                    firstResponse: response.data.firstResponse,
 
-                question: response.data.secondCard.question[0],
-                respondentCount: response.data.secondCard.answerCount,
-                respondentsTotalCount: response.data.respondentsOverall,
-                respondentsCount: response.data.respondentsTotal,
-                respondentSkipped: response.data.secondCard.skippedCount,
+                    question: response.data.secondCard.question[0],
+                    respondentCount: response.data.secondCard.answerCount,
+                    respondentsTotalCount: response.data.respondentsOverall,
+                    respondentsCount: response.data.respondentsTotal,
+                    respondentSkipped: response.data.secondCard.skippedCount,
 
-                labelsSecondCard: response.data.secondCard.labelsSecondCard,
-                lengthQuestion: response.data.secondCard.questionCount,
-                lengthAnswer: response.data.secondCard.lengthAnswer,
-                dataSecondCard: response.data.secondCard.dataSecondCard,
-                lengthSecondGraph: response.data.lengthCard1,
-            });
+                    labelsSecondCard: response.data.secondCard.labelsSecondCard,
+                    lengthQuestion: response.data.secondCard.questionCount,
+                    lengthAnswer: response.data.secondCard.lengthAnswer,
+                    dataSecondCard: response.data.secondCard.dataSecondCard,
+                    lengthSecondGraph: response.data.lengthCard1,
+
+                    isArray: response.data.isArray,
+                });
+            } else {
+                this.setState({
+                    title: response.data.title,
+                    id: id,
+
+                    //first card
+                    labelsFirstCard: response.data.labelsFirstCard,
+                    dataFirstCard: response.data.dataFirstCard,
+                    zoomData: response.data.zoomData,
+                    zoomData2: response.data.zoomData,
+                    yMax1: response.data.yMax1,
+                    lengthGraph: response.data.lengthCard1,
+
+                    //second card
+                    firstResponse: response.data.firstResponse,
+
+                    question: response.data.secondCard.question[0],
+                    respondentCount: response.data.secondCard.answerCount,
+                    respondentsTotalCount: response.data.respondentsOverall,
+                    respondentsCount: response.data.respondentsTotal,
+                    respondentSkipped: response.data.secondCard.skippedCount,
+
+                    lengthQuestion: response.data.secondCard.questionCount,
+                    lengthSecondGraph: response.data.lengthCard1,
+
+                    isArray: response.data.isArray,
+                });
+            }
 
             if(response.data.lengthCard1 <= 1) {
                 this.setState({
@@ -374,34 +406,48 @@ export default class Response extends Component {
 
                 axios.post('/api/response/data_trends/nextGraph/' + this.state.id, form).then(response => {
                     if(response.data.isArray) {
-                        if(response.data.lengthCard2 <= 1) {
+                        if(response.data.isArray == 'noData') {
                             this.setState({
                                 question: response.data.secondCard.question,
-                                countSecondGraph: 1,
                                 respondentCount: response.data.respondentCount,
                                 respondentSkipped: response.data.respondentSkipped,
-
-                                dataSecondCard: response.data.secondCard.dataSecondCard,
-                                labelsSecondCard: response.data.secondCard.labelsSecondCard,
-                                buttonSecondCardDisplayGraph: 'hidden',
-                                prevSecondGraph: 'hidden',
-                                nextSecondGraph: 'hidden',
-                                lengthSecondGraph: response.data.lengthCard2,
-                            });
-                        } else {
-                            this.setState({
-                                question: response.data.secondCard.question,
                                 countSecondGraph: 1,
                                 prevSecondGraph: 'hidden',
                                 nextSecondGraph: 'show',
-                                respondentCount: response.data.respondentCount,
-                                respondentSkipped: response.data.respondentSkipped,
-
-                                dataSecondCard: response.data.secondCard.dataSecondCard,
-                                labelsSecondCard: response.data.secondCard.labelsSecondCard,
-                                buttonSecondCardDisplayGraph: 'show',
-                                lengthSecondGraph: response.data.lengthCard2,
+                                isArray: false,
                             });
+                        } else {
+                            if(response.data.lengthCard2 <= 1) {
+                                this.setState({
+                                    question: response.data.secondCard.question,
+                                    countSecondGraph: 1,
+                                    respondentCount: response.data.respondentCount,
+                                    respondentSkipped: response.data.respondentSkipped,
+
+                                    dataSecondCard: response.data.secondCard.dataSecondCard,
+                                    labelsSecondCard: response.data.secondCard.labelsSecondCard,
+                                    buttonSecondCardDisplayGraph: 'hidden',
+                                    prevSecondGraph: 'hidden',
+                                    nextSecondGraph: 'hidden',
+                                    lengthSecondGraph: response.data.lengthCard2,
+                                    isArray: true,
+                                });
+                            } else {
+                                this.setState({
+                                    question: response.data.secondCard.question,
+                                    countSecondGraph: 1,
+                                    prevSecondGraph: 'hidden',
+                                    nextSecondGraph: 'show',
+                                    respondentCount: response.data.respondentCount,
+                                    respondentSkipped: response.data.respondentSkipped,
+
+                                    dataSecondCard: response.data.secondCard.dataSecondCard,
+                                    labelsSecondCard: response.data.secondCard.labelsSecondCard,
+                                    buttonSecondCardDisplayGraph: 'show',
+                                    lengthSecondGraph: response.data.lengthCard2,
+                                    isArray: true,
+                                });
+                            }
                         }
                     } else {
                         this.setState({
@@ -411,6 +457,7 @@ export default class Response extends Component {
                             countSecondGraph: 1,
                             prevSecondGraph: 'hidden',
                             nextSecondGraph: 'show',
+                            isArray: false,
                         });
                     }
                 }).catch(error => {
@@ -720,50 +767,63 @@ export default class Response extends Component {
                                 <div className="dt-card-body">
                                     <Choose>
                                         <When condition = {this.state.question['q_type'] == 'Multiple Choice' || this.state.question['q_type'] == 'Checkbox' || this.state.question['q_type'] == 'Dropdown' || this.state.question['q_type'] == 'Star'}>
-                                            <div className={"d-flex justify-content-between " + this.state.buttonSecondCardDisplayGraph}>
-                                                <span className={"card-body-question-prev " + this.state.prevSecondGraph} data-name="prev" data-value="secondGraph" onClick={this.nextPrevGraph}><FontAwesomeIcon data-name="prev" data-value="secondGraph" icon={faChevronLeft} />&nbsp;&nbsp;&nbsp;Prev</span>
-                                                <span></span>
-                                                <span className={"card-body-question-next " + this.state.nextSecondGraph} data-name="next" data-value="secondGraph" onClick={this.nextPrevGraph}>Next&nbsp;&nbsp;&nbsp;<FontAwesomeIcon data-name="next" data-value="secondGraph" icon={faChevronRight} /></span>
-                                            </div>
-                                            <div className="card-body-graph">
-                                                <Bar
-                                                    data={{
-                                                        labels: this.state.labelsSecondCard,
-                                                        datasets: this.state.dataSecondCard
-                                                    }}
-                                                    options={{
-                                                        tooltips: {
-                                                            mode: 'index',
-                                                            intersect: false
-                                                        },
-                                                        responsive: true,
-                                                        scales: {
-                                                            xAxes: [{
-                                                                gridLines: {
-                                                                    color: "rgba(0, 0, 0, 0)",
+                                            <Choose>
+                                                <When condition = {this.state.isArray}>
+                                                    <div className={"d-flex justify-content-between " + this.state.buttonSecondCardDisplayGraph}>
+                                                        <span className={"card-body-question-prev " + this.state.prevSecondGraph} data-name="prev" data-value="secondGraph" onClick={this.nextPrevGraph}><FontAwesomeIcon data-name="prev" data-value="secondGraph" icon={faChevronLeft} />&nbsp;&nbsp;&nbsp;Prev</span>
+                                                        <span></span>
+                                                        <span className={"card-body-question-next " + this.state.nextSecondGraph} data-name="next" data-value="secondGraph" onClick={this.nextPrevGraph}>Next&nbsp;&nbsp;&nbsp;<FontAwesomeIcon data-name="next" data-value="secondGraph" icon={faChevronRight} /></span>
+                                                    </div>
+                                                    <div className="card-body-graph">
+                                                        <Bar
+                                                            data={{
+                                                                labels: this.state.labelsSecondCard,
+                                                                datasets: this.state.dataSecondCard
+                                                            }}
+                                                            options={{
+                                                                tooltips: {
+                                                                    mode: 'index',
+                                                                    intersect: false
                                                                 },
-                                                                stacked: true,
-                                                                ticks: {
-                                                                    autoSkip: false
-                                                                }
-                                                            }],
-                                                            yAxes: [{
-                                                                stacked: true,
-                                                                ticks: {
-                                                                    min: 0, // it is for ignoring negative step.
-                                                                    //max: 50,
-                                                                    beginAtZero: true,
-                                                                    callback: function(value, index, values) {
-                                                                        if (Math.floor(value) === value) {
-                                                                            return value;
+                                                                responsive: true,
+                                                                scales: {
+                                                                    xAxes: [{
+                                                                        gridLines: {
+                                                                            color: "rgba(0, 0, 0, 0)",
+                                                                        },
+                                                                        stacked: true,
+                                                                        ticks: {
+                                                                            autoSkip: false
                                                                         }
-                                                                    }
+                                                                    }],
+                                                                    yAxes: [{
+                                                                        stacked: true,
+                                                                        ticks: {
+                                                                            min: 0, // it is for ignoring negative step.
+                                                                            //max: 50,
+                                                                            beginAtZero: true,
+                                                                            callback: function(value, index, values) {
+                                                                                if (Math.floor(value) === value) {
+                                                                                    return value;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }]
                                                                 }
-                                                            }]
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </When>
+                                                <Otherwise>
+                                                    <div className="card-body-otherwise text-center">
+                                                        <div className="row">
+                                                            <div className="col text-center">
+                                                                <h5><FontAwesomeIcon icon={faExclamationCircle} /> No Responses</h5>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Otherwise>
+                                            </Choose>
                                         </When>
                                         <Otherwise>
                                             <div className="card-body-otherwise text-center">

@@ -8,6 +8,7 @@ import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import ShareModal from './Modal/ShareModal';
 import surveyImage from './images/live-survey.jpg';
+import NoResponseModal from './Modal/NoResponseModal';
 
 export default class Survey extends Component {
     constructor() {
@@ -21,7 +22,14 @@ export default class Survey extends Component {
             shareIcon: './../../images/share-default-icon.png',
             moreIcon: './../../images/more-icon.png',
             researcherIcon: './../../images/researcher-icon.png',
-            token: sessionStorage.getItem('token')
+            token: sessionStorage.getItem('token'),
+            responses: [],
+
+            //modal
+            warningHeader: '',
+            warningContent: '',
+            warningTheme: '',
+            warningModal: false,
         }
     }
 
@@ -44,6 +52,34 @@ export default class Survey extends Component {
         });
     }
 
+    analyzeClick = (surveyId) => () => {
+        axios.get('/api/webmaster/checkResponses/' + surveyId).then(response => {
+            if(response.data.success) {
+                this.props.history.push('/dashboard/response/question_summaries/'+ surveyId);
+            } else {
+                this.setState({
+                    warningHeader: 'Warning!',
+                    warningContent: 'No respondents',
+                    warningTheme: 'warning',
+                });
+
+                this.toggleWarnigModal();
+            }
+        }).catch(error => { 
+            console.log(error);
+        });
+    }
+
+    toggleWarnigModal() {
+        this.setState({
+            warningModal: !this.state.warningModal
+        });
+    }
+
+    closeWarningModal = () => {
+        this.toggleWarnigModal();
+    }
+
     componentWillMount() {
         const form = {
             token: this.state.token
@@ -51,7 +87,8 @@ export default class Survey extends Component {
 
         axios.post('/api/webmaster/lists', form).then(response => {
             this.setState({
-                surveyLists: response.data
+                surveyLists: response.data.lists,
+                responses: response.data.responses,
             });
         }).catch(error => { 
             console.log(error);
@@ -69,6 +106,13 @@ export default class Survey extends Component {
                             isOpen = {this.state.shareModal}
                             closeSurvey = {this.toggleShareModal}
                             surveyID = {this.state.shareSurveyURL}
+                        />
+                        <NoResponseModal
+                            isOpen = {this.state.warningModal}
+                            closeSurvey = {this.closeWarningModal}
+                            warningHeader = {this.state.warningHeader}
+                            warningContent = {this.state.warningContent}
+                            warningTheme = {this.state.warningTheme}
                         />
                     </div>
                 </header>
@@ -106,20 +150,24 @@ export default class Survey extends Component {
                                             <tbody>
                                                 <Choose>
                                                     <When condition = {this.state.surveyLists.length != 0}>
-                                                        {this.state.surveyLists.map(list => 
+                                                        {this.state.surveyLists.map((list, key) => 
                                                             <tr key={list.id}>
                                                                 <td className="pl-4">
                                                                     <div className="text-success">DIGITAL SURVEY</div>
                                                                     <div>{list.title}</div>
                                                                     <div className="">Created on {list.created_at}.</div>
                                                                 </td>
-                                                                <td><div>{list.updated_at}</div></td>
-                                                                <td><div>0</div></td>
-                                                                <td><Link to={'/dashboard/survey/'+ list.survey_id +'/view'}><img src={this.state.editIcon} alt="Edit" /></Link></td>
-                                                                <td><img src={this.state.analyzeIcon} alt="Analyze" /></td>
-                                                                <td><img src={this.state.shareIcon} alt="Share" onClick={this.shareSurvey(list.survey_id)} /></td>
-                                                                <td><img src={this.state.moreIcon} alt="More" /></td>
-                                                                <td><img src={this.state.researcherIcon} alt="Researcher" /></td>
+                                                                <td align="center">
+                                                                    <div>{list.updated_at}</div>
+                                                                </td>
+                                                                <td align="center">
+                                                                    <div>{this.state.responses[key]}</div>
+                                                                </td>
+                                                                <td align="center"><Link to={'/dashboard/survey/'+ list.survey_id +'/view'}><img src={this.state.editIcon} alt="Edit" /></Link></td>
+                                                                <td align="center"><img src={this.state.analyzeIcon} alt="Analyze" onClick={this.analyzeClick(list.survey_id)}/></td>
+                                                                <td align="center"><img src={this.state.shareIcon} alt="Share" onClick={this.shareSurvey(list.survey_id)} /></td>
+                                                                <td align="center"><img src={this.state.moreIcon} alt="More" /></td>
+                                                                <td align="center"><img src={this.state.researcherIcon} alt="Researcher" /></td>
                                                             </tr>
                                                         )}
                                                     </When>

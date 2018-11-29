@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use DB;
 use App\Question;
 use App\Survey;
 use Illuminate\Http\Request;
@@ -122,5 +123,18 @@ class QuestionController extends Controller
 
         return response()->json($id);
 
+    }
+
+    public function editSurveyQuestion(Request $request) {
+        $edit_result = DB::table('surveys')->where('survey_id','=',$request->get('survey_id'))
+                                        ->update([
+                                            'title' => $request->get('new_name')
+                                        ]);
+
+        if($edit_result) {
+            return response()->json(['success' => 'Edit success!']);
+        } else {
+            return response()->json(['error' => 'Error Saving']);
+        }
     }
 }

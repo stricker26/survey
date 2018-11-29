@@ -36,6 +36,21 @@ export default class AddQuestions extends Component {
             sliders: './../../../../images/sliders-icon.png',
             textboxIcon: './../../../../images/textbox-icon.png',
             rankingIcon: './../../../../images/ranking-icon.png',
+            backIcon: './../../../../images/back-icon.png',
+
+            //contact
+            checkboxes: [
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+                { answer: true, },
+            ],
         };
     }
 
@@ -122,7 +137,7 @@ export default class AddQuestions extends Component {
             type: this.state.defaultQtype,
             order: this.state.random,
             wchoice: this.state.wChoice,
-            answers: this.state.answers
+            answers: (this.state.defaultQtype == 'Contact' ? this.state.checkboxes : this.state.answers)
         }
 
         axios.post('/api/webmaster/question', form).then(response => {
@@ -131,9 +146,20 @@ export default class AddQuestions extends Component {
                     warningHeader: 'Success!',
                     warningContent: 'Successfully Added!',
                     warningTheme: 'success',
-                    qTitle: '',
-                    answers: [],
                 });
+
+                var q_t = this.state.defaultQtype;
+                if(q_t == 'Ranking' || q_t == 'Multiple Choice' || q_t == 'Checkbox' || q_t == 'Textboxes' || q_t == 'Dropdown') {
+                    this.setState({
+                        qTitle: '',
+                        answers: [{ answer: '' }],
+                    });
+                } else {
+                    this.setState({
+                        qTitle: '',
+                        answers: [],
+                    });
+                }
                 this.toggleWarnigModal();
             } else {
                 this.setState({
@@ -145,6 +171,17 @@ export default class AddQuestions extends Component {
             }
         }).catch(error => {
             console.log(error);
+        });
+
+    }
+
+    checkboxChange = (e) => {
+
+        var cbcount = parseInt(e.target.dataset.cbcount, 10);
+        var checkboxArray = this.state.checkboxes;
+        checkboxArray[cbcount].answer = !this.state.checkboxes[cbcount].answer;
+        this.setState({
+            checkboxes: checkboxArray
         });
 
     }
@@ -221,91 +258,185 @@ export default class AddQuestions extends Component {
                     </div>
                 </div>
             ));
-        } else {
+        } else if(toolType == 'Slider') {
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <div>
+                        <img src={this.state.sliders} alt="Sliders" />
+                    </div>
+                    <br/>
+                    <div>
+                        <span>Min: 0</span>
+                    </div>
+                    <div>
+                        <span>Max: 100</span>
+                    </div>
+                </div>
+            </div>
+        } else if(toolType == 'Textboxes') {
+            tool = this.state.answers.map((answer, idx) => (
+                <div className="form-group" key={idx}>
+                    <div className="tool-option pb-2">
+                        <div style={{display: "flex"}}>
+                            <div style={{width: 140 + "px", paddingRight: 15 + "px"}}>
+                                <span>{answer.answer}</span>
+                            </div>
+                            <div>
+                                <img src={this.state.textboxIcon} alt="Textbox" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ));
+        } else if(toolType == 'Ranking') {
+            // tool = this.state.answers.map((answer, idx) => (
+            //     <div className="form-group" key={idx}>
+            //         <div className="tool-option pb-2">
+            //             <img src={this.state.rankingIcon} alt="Ranking" />
+            //             <span style={{marginLeft: -40 + "px", marginRight: 30 + "px"}}>{idx + 1}</span>
+            //             <label htmlFor={idx}><span>{answer.answer ? answer.answer : '(Enter text..)'}</span></label>
+            //         </div>
+            //     </div>
+            // ));
+        } else if(toolType == 'Contact') {
+            tool = <div className="form-group">
+                <div className="tool-option">
+                    <table className="contact-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <h5>Type</h5>
+                                </th>
+                                <th>
+                                    <h5>Label</h5>
+                                </th>
+                                <th align="center">
+                                    <h5>Visible</h5>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>{/*Name*/}
+                                <td>
+                                    <span>Name</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Name" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[0].answer} data-cbcount="0" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*Company*/}
+                                <td>
+                                    <span>Company</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Company" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[1].answer} data-cbcount="1" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*Address*/}
+                                <td>
+                                    <span>Address</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Address" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[2].answer} data-cbcount="2" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*Address 2*/}
+                                <td>
+                                    <span>Address 2</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Address 2" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[3].answer} data-cbcount="3" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*City / Town*/}
+                                <td>
+                                    <span>City / Town</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="City/Town" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[4].answer} data-cbcount="4" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*State / Province*/}
+                                <td>
+                                    <span>State / Province</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="State/Province" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[5].answer} data-cbcount="5" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*ZIP / Postal Code*/}
+                                <td>
+                                    <span>ZIP / Postal Code</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="ZIP/Postal Code" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[6].answer} data-cbcount="6" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*Country*/}
+                                <td>
+                                    <span>Country</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Country" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[7].answer} data-cbcount="7" onChange={this.checkboxChange}  />
+                                </td>
+                            </tr>
+                            <tr>{/*Email*/}
+                                <td>
+                                    <span>Email</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Email" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[8].answer} data-cbcount="8" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                            <tr>{/*Phone*/}
+                                <td>
+                                    <span>Phone</span>
+                                </td>
+                                <td>
+                                    <input type="text" className="form-control" placeholder="Phone" disabled/>
+                                </td>
+                                <td align="center">
+                                    <input type="checkbox" checked={this.state.checkboxes[9].answer} data-cbcount="9" onChange={this.checkboxChange} />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        } else if(toolType == 'Rating') {
+
+        } else if(toolType == 'Image') {
 
         }
 
-        //  else if(toolType == 'Slider') {
-        //     tool = <div className="form-group">
-        //         <div className="tool-option">
-        //             <div>
-        //                 <img src={this.state.sliders} alt="Sliders" />
-        //             </div>
-        //             <br/>
-        //             <div>
-        //                 <span>Min: 0</span>
-        //             </div>
-        //             <div>
-        //                 <span>Max: 100</span>
-        //             </div>
-        //         </div>
-        //     </div>
-        // } else if(toolType == 'Textboxes'){
-        //     tool = this.state.answers.map((answer, idx) => (
-        //         <div className="form-group" key={idx}>
-        //             <div className="tool-option pb-2">
-        //                 <div style={{display: "flex"}}>
-        //                     <div style={{width: 140 + "px", paddingRight: 15 + "px"}}>
-        //                         <span>{answer.answer}</span>
-        //                     </div>
-        //                     <div>
-        //                         <img src={this.state.textboxIcon} alt="Textbox" />
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     ));
-        // } else if(toolType == 'Ranking'){
-        //     tool = this.state.answers.map((answer, idx) => (
-        //         <div className="form-group" key={idx}>
-        //             <div className="tool-option pb-2">
-        //                 <img src={this.state.rankingIcon} alt="Ranking" />
-        //                 <span style={{marginLeft: -40 + "px", marginRight: 30 + "px"}}>{idx + 1}</span>
-        //                 <label htmlFor={idx}><span>{answer.answer ? answer.answer : '(Enter text..)'}</span></label>
-        //             </div>
-        //         </div>
-        //     ));
-        // } else if(toolType == 'Rating') {
-
-        // } else if(toolType == 'Image'){
-
-        // } else if(toolType == 'Contact'){
-        //     tool = <div className="form-group">
-        //         <div className="tool-option">
-        //             <table>
-        //                 <thead>
-        //                     <tr>
-        //                         <th>
-        //                             <h4>Type</h4>
-        //                         </th>
-        //                     </tr>
-        //                     <tr>
-        //                         <th>Label</th>
-        //                     </tr>
-        //                     <tr>
-        //                         <th>Visible</th>
-        //                     </tr>
-        //                 </thead>
-        //                 <tbody>
-        //                     <tr>
-        //                         <td>
-        //                             <span>Name</span>
-        //                         </td>
-        //                     </tr>
-        //                     <tr>
-        //                         <td>Name</td>
-        //                     </tr>
-        //                     <tr>
-        //                         <td>Name</td>
-        //                     </tr>
-        //                 </tbody>
-        //             </table>
-        //         </div>
-        //     </div>
-        // }
-
         return (
-
             <React.Fragment>
                 <header>
                     <div className="container">
@@ -378,7 +509,7 @@ export default class AddQuestions extends Component {
                                 <div className="row content-inner-head">
                                     <div className="col">
                                         <ul>
-                                            <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/view"} className="nav-link">Back</Link></li>
+                                            <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/view"} className="nav-link"><img src={this.state.backIcon} alt="back button" />&nbsp;&nbsp;&nbsp;&nbsp;Survey Overview</Link></li>
                                         </ul>
                                     </div>
                                 </div>

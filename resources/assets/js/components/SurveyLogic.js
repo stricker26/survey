@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
+import SurveyTitleModal from './Modal/SurveyTitleModal';
 
 export default class SurveyLogic extends Component {
     constructor() {
@@ -16,7 +17,13 @@ export default class SurveyLogic extends Component {
             questions: [],
             surveysTitle: '',
             sTitle: '',
-            surveyID: ''
+            surveyID: '',
+
+            //modal
+            warningHeader: '',
+            warningContent: '',
+            warningTheme: '',
+            warningModal: false,
         }
     }
 
@@ -42,6 +49,43 @@ export default class SurveyLogic extends Component {
 
     }
 
+    editSurveyTitle = () => {
+        const form = {
+            survey_id: this.state.surveyID,
+            new_name: this.state.surveysTitle,
+        };
+
+        axios.post('/api/webmaster/editSurveyQuestion', form).then(response => {
+            if(response.data.success) {
+                this.setState({
+                    warningHeader: 'Success!',
+                    warningContent: 'Edited Successfully!',
+                    warningTheme: 'success',
+                });
+            } else {
+                this.setState({
+                    warningHeader: 'Warning!',
+                    warningContent: 'Error Saving Survey Title',
+                    warningTheme: 'warning',
+                });
+            }
+            this.toggleWarnigModal();
+        }).catch(errors => {
+            console.log(errors);
+        })
+
+    }
+
+    toggleWarnigModal() {
+        this.setState({
+            warningModal: !this.state.warningModal
+        });
+    }
+
+    closeWarningModal = () => {
+        this.toggleWarnigModal();
+    }
+
     render() {
         let iterate = 1;
         return (
@@ -49,6 +93,13 @@ export default class SurveyLogic extends Component {
                 <header>
                     <div className="container">
                         <Header />
+                        <SurveyTitleModal
+                            isOpen = {this.state.warningModal}
+                            closeSurvey = {this.closeWarningModal}
+                            warningHeader = {this.state.warningHeader}
+                            warningContent = {this.state.warningContent}
+                            warningTheme = {this.state.warningTheme}
+                        />
                     </div>
                 </header>
                 <section>
@@ -61,6 +112,7 @@ export default class SurveyLogic extends Component {
                                     <div className="row">
                                         <div className="col">
                                             <input type="text" value={this.state.surveysTitle} onChange={this.handleChange} className="survey-name" />
+                                            <button type="button" className="btn btn-primary" onClick={this.editSurveyTitle}>Save Survey Title</button>
                                         </div>
                                     </div>
                                     <div className="row">

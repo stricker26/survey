@@ -36,7 +36,21 @@ export default class Response extends Component {
 
             //buttons
             backStatBtn: 'blur',
-            nextStatBtn: 'show'
+            nextStatBtn: 'show',
+
+            //contacts
+            contactData: [
+                "Name",
+                "Company",
+                "Address",
+                "Address 2",
+                "City / Town",
+                "State / Province",
+                "ZIP / Postal Code",
+                "Country",
+                "Email",
+                "Phone",
+            ],
         }
     }
 
@@ -199,6 +213,7 @@ export default class Response extends Component {
             respondentsElement += '<span class="dropdown-item" data-value="'+(e + 1)+'">Respondent #'+(e + 1)+'</span>';
         }
 
+        let iterator = 0;
         const questions = this.state.questions.map((list, index) =>
             <div key={index}>
                 <div className="card-content">
@@ -220,6 +235,37 @@ export default class Response extends Component {
                                     <Choose>
                                         <When condition = {list.q_type == 'Star'}>
                                             {this.state.answers[list.id] ? <span><FontAwesomeIcon icon={faStar} />&nbsp;&nbsp;&nbsp;&nbsp;{this.state.answers[list.id]}/5 Stars</span> : <span>(skipped)</span>}
+                                        </When>
+                                        <When condition = {list.q_type == 'Textboxes'}>
+                                            {
+                                                (JSON.parse(list.choices)).map((element, key)=>
+                                                    <div className="row" key={key}>
+                                                        <div className="col-sm-2">
+                                                            <span>{element.answer}</span>
+                                                        </div>
+                                                        <div className="col-sm-10">
+                                                            <span>{JSON.parse(this.state.answers[list.id])[key]}</span>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                        </When>
+                                        <When condition = {list.q_type == 'Contact'}>
+                                            {
+                                                (JSON.parse(list.choices)).map((element, key)=>
+                                                    <If condition = {element.answer}>
+                                                        <div className="row" key={key}>
+                                                            <div className="col-sm-2">
+                                                                <span>{this.state.contactData[key]}</span>
+                                                            </div>
+                                                            <div className="col-sm-10">
+                                                                <span>{JSON.parse(this.state.answers[list.id])[iterator]}</span>
+                                                                <span className={iterator = iterator + 1}></span>
+                                                            </div>
+                                                        </div>
+                                                    </If>
+                                                )
+                                            }
                                         </When>
                                         <Otherwise>
                                             {this.state.answers[list.id] ? <span>{this.state.answers[list.id]}</span> : <span>(skipped)</span>}

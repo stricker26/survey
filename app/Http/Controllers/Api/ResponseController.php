@@ -39,19 +39,19 @@ class ResponseController extends Controller
         						                            ->where('created_at','>=',$date_now)
                                                             ->where('finished_at','!=',null)
         						                            ->count();
-                    $respondents_dates = (
-                        new DateTime(
-                            Created::where('id','=',$survey->survey_id)
-                                   ->first()
-                                   ->created_at
-                        )
-                    )->format("Y-m-d");
-        	    	$survey->respondents_days_ago = (new DateTime($respondents_dates))->diff(new DateTime($date_for_respon))->format('%a');
                 } else {
                     $survey->respondents_ago = 0;
                     $survey->respondents_today = 0;
-                    $survey->respondents_days_ago = 0;
                 }
+
+                $respondents_dates = (
+                    new DateTime(
+                        Created::where('id','=',$survey->survey_id)
+                               ->first()
+                               ->created_at
+                    )
+                )->format("Y-m-d");
+                $survey->respondents_days_ago = (new DateTime($respondents_dates))->diff(new DateTime($date_for_respon))->format('%a');
         	}
         }
 
@@ -59,216 +59,269 @@ class ResponseController extends Controller
     }
 
     public function questionSummaryView($id, Request $request) {
-        $respondentCount = Respondents::where('survey_id',$id)
-                                      ->where('finished_at','!=',null)
-                                      ->count();
-        $respondentsOverall = Respondents::where('survey_id',$id)
-                                      ->count();
-        if($respondentCount == 0) {
-            return response()->json(['error' => 'No response']);
-        }
-        
-        $questions = Question::where('survey_id','=',$id)->get();
-        $array_qid = [];
-        foreach($questions as $question) {
-            array_push($array_qid, $question->id);
-        }
-        $answers = Answers::whereIn('q_id',$array_qid)->get();
-        $title = Survey::where('survey_id', '=', $questions[0]->survey_id)->first()->title;
+        $survey_id = $id;
 
-        $dataStore = [];
-        $answerArr = [];
-        $countAnswerArr = [];
-        $countAnswerArr2 = [];
-        $dataObj = [];
-        $dataTitle = [];
-        $totalCount = 0;
-        $countAnswer = 0;
-        $checkboxTotal = 0;
-        foreach($questions as $question) {
-            $dataStore['question'] = strip_tags($question->q_title);
-            $dataStore['questionType'] = $question->q_type;
 
-            //check question type
-            if($question->q_type == 'Multiple Choice' ||
-                $question->q_type == 'Checkbox' ||
-                $question->q_type == 'Dropdown') {
-                //get all of the answer inside the array
-                $jsondec = json_decode($question->answer);
-                if($jsondec) {
-                    foreach($jsondec as $answer_answer) {
-                        array_push($answerArr, $answer_answer->answer);
+        //top part of the page
+        $done_respondents = Respondents::where('survey_id', '=', $survey_id)
+                                    ->where('finished_at', '!=', null)
+                                    ->count();
+
+        $overall_respondents = Respondents::where('survey_id', '=', $survey_id)
+                                    ->count();
+
+        $survey_title = Survey::where('survey_id', '=', $survey_id)->first()->title;
+        //end
+
+
+        //get survey data e.g: questions
+        $survey_data = Question::where('survey_id', '=', $survey_id)->get();
+        $arr_store = array();
+        $obj_store = (object)[];
+        foreach($survey_data as $d) {
+
+            $obj_store->title = strip_tags($d->q_title);
+            $obj_store->type = $d->q_type;
+            $obj_store->id = $d->id;
+
+
+            $answers = Answers::where('q_id','=',$d->id)->get();
+            $answer_length = count($answers);
+            $obj_store->answerLength = $answer_length;
+
+            if($answer_length != 0) {
+
+                //get the labels for chart
+                if($d->q_type == 'Star') {
+
+                    $starArray = array();
+                    $colorArray = array(); //color array storage
+                    for($x = 1; $x <= 5; $x++) {
+
+                        array_push($starArray, $x);
+                        array_push($colorArray, $this->getColor(rand())); //get color
+
                     }
+                    $obj_store->labelChart = $starArray;
+                    $obj_store->color = $colorArray; //store all of the colors
+
+                } elseif($d->q_type == 'Slider') {
+
+                    $sliderArray = array();
+                    for($x = 1; $x <= 100; $x++) array_push($sliderArray, $x);
+                    $obj_store->labelChart = $sliderArray;
+
+                } elseif($d->q_type == 'Multiple Choice' || $d->q_type == 'Checkbox' || $d->q_type == 'Dropdown') {
+
+                    $jsonChoices = json_decode($d->answer);
+                    $storArray = array();
+                    $colorArray = array(); //color array storage
+                    foreach($jsonChoices as $key=>$c) {
+
+                        array_push($storArray, $c->answer);
+                        array_push($colorArray, $this->getColor(rand())); //get color
+                    }
+                    $obj_store->labelChart = $storArray;
+                    $obj_store->color = $colorArray; //store all of the colors
+
                 } else {
-                    $dataArr = null;
-                }
-                $dataStore['answer'] = $answerArr;
-                $answerArr = [];
 
-                //total count of the respondents answer
-                foreach($answers as $countTotal){
-                    if($countTotal->q_id == $question->id) {
-                        $totalCount++;
+                    $obj_store->labelChart = [];
+                    $jsonLabels = json_decode($d->answer);
+                    $elseArray = array();
+                    foreach($jsonLabels as $jsl) array_push($elseArray, $jsl->answer);
+                    $obj_store->jsonLabels = $elseArray;
+
+                    if($d->q_type == 'Contact') {
+
+                        $contact_values = array(
+                            'Name',
+                            'Company',
+                            'Address',
+                            'Address 2',
+                            'City / Town',
+                            'State / Province',
+                            'ZIP / PostalCode',
+                            'Country',
+                            'Email',
+                            'Phone',
+                        );
+                        $objStore = array();
+                        foreach($obj_store->jsonLabels as $key=>$dtarr) if($dtarr) array_push($objStore, $contact_values[$key]);
+                        $obj_store->jsonLabels = $objStore;
+
                     }
-                }
-                $dataStore['total'] = $totalCount;
-                $totalCount = 0;
 
-                $answerList = Answers::where('q_id','=',$question->id)->get();
-                if($dataStore['answer']) {
-                    foreach($dataStore['answer'] as $dataSingle) {
-                        if(!empty($answerList)) {
-                            foreach($answerList as $answerSingle) {
-                                if(strpos($answerSingle['answer'], ',') === false) {
-                                    if($dataSingle === $answerSingle['answer']) {
-                                        $countAnswer++;
-                                    }
-                                } else {
-                                    if(strpos($answerSingle['answer'], $dataSingle) !== false) {
-                                        $countAnswer++;
-                                    }
-                                }
+                }
+
+
+                //get the answers and data for chart
+                if($answer_length != 0) {//got data
+
+                    if(count($obj_store->labelChart) == 0) {//walnag choices
+
+                        if($d->q_type == 'Textboxes' || $d->q_type == 'Contact') {
+
+                            //get total answers
+                            $data_array = array_fill(0, count($obj_store->jsonLabels), 0);
+                            foreach($answers as $a) {
+
+                                $jsonAnswer = json_decode($a->answer);
+                                foreach($jsonAnswer as $key=>$ja) if($ja) $data_array[$key]++;
+
                             }
-                        }
-                        if($question->q_type == 'Checkbox') {
-                            $checkboxTotal += $countAnswer;
+                            //$obj_store->answer = $data_array;
+
+
+                            //get percentage
+                            $percentage_array = array();
+                            foreach($data_array as $dtArr) {
+
+                                $percentage = number_format((float)($dtArr/$answer_length)*100, 2, '.', '');
+                                array_push($percentage_array, $percentage);
+
+                            }
+                            //$obj_store->percentage = $data_percentage;
+
+
+                            //setup data tables
+                            $dt_arr = array();
+                            foreach($obj_store->jsonLabels as $jsonL) {
+
+                                $dt_obj = (object)[ //data on table
+                                    "choice" => $jsonL,
+                                    "answerTotal" => $data_array[$key],
+                                    "answerPercentage" => $percentage_array[$key],
+                                ];
+                                array_push($dt_arr, $dt_obj);
+
+                            }
+                            $obj_store->dataTable = $dt_arr;
+                            $data_array = array();
+
                         } else {
-                            if(count($answerList) == 0) {
-                                array_push($countAnswerArr, 0);
+
+                            $dc_arr = array();
+                            $dc_obj = (object)[];
+                            foreach($answers as $a) {
+
+                                $dc_obj->answer = $a->answer;
+                                $dc_obj->created_at = $a->created_at;
+                                array_push($dc_arr, $dc_obj);
+                                $dc_obj = (object)[];
+
+                            }
+                            $obj_store->answer = $dc_arr;
+
+                        }
+
+                    } else {//may choices
+
+                        $data_chart = array_fill(0, count($obj_store->labelChart), 0);
+                        foreach($answers as $a) {
+
+                            if($d->q_type == 'Checkbox') {
+
+                                $cb_explode = explode(",", $a->answer);
+                                foreach($cb_explode as $oneByone) {
+
+                                    $idx = array_search($oneByone, $obj_store->labelChart);
+                                    if($idx >= 0) $data_chart[$idx]++;
+
+                                }
+
                             } else {
-                                array_push($countAnswerArr, number_format((float)($countAnswer/count($answerList))*100, 2, '.', ''));
+
+                                $idx = array_search($a->answer, $obj_store->labelChart);
+                                $data_chart[$idx]++;
+
                             }
                         }
-                        array_push($countAnswerArr2, $countAnswer);
-                        $countAnswer = 0;
-                    }
-                }
-                if($question->q_type == 'Checkbox') {
-                    foreach($countAnswerArr2 as $answerCheckbox) {
-                        array_push($countAnswerArr, number_format((float)($answerCheckbox/$checkboxTotal)*100, 2, '.', ''));
-                    }
-                    $checkboxTotal = 0;
-                }
-                $dataStore['answerCount'] = $countAnswerArr;
-                $dataStore['answerCount2'] = $countAnswerArr2;
-                $countAnswerArr = [];
-                $countAnswerArr2 = [];
+                        //$obj_store->answer = $data_chart;
 
-                array_push($dataObj, $dataStore);
-            } elseif($question->q_type == 'Star') {
-                $dataStore['answer'] = ['1','2','3','4','5'];
 
-                //total count of the respondents answer
-                foreach($answers as $countTotal){
-                    if($countTotal->q_id == $question->id) {
-                        $totalCount++;
-                    }
-                }
-                $dataStore['total'] = $totalCount;
-                $totalCount = 0;
+                        //get data on table and stacked data on charts and get percentage
+                        if($d->q_type != 'Slider') {// if qtype is not slider
 
-                $answerList = Answers::where('q_id','=',$question->id)->get();
-                if($dataStore['answer']) {
-                    foreach($dataStore['answer'] as $dataSingle) {
-                        if(!empty($answerList)) {
-                            foreach($answerList as $answerSingle) {
-                                if(strpos($answerSingle['answer'], ',') === false) {
-                                    if($dataSingle === $answerSingle['answer']) {
-                                        $countAnswer++;
-                                    }
-                                } else {
-                                    if(strpos($answerSingle['answer'], $dataSingle) !== false) {
-                                        $countAnswer++;
-                                    }
+                            $data_percentage = array();
+                            foreach($data_chart as $dc) {
+
+                                $percentage = number_format((float)($dc/array_sum($data_chart))*100, 2, '.', '');
+                                array_push($data_percentage, $percentage);
+
+                            }
+                            $obj_store->percentage = $data_percentage;
+
+
+                            $dt_arr = array();
+                            $sd_arr = array();
+                            foreach($obj_store->labelChart as $key=>$lc) {
+
+                                $dt_obj = (object)[ //data on table
+                                    "choice" => $lc,
+                                    "answerTotal" => $data_chart[$key],
+                                    "answerPercentage" => $data_percentage[$key],
+                                ];
+                                array_push($dt_arr, $dt_obj);
+
+                                $sd_obj = (object)[//stacked data on charts
+                                    "backgroundColor" => $obj_store->color[$key],
+                                    "borderWidth" => 1,
+                                    "data" => [$data_percentage[$key]],
+                                    "label" => $lc,
+                                ];
+                                array_push($sd_arr, $sd_obj);
+
+                            }
+                            $obj_store->dataTable = $dt_arr;
+                            $obj_store->stackedData = $sd_arr;
+                        } elseif($d->q_type == 'Slider') {// qtype is slider
+
+                            $sliderTotal = 0;
+                            foreach($data_chart as $key=>$dc) {
+                                if($dc != 0) {
+                                    $sliderTotal += $obj_store->labelChart[$key] * $dc;
                                 }
                             }
+                            $sliderAverage = $sliderTotal / $answer_length;
+                            $obj_store->data = [$sliderAverage];
+                            $obj_store->total = $sliderTotal;
+                            $obj_store->average = $sliderAverage;
+
                         }
-                        array_push($countAnswerArr, number_format((float)($countAnswer/count($answerList))*100, 2, '.', ''));
-                        array_push($countAnswerArr2, $countAnswer);
-                        $countAnswer = 0;
-                    }
-                }
-                $dataStore['answerCount'] = $countAnswerArr;
-                $dataStore['answerCount2'] = $countAnswerArr2;
-                $countAnswerArr = [];
-                $countAnswerArr2 = [];
 
-                array_push($dataObj, $dataStore);
+                    }
+
+                } else {
+                    //no data
+
+
+                }
+
+
+                //number of respondents who answered ans skipped
+                $obj_store->skipped_respondents = $done_respondents - $answer_length;
+                $obj_store->answered_respondents = $answer_length;
+
             } else {
-                foreach($answers as $countTotal){
-                    if($countTotal->q_id == $question->id) {
-                        //total count of the respondents answer
-                        $totalCount++;
 
-                        //get all of the answer inside the array
-                        array_push($answerArr, [
-                            'answer' => $countTotal->answer,
-                            'created_at' => Respondents::where('id', $countTotal->respondent_id)
-                                                       ->where('finished_at','!=',null)
-                                                       ->first()
-                                                       ->created_at
-                        ]);
-                    }
-                }
-                $dataStore['answer'] = $answerArr;
-                $dataStore['total'] = $totalCount;
-                $dataStore['answerCount'] = count($answerArr);
-                $dataStore['answerCount2'] = null;
-                $answerArr = [];
-                $totalCount = 0;
+                //number of respondents who answered ans skipped
+                $obj_store->skipped_respondents = $done_respondents;
+                $obj_store->answered_respondents = $answer_length;
 
-                array_push($dataObj, $dataStore);
             }
+
+
+            array_push($arr_store, $obj_store);
+            $obj_store = (object)[];
+
         }
-
-        $rowTable = [];
-        $coloR = [];
-        if($dataObj[$request->get('question_no')]['questionType'] == 'Multiple Choice' ||
-            $dataObj[$request->get('question_no')]['questionType'] == 'Checkbox' ||
-            $dataObj[$request->get('question_no')]['questionType'] == 'Dropdown' ||
-            $dataObj[$request->get('question_no')]['questionType'] == 'Star') {
-            for($x = 0; $x < count($dataObj[$request->get('question_no')]['answer']); $x++) {
-                array_push($rowTable, [
-                    'answer' => $dataObj[$request->get('question_no')]['answer'][$x],
-                    'answerPercentage' => $dataObj[$request->get('question_no')]['answerCount'][$x],
-                    'answerCount' => $dataObj[$request->get('question_no')]['answerCount2'][$x]
-                ]);
-                array_push($coloR, $this->getColor(rand()));
-            }
-
-            $chartStackedData = [];
-            foreach($rowTable as $key => $singleTable) {
-                array_push($chartStackedData, 
-                    [
-                        'label' => $singleTable['answer'],
-                        'data' => [$singleTable['answerPercentage']],
-                        'backgroundColor' => $coloR[$key],
-                        'borderWidth' => 1
-                    ]
-                );
-            }
-            $dataObj[$request->get('question_no')]['stackedData'] = $chartStackedData;
-        } else {
-            $rowTable = null;
-            $dataObj[$request->get('question_no')]['stackedData'] = null;
-        }
-
-        //get the total respo
-        $q = Question::where('survey_id','=',$id)
-                            ->skip($request->get('question_no'))
-                            ->first();
-        $r_total = Answers::where('q_id','=',$q->id)
-                            ->count();
 
         return response()->json([
-            'test' => $dataObj,
-            'rowTable' => $rowTable,
-            'responseCount' => $r_total,
-            'data' => $dataObj[$request->get('question_no')],
-            'totalCount' => count($questions),
-            'title' => $title,
-            'color' => $coloR,
-            'respondentsOverall' => $respondentsOverall,
+            'data' => $arr_store,
+            'doneRespondents' => $done_respondents,
+            'overallRespondents' => $overall_respondents,
+            'surveyTitle' => $survey_title,
         ]);
     }
 
@@ -356,8 +409,33 @@ class ResponseController extends Controller
                 'q_id' => $question->id
             ]);
         }
+
+        //respondent answered
+        $total_respondents = Respondents::where('survey_id','=',$id)
+                                        ->where('finished_at','!=',null)
+                                        ->count();
+        $overall_respondents = Respondents::where('survey_id','=',$id)
+                                        ->count();
         $secondCard['questionCount'] = count($array_questions);
         $secondCard['question'] = [$array_questions[0]];
+        $secondCard['skippedCount'] = $total_respondents - Answers::where('q_id',$array_questions[0]['q_id'])->count();
+        $secondCard['answerCount'] = $total_respondents - $secondCard['skippedCount'];
+        $checkNull = Answers::where('q_id','=',$questions[0]->id)->count();
+        if($checkNull == 0) {
+            return response()->json([
+                'isArray' => false,
+                'title' => $returnData,
+                'labelsFirstCard' => $array_hour,
+                'dataFirstCard' => $array_data,
+                'zoomData' => $zoomData,
+                'yMax1' => max($array_biggest),
+                'firstResponse' => $firstResponse->format("n/j/Y"),
+                'lengthCard1' => $lengthCard1,
+                'secondCard' => $secondCard,
+                'respondentsOverall' => $overall_respondents,
+                'respondentsTotal' => $total_respondents,
+            ]);
+        }
 
         if($questions[0]->q_type == 'Multiple Choice' ||
             $questions[0]->q_type == 'Checkbox' ||
@@ -383,16 +461,6 @@ class ResponseController extends Controller
             $choices = null;
         }
         $secondCard['choices'] = $choices;
-
-        //respondent answered
-        $total_respondents = Respondents::where('survey_id','=',$id)
-                                        ->where('finished_at','!=',null)
-                                        ->count();
-        $overall_respondents = Respondents::where('survey_id','=',$id)
-                                        ->count();
-        $secondCard['skippedCount'] = $total_respondents - Answers::where('q_id',$array_questions[0]['q_id'])->count();
-
-        $secondCard['answerCount'] = $total_respondents - $secondCard['skippedCount'];
 
         $secondCard['labelsSecondCard'] = $array_hour;
         
@@ -449,6 +517,7 @@ class ResponseController extends Controller
         }
 
         return response()->json([
+            'isArray' => true,
             'title' => $returnData,
             'labelsFirstCard' => $array_hour,
             'dataFirstCard' => $array_data,
@@ -888,9 +957,29 @@ class ResponseController extends Controller
                             ->first();
 
             //last date
-            $dateRespondents = Answers::where('q_id',$question->id)
+            $checkNull = Answers::where('q_id',$question->id)->count();
+            if($checkNull == 0) {
+                $dateRespondents = 0;
+
+                $secondCard = [];
+                $array_questions = [
+                    'q_title' => strip_tags($question->q_title),
+                    'q_type' => $question->q_type,
+                ];
+                $secondCard['question'] = $array_questions;
+
+                return response()->json([
+                    'isArray' => 'noData',
+                    'secondCard' => $secondCard,
+                    'lengthCard2' => 1,
+                    'respondentCount' => 0,
+                    'respondentSkipped' => 0,
+                ]);
+            } else {
+                $dateRespondents = Answers::where('q_id',$question->id)
                                  ->orderBy('created_at', 'desc')
                                  ->first()->created_at;
+            }
 
             //respondents data 
             $respondents_data = Respondents::where('survey_id','=',$id)
@@ -1307,7 +1396,12 @@ class ResponseController extends Controller
         $questions = Question::where('survey_id','=',$id)->get();
         $questionsArr = [];
         foreach($questions as $question) {
-            array_push($questionsArr, ['question' => strip_tags($question['q_title']), 'q_type' => $question['q_type'], 'id' => $question['id']]);
+            array_push($questionsArr, [
+                'question' => strip_tags($question['q_title']),
+                'q_type' => $question['q_type'],
+                'id' => $question['id'],
+                'choices' => $question['answer'],
+            ]);
         }
 
         //respondent answer

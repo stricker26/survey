@@ -4,13 +4,18 @@ import { Redirect } from 'react-router-dom';
 import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
+import NoResponseModal from './Modal/NoResponseModal';
 
 export default class Response extends Component {
     constructor(){
         super()
         this.state = {
             token: sessionStorage.getItem('token'),
-            surveySummary: []
+            surveySummary: [],
+            warningHeader: '',
+            warningContent: '',
+            warningTheme: '',
+            warningModal: false,
         }
     }
 
@@ -38,8 +43,24 @@ export default class Response extends Component {
         if(e.target.dataset.value != 0) { 
             this.props.history.push('/dashboard/response/question_summaries/'+ e.target.id);
         } else {
-            alert('No responses!');
+            this.setState({
+                warningHeader: 'Warning!',
+                warningContent: 'No respondents',
+                warningTheme: 'warning',
+            });
+
+            this.toggleWarnigModal();
         }
+    }
+
+    toggleWarnigModal() {
+        this.setState({
+            warningModal: !this.state.warningModal
+        });
+    }
+
+    closeWarningModal = () => {
+        this.toggleWarnigModal();
     }
     
 	render() {
@@ -59,7 +80,7 @@ export default class Response extends Component {
                                             <span>{list.respondents_ago}</span>
                                             <p>
                                                 Responses Since<br/>
-                                                {list.respondents_days_ago + (list.respondents_days_ago >= 1 ? " day ago" : " days ago")}
+                                                {list.respondents_days_ago + (list.respondents_days_ago > 1 ? " days ago" : " day ago")}
                                             </p>
                                         </div>
                                         <div className="response-count-today">
@@ -89,6 +110,13 @@ export default class Response extends Component {
 				<header>
                     <div className="container">
                         <Header />
+                        <NoResponseModal
+                            isOpen = {this.state.warningModal}
+                            closeSurvey = {this.closeWarningModal}
+                            warningHeader = {this.state.warningHeader}
+                            warningContent = {this.state.warningContent}
+                            warningTheme = {this.state.warningTheme}
+                        />
                     </div>
                 </header>
                 <section className="response-section">

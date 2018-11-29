@@ -72,6 +72,34 @@ export default class Survey extends Component {
             dateStorageId: [],
             dateAnswer: '',
             dateId: '',
+            
+            sliderStorage: [],
+            sliderStorageId: [],
+            sliderAnswer: 0,
+            sliderNumberAnswer: 0,
+            sliderId: '',
+
+            contactData: [
+                "Name",
+                "Company",
+                "Address",
+                "Address 2",
+                "City / Town",
+                "State / Province",
+                "ZIP / Postal Code",
+                "Country",
+                "Email",
+                "Phone",
+            ],
+            contactStorage: [],
+            contactStorageId: [],
+            contactAnswer: {},
+            contactId: '',
+
+            textboxesStorage: [],
+            textboxesStorageId: [],
+            textboxesAnswer: {},
+            textboxesId: '',
 
             //question logic
             popup: false,
@@ -353,6 +381,98 @@ export default class Survey extends Component {
         }
     }
 
+    sliderChange = (e) => {
+        if(e.target.type == 'number') {
+            if(e.target.value != '') {
+                var value = parseInt(e.target.value, 10);
+                if(value < 0 || value > 100) {
+                    e.preventDefault();
+                } else {
+                    this.setState({
+                        currentSurvey: e.target.name + "*,*" + value + "*,*slider",
+                        sliderNumberAnswer: e.target.value,
+                        sliderAnswer: e.target.value,
+                        sliderId: e.target.name,
+                    });
+                }
+            } else {
+                this.setState({
+                    currentSurvey: e.target.name + "*,*0*,*slider",
+                    sliderNumberAnswer: e.target.value,
+                    sliderAnswer: 0,
+                    sliderId: e.target.name,
+                });
+            }
+        } else {
+            var value = parseInt(e.target.value, 10);
+            this.setState({
+                currentSurvey: e.target.name + "*,*" + value + "*,*slider",
+                sliderAnswer: value,
+                sliderNumberAnswer: value,
+                sliderId: e.target.name,
+            });
+        }
+    }
+
+    contactChange = (e) => {
+        var contactObj = this.state.contactAnswer;
+
+        if(e.target.value == "") {
+            delete contactObj[e.target.name];
+        } else {
+            contactObj[e.target.name] = e.target.value;
+        }
+
+        this.setState({
+            currentSurvey: false,
+            contactAnswer: contactObj,
+            contactId: e.target.dataset.id,
+        });
+
+        var jsonParse = JSON.parse(this.state.survey[0].answer);
+        var total = 0;
+        for(var x = 0; x < jsonParse.length; x++) {
+            if(jsonParse[x].answer) total++;
+        }
+
+        if(this.sizeObject(contactObj) == total) {
+            this.setState({
+                currentSurvey: e.target.dataset.id + "*,*" + contactObj + "*,*contact",
+            });
+        }
+    }
+
+    textboxesChange = (e) => {
+        var textboxesObj = this.state.textboxesAnswer;
+
+        if(e.target.value == "") {
+            delete textboxesObj[e.target.name];
+        } else {
+            textboxesObj[e.target.name] = e.target.value;
+        }
+
+        this.setState({
+            currentSurvey: false,
+            textboxesAnswer: textboxesObj,
+            textboxesId: e.target.dataset.id,
+        });
+
+        var jsonParse = JSON.parse(this.state.survey[0].answer);
+        if(this.sizeObject(textboxesObj) == jsonParse.length) {
+            this.setState({
+                currentSurvey: e.target.dataset.id + "*,*" + textboxesObj + "*,*textboxes",
+            });
+        }
+    }
+
+    sizeObject = (obj) => {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    }
+
     switchFunction = (q_type) => {
         switch(q_type) {
             case 'radio':
@@ -458,6 +578,46 @@ export default class Survey extends Component {
                     dateId: '',
                 });
                 break;
+
+            case 'slider':
+                var storageAnswer = this.state.sliderStorage;
+                var storageId = this.state.sliderStorageId;
+                storageAnswer.push(this.state.sliderAnswer);
+                storageId.push(this.state.sliderId);
+                this.setState({
+                    sliderStorage: storageAnswer,
+                    sliderStorageId: storageId,
+                    sliderAnswer: 0,
+                    sliderNumberAnswer: 0,
+                    sliderId: '',
+                });
+                break;
+
+            case 'contact':
+                var storageAnswer = this.state.contactStorage;
+                var storageId = this.state.contactStorageId;
+                storageAnswer.push(this.state.contactAnswer);
+                storageId.push(this.state.contactId);
+                this.setState({
+                    contactStorage: storageAnswer,
+                    contactStorageId: storageId,
+                    contactAnswer: {},
+                    contactId: '',
+                });
+                break;
+
+            case 'textboxes':
+                var storageAnswer = this.state.textboxesStorage;
+                var storageId = this.state.textboxesStorageId;
+                storageAnswer.push(this.state.textboxesAnswer);
+                storageId.push(this.state.textboxesId);
+                this.setState({
+                    textboxesStorage: storageAnswer,
+                    textboxesStorageId: storageId,
+                    textboxesAnswer: {},
+                    textboxesId: '',
+                });
+                break;
         }
     }
 
@@ -478,6 +638,12 @@ export default class Survey extends Component {
         var dd_id = this.state.dropdownStorageId;
         var da_a = this.state.dateStorage;
         var da_id = this.state.dateStorageId;
+        var sl_a = this.state.sliderStorage;
+        var sl_id = this.state.sliderStorageId;
+        var ci_a = this.state.contactStorage;
+        var ci_id = this.state.contactStorageId;
+        var tbs_a = this.state.textboxesStorage;
+        var tbs_id = this.state.textboxesStorageId;
 
         switch(q_type) {
             case 'radio':
@@ -519,6 +685,21 @@ export default class Survey extends Component {
                 da_a.push(this.state.dateAnswer);
                 da_id.push(this.state.dateId);
                 break;
+
+            case 'slider':
+                sl_a.push(this.state.sliderAnswer);
+                sl_id.push(this.state.sliderId);
+                break;
+
+            case 'contact':
+                ci_a.push(this.state.contactAnswer);
+                ci_id.push(this.state.contactId);
+                break;
+
+            case 'textboxes':
+                tbs_a.push(this.state.textboxesAnswer);
+                tbs_id.push(this.state.textboxesId);
+                break;
         }
 
         const { id } = this.props.match.params;
@@ -542,7 +723,14 @@ export default class Survey extends Component {
             dropdownId: dd_id,
             dateAnswer: da_a,
             dateId: da_id,
+            sliderAnswer: sl_a,
+            sliderId: sl_id,
+            contactAnswer: ci_a,
+            contactId: ci_id,
+            textboxesAnswer: tbs_a,
+            textboxesId: tbs_id,
         };
+
         console.log(form);
         
         axios.post('/api/webmaster/answerRespondent/' + id_pass, form).then(response => {
@@ -690,6 +878,77 @@ export default class Survey extends Component {
                                 <div className="col">
                                     <div className="answer-text">
                                         <input type="date" className="date-input" name={list.id} onChange={this.dateChange}/>
+                                    </div>
+                                </div>
+                            </div>
+                        </When>
+                        <When condition = {list.q_type == 'Slider'}>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="answer-text">
+                                        <div className="d-flex justify-content-between">
+                                            <div className="slider-header">
+                                                <input type="range" className="slider-input" name={list.id} min="0" max="100" value={this.state.sliderAnswer} onChange={this.sliderChange}/>
+                                                <div className="d-flex justify-content-between pr-2 pl-3">
+                                                    <div className="slider-minimum"><span>0</span></div>
+                                                    <div className="slider-maximum"><span>100</span></div>
+                                                </div>
+                                            </div>
+                                            <div className="slider-value">
+                                                <input type="number" name={list.id} value={this.state.sliderNumberAnswer} onChange={this.sliderChange} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </When>
+                        <When condition = {list.q_type == 'Contact'}>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="answer-text">
+                                        <table className="contact-table">
+                                            <tbody>
+                                                {
+                                                    (JSON.parse(list.answer)).map((tORf, key) =>
+                                                        <If condition = {tORf.answer}>
+                                                            <tr key={iterator - 1}>
+                                                                <td>
+                                                                    <span>{this.state.contactData[key]}</span>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" name={iterator - 1} data-id={list.id} className="form-control" placeholder={this.state.contactData[key]} onChange={this.contactChange} />
+                                                                    <span className={iterator = iterator + 1}></span>
+                                                                </td>
+                                                            </tr>
+                                                        </If>
+                                                    )
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </When>
+                        <When condition = {list.q_type == 'Textboxes'}>
+                            <div className="row">
+                                <div className="col">
+                                    <div className="answer-text">
+                                        <table className="contact-table">
+                                            <tbody>
+                                                {
+                                                    (JSON.parse(list.answer)).map((e, key) =>
+                                                        <tr key={key}>
+                                                            <td>
+                                                                <span>{e.answer}</span>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name={key} data-id={list.id} className="form-control" placeholder="Input text" onChange={this.textboxesChange} />
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
