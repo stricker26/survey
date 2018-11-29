@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import SurveyTitleModal from './Modal/SurveyTitleModal';
+import { Redirect } from 'react-router-dom';
 
 export default class SurveyLogic extends Component {
     constructor() {
@@ -24,6 +25,13 @@ export default class SurveyLogic extends Component {
             warningContent: '',
             warningTheme: '',
             warningModal: false,
+            token: sessionStorage.getItem('token')
+        }
+    }
+
+    renderRedirect = () => {
+        if(!this.state.token) {
+            return <Redirect to='/dashboard/login' />
         }
     }
 
@@ -90,6 +98,7 @@ export default class SurveyLogic extends Component {
         let iterate = 1;
         return (
             <React.Fragment>
+                {this.renderRedirect()}
                 <header>
                     <div className="container">
                         <Header />

@@ -14,11 +14,11 @@ export default class Dashboard extends Component {
             token: sessionStorage.getItem('token')
 		};
 
-		const form = {
-			token: sessionStorage.getItem('token')
-		};
+        const form = {
+            token: sessionStorage.getItem('token')
+        };
 
-		axios.post('/api/webmaster/getName', form).then(response => {
+        axios.post('/api/webmaster/getName', form).then(response => {
             this.setState({
                 user: response.data.user
             });

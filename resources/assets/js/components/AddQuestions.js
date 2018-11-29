@@ -9,6 +9,7 @@ import ValidateModal from './Modal/ValidateModal';
 import { Editor } from '@tinymce/tinymce-react';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Redirect } from 'react-router-dom';
 
 export default class AddQuestions extends Component {
 
@@ -51,7 +52,16 @@ export default class AddQuestions extends Component {
                 { answer: true, },
                 { answer: true, },
             ],
+
+            //session
+            token: sessionStorage.getItem('token'),
         };
+    }
+
+    renderRedirect = () => {
+        if(!this.state.token) {
+            return <Redirect to='/dashboard/login' />
+        }
     }
 
     handleAnswerNameChange = (idx) => (evt) => {
@@ -438,6 +448,7 @@ export default class AddQuestions extends Component {
 
         return (
             <React.Fragment>
+                {this.renderRedirect()}
                 <header>
                     <div className="container">
                         <Header

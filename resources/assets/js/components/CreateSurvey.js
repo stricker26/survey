@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
+import { Redirect } from 'react-router-dom';
 
 export default class CreateSurvey extends Component {
     constructor() {
@@ -15,7 +16,14 @@ export default class CreateSurvey extends Component {
             deleteIcon: './../../images/delete-icon.png',
             questions: [],
             sTitle: '',
-            addClass: ''
+            addClass: '',
+            token: sessionStorage.getItem('token'),
+        }
+    }
+    
+    renderRedirect = () => {
+        if(!this.state.token) {
+            return <Redirect to='/dashboard/login' />
         }
     }
 
@@ -50,6 +58,7 @@ export default class CreateSurvey extends Component {
 
         return (
             <React.Fragment>
+                {this.renderRedirect()}
                 <header>
                     <div className="container">
                         <Header />
