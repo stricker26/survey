@@ -19,9 +19,11 @@ export default class Dashboard extends Component {
         };
 
         axios.post('/api/webmaster/getName', form).then(response => {
+
             this.setState({
                 user: response.data.user
             });
+            
         }).catch(error => {
             console.log(error);
         });
