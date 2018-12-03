@@ -66,7 +66,10 @@ class QuestionController extends Controller
             $question->answer = json_encode($request->get('answers'));
             $question->save();
 
-            return response()->json(['success' => 'Successfully Added!']);
+            $q_count = Question::where('survey_id','=',$request->get('id'))
+                                ->count();
+
+            return response()->json(['success' => 'Successfully Added!', 'qNumber' => ($q_count + 1)]);
         }
     }
 
@@ -136,5 +139,12 @@ class QuestionController extends Controller
         } else {
             return response()->json(['error' => 'Error Saving']);
         }
+    }
+
+    public function questionNumber($id) {
+        $q_count = Question::where('survey_id','=',$id)
+                            ->count();
+
+        return response()->json(['qNumber' => ($q_count + 1)]);
     }
 }

@@ -10,6 +10,7 @@ use App\Question;
 use App\Respondents;
 use App\Created;
 use App\User;
+use DB;
 use DateTime;
 
 class ResponseController extends Controller
@@ -1415,6 +1416,10 @@ class ResponseController extends Controller
             }
         }
 
+        $respondents_email = DB::table('Respondents')->where('survey_id','=',$id)
+                                                     ->where('finished_at','!=',null)
+                                                     ->get();
+
         return response()->json([
             'title' => $title,
             'respondents_count' => $respondents_count,
@@ -1422,6 +1427,7 @@ class ResponseController extends Controller
             'questions' => $questionsArr,
             'answers' => $answersArr,
             'respondentsOverall' => $respondentsOverall,
+            'respondentsEmail' => $respondents_email->pluck('email')->all(),
         ]);
     }
 

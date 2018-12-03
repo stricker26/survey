@@ -28,6 +28,7 @@ Route::prefix('webmaster')->group(function() {
 	Route::post('getName', 'Api\AuthController@getName');
 
 	Route::resource('question', 'Api\QuestionController');
+	Route::get('questionNumber/{id}', 'Api\QuestionController@questionNumber');
 	Route::post('editSurveyQuestion', 'Api\QuestionController@editSurveyQuestion');
 
 	Route::get('/answers/{id}', 'Api\AnswerController@view');

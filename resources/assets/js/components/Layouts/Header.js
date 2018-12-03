@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 import SurveyModal from './../Modal/SurveyModal';
+import { Redirect } from 'react-router-dom';
 
 class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false
+            showModal: false,
+            redirect: false,
         };
 
         const form = {
@@ -15,9 +17,15 @@ class Header extends Component {
         };
 
         axios.post('/api/webmaster/getName', form).then(response => {
-            this.setState({
-                user: response.data.user
-            });
+            if(response.data.user) {
+                this.setState({
+                    user: response.data.user
+                });
+            } else if(response.data.error) {
+                this.setState({
+                    redirect: true
+                });
+            }
         }).catch(error => {
             console.log(error);
         });
@@ -53,10 +61,17 @@ class Header extends Component {
         console.log(tool);
     }
 
+    renderRedirect = () => {
+        if(this.state.redirect) {
+            return <Redirect to='/dashboard/login' />
+        }
+    }
+
     render() {
 
         return (
             <React.Fragment>
+                {this.renderRedirect()}
                 <nav className="navbar navbar-default">
     	          	<ul className="nav">
                   		<li className="nav-item"><Link to="/dashboard/home" className="nav-link">Dashboard</Link></li>

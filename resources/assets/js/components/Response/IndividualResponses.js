@@ -33,6 +33,7 @@ export default class Response extends Component {
             respondentIP: '',
             questions: [],
             answers: [],
+            respondentsEmail: [],
 
             //buttons
             backStatBtn: 'blur',
@@ -70,9 +71,8 @@ export default class Response extends Component {
                 questions: response.data.questions,
                 answers: response.data.answers,
                 respondentsOverall: response.data.respondentsOverall,
+                respondentsEmail: response.data.respondentsEmail,
             });
-
-
         }).catch(error => {
             console.log(error);
         });
@@ -210,7 +210,7 @@ export default class Response extends Component {
 	render() {
         var respondentsElement = '';
         for(var e = 0; e < this.state.respondentsCount; e++) {
-            respondentsElement += '<span class="dropdown-item" data-value="'+(e + 1)+'">Respondent #'+(e + 1)+'</span>';
+            respondentsElement += '<span class="dropdown-item" data-value="'+(e + 1)+'">'+(this.state.respondentsEmail[e].length >= 35 ? this.state.respondentsEmail[e].substring(0, 35) + "..." : this.state.respondentsEmail[e])+'</span>';
         }
 
         let iterator = 0;

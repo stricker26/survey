@@ -187,7 +187,8 @@ export default class ViewSurvey extends Component {
                                                         <div className="col-lg-4">
                                                             <div className="question-tools">
                                                                 <div className="question-tools-item">
-                                                                    <Link to={"/dashboard/survey/" + question.id + "/edit"}><img src={this.state.editIcon} /></Link>
+                                                                    {/*<Link to={"/dashboard/survey/" + question.id + "/edit"}>*/}
+                                                                    <img src={this.state.editIcon} />{/*</Link>*/}
                                                                 </div>
                                                                 <div className="question-tools-item">
                                                                     <img src={this.state.duplicateIcon} />

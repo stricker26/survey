@@ -410,9 +410,10 @@
 					}
 				}
 				.dropdown-menu {
-					min-width: 200px;
-					width: 200px;
-					max-height: 142px;
+					//min-width: 300px;
+					//width: 300px;
+					max-width: 345px;
+					max-height: 200px;
     				overflow-x:auto;
 					span:hover {
 						cursor: pointer;

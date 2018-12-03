@@ -153,8 +153,8 @@ export default class Survey extends Component {
                                                         {this.state.surveyLists.map((list, key) => 
                                                             <tr key={list.id}>
                                                                 <td className="pl-4">
-                                                                    <div className="text-success">DIGITAL SURVEY</div>
-                                                                    <div>{list.title}</div>
+                                                                    {/*<div className="text-success">DIGITAL SURVEY</div>*/}
+                                                                    <div><strong>{list.title.length >= 40 ? list.title.substring(0, 40) + "..." : list.title}</strong></div>
                                                                     <div className="">Created on {list.created_at}.</div>
                                                                 </td>
                                                                 <td align="center">

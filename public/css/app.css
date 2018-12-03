@@ -12349,9 +12349,8 @@ ul.startSurvey-page {
 }
 
 .response-ir-section .response-ir-body .response-ir-body-beforecard .respondent-dropdown .dropdown-menu {
-  min-width: 200px;
-  width: 200px;
-  max-height: 142px;
+  max-width: 345px;
+  max-height: 200px;
   overflow-x: auto;
 }
 

@@ -21,6 +21,7 @@ export default class AddQuestions extends Component {
             defaultQtype: 'Multiple Choice',
             passToolvalue: '',
             qTitle: '',
+            qNumber: 1,
             random: 0, 
             wChoice: 0,
             result: '',
@@ -56,6 +57,19 @@ export default class AddQuestions extends Component {
             //session
             token: sessionStorage.getItem('token'),
         };
+    }
+
+    componentWillMount() {
+        const { id } = this.props.match.params;
+
+        axios.get('/api/webmaster/questionNumber/' + id).then(response => {
+            this.setState({
+                qNumber: response.data.qNumber,
+            });
+        }).catch(error => {
+            console.log(error);
+        });
+
     }
 
     renderRedirect = () => {
@@ -150,38 +164,41 @@ export default class AddQuestions extends Component {
             answers: (this.state.defaultQtype == 'Contact' ? this.state.checkboxes : this.state.answers)
         }
 
-        axios.post('/api/webmaster/question', form).then(response => {
-            if(response.data.success) {
-                this.setState({
-                    warningHeader: 'Success!',
-                    warningContent: 'Successfully Added!',
-                    warningTheme: 'success',
-                });
-
-                var q_t = this.state.defaultQtype;
-                if(q_t == 'Ranking' || q_t == 'Multiple Choice' || q_t == 'Checkbox' || q_t == 'Textboxes' || q_t == 'Dropdown') {
+        if(this.state.defaultQtype != 'Ranking' && this.state.defaultQtype != 'Image' && this.state.defaultQtype != 'Rating') {
+            axios.post('/api/webmaster/question', form).then(response => {
+                if(response.data.success) {
                     this.setState({
-                        qTitle: '',
-                        answers: [{ answer: '' }],
+                        warningHeader: 'Success!',
+                        warningContent: 'Successfully Added!',
+                        warningTheme: 'success',
+                        qNumber: response.data.qNumber,
                     });
+
+                    var q_t = this.state.defaultQtype;
+                    if(q_t == 'Ranking' || q_t == 'Multiple Choice' || q_t == 'Checkbox' || q_t == 'Textboxes' || q_t == 'Dropdown') {
+                        this.setState({
+                            qTitle: '',
+                            answers: [{ answer: '' }],
+                        });
+                    } else {
+                        this.setState({
+                            qTitle: '',
+                            answers: [],
+                        });
+                    }
+                    this.toggleWarnigModal();
                 } else {
                     this.setState({
-                        qTitle: '',
-                        answers: [],
+                        warningHeader: 'Warning!',
+                        warningContent: 'Question type and Question title are required.',
+                        warningTheme: 'primary',
                     });
+                    this.toggleWarnigModal();
                 }
-                this.toggleWarnigModal();
-            } else {
-                this.setState({
-                    warningHeader: 'Warning!',
-                    warningContent: 'Question type and Question title are required.',
-                    warningTheme: 'primary',
-                });
-                this.toggleWarnigModal();
-            }
-        }).catch(error => {
-            console.log(error);
-        });
+            }).catch(error => {
+                console.log(error);
+            });
+        }
 
     }
 
@@ -559,7 +576,7 @@ export default class AddQuestions extends Component {
                                             </div>
                                             <div className="row question-preview tool-check-option mt-5">
                                                 <div className="col">
-                                                    <p>Q1</p>
+                                                    <p>Q{this.state.qNumber}</p>
                                                     <div className="card">
                                                         <div className="card-header">
                                                             {this.state.qTitle.replace(/<\/?[^>]+(>|$)/g, "")}

@@ -735,7 +735,7 @@ export default class Survey extends Component {
         
         axios.post('/api/webmaster/answerRespondent/' + id_pass, form).then(response => {
             if(response.data.success) {
-                alert('Data submitted');
+                alert('Thank you for taking the time to answer our survey!');
                 this.props.history.push('/survey/welcome/'+ this.state.surveyId);
             } else {
                 alert('something went wrong');

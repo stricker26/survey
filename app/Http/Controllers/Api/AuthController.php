@@ -46,7 +46,14 @@ class AuthController extends Controller
     public function getName(Request $request) {
         $token = $request->get('token');
 
-        return response()->json(['user' => User::where('token', '=', $token)->first()->name]);
+        $user = User::where('token', '=', $token)->first();
+
+        if($user) {
+            return response()->json(['user' => $user->name]);
+        } else {
+            return response()->json(['error' => 'Error']);
+        }
+
     }
 
     public function usernameValidate($username) {
