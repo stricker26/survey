@@ -27,20 +27,13 @@ export default class LogicModal extends Component {
         if(e.target.value == '') {
         	var choice = this.state.choice;
         	var action = this.state.action;
-        	var arrayPos = choice.indexOf(e.target.dataset.value);
-        	choice.splice(arrayPos, 1);
-        	action.splice(arrayPos, 1);
+        	choice[e.target.dataset.count] = null;
+        	action[e.target.dataset.count] = null;
         } else {
         	var choice = this.state.choice;
         	var action = this.state.action;
-        	var arrayPos = choice.indexOf(e.target.dataset.value);
-        	if(arrayPos == -1) {
-	        	choice.push(e.target.dataset.value);
-	        	action.push(e.target.value);
-        	} else {
-        		choice[arrayPos] = e.target.dataset.value;
-        		action[arrayPos] = e.target.value;
-        	}
+        	choice[e.target.dataset.count] = e.target.dataset.value;
+        	action[e.target.dataset.count] = e.target.value;
         }
 
     	if(e.target.value == 'popup') {
@@ -110,11 +103,13 @@ export default class LogicModal extends Component {
 		var question = this.state.popupQuestion;
 		var answer = this.state.popupAnswer;
 		var action = this.state.popupAction;
+		var message = this.state.popupMessage;
 
 		var arrayCount = question.length;
 		var questionCheck = 0;
 		var answerCheck = 0;
 		var actionCheck = 0;
+		var messageCheck = 0;
 		if(arrayCount != 0) {
 			for(var x = 0; x < arrayCount; x++) {
 				if(question[x]) {
@@ -128,9 +123,13 @@ export default class LogicModal extends Component {
 				if(action[x]) {
 					actionCheck++;
 				}
+
+				if(message[x]) {
+					messageCheck++;
+				}
 			}
 
-			if(questionCheck == answerCheck && answerCheck == actionCheck) {
+			if(questionCheck == answerCheck && answerCheck == actionCheck && actionCheck == messageCheck) {
 				nullCheck = true;
 			} else {
 				nullCheck = false;

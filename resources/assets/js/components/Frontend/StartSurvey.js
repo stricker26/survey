@@ -148,6 +148,9 @@ export default class Survey extends Component {
             newPageCount++;
 
             if(newPageCount == (this.state.surveyLength + 1)) { //submitted
+                this.setState({
+                    submitShow: 'hideSubmit',
+                });
                 this.submitAnswer(q_type);
             } else {
                 const form = {

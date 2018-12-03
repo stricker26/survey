@@ -25,61 +25,69 @@ class LogicController extends Controller
     	$popup_act = $request->get('paction');
 
     	foreach($choices as $key=>$choice) {
-    		$logicCheck = Logics::where('question_id',$q_id)
-    							->where('answer',$choice)
-    							->count();
-    		if($logicCheck == 0) { //check if existing na yung logic with question id and answer
-	    		$logic = new Logics;
-	    		$logic->question_id = $q_id;
-	    		if($actions[$key] == 'popup' || $actions[$key] == 'end') {
-	    			$logic->logic = $actions[$key];
-	    			$logic->answer = $choice;
-	    			$logic->action = null;
-					$logic->save();
+    		if($choice) {
+	    		$logicCheck = Logics::where('question_id',$q_id)
+	    							->where('answer',$choice)
+	    							->count();
+	    		if($logicCheck == 0) { //check if existing na yung logic with question id and answer
+		    		$logic = new Logics;
+		    		$logic->question_id = $q_id;
+		    		if($actions[$key] == 'popup' || $actions[$key] == 'end') {
+		    			$logic->logic = $actions[$key];
+		    			$logic->answer = $choice;
+		    			$logic->action = null;
+						$logic->save();
 
-	    			$this->popupSave($popup_check, $popup_mess, $popup_ques, $popup_ans, $popup_act, $logic->id, "not-existing");
+						if($popup_check != 0) {
+		    				$this->popupSave($popup_mess[$key], $popup_ques[$key], $popup_ans[$key], $popup_act[$key], $logic->id, "not-existing");
+						}
 
-	    		} elseif($actions[$key] != 'removeLogic') {
-	    			$logic->logic = "skip to";
-	    			$logic->answer = $choice;
-	    			$logic->action = $actions[$key];
-					$logic->save();
-	    		}
-			} else {
-				if($actions[$key] == 'popup' || $actions[$key] == 'end') {
-					$logic = Logics::where('question_id',$q_id)
-	    						->where('answer',$choice)
-	    						->update([
-	    							'logic' => $actions[$key],
-	    							'answer' => $choice,
-	    							'action' => null
-	    						]);
+		    		} elseif($actions[$key] != 'removeLogic') {
+		    			$logic->logic = "skip to";
+		    			$logic->answer = $choice;
+		    			$logic->action = $actions[$key];
+						$logic->save();
+		    		}
+				} else {
+					if($actions[$key] == 'popup' || $actions[$key] == 'end') {
+						$logic = Logics::where('question_id',$q_id)
+		    						->where('answer',$choice)
+		    						->update([
+		    							'logic' => $actions[$key],
+		    							'answer' => $choice,
+		    							'action' => null
+		    						]);
 
-	    			//update popup
-	    			$logic_id = Logics::where('question_id',$q_id)
-	    						->where('answer',$choice)
-	    						->first()->id;
-	    			$this->popupSave($popup_check, $popup_mess, $popup_ques, $popup_ans, $popup_act, $logic_id, "existing");
+		    			//update popup
+		    			$logic_id = Logics::where('question_id',$q_id)
+		    						->where('answer',$choice)
+		    						->first()->id;
+						if($popup_check != 0) {			
+			    			$this->popupSave($popup_mess[$key], $popup_ques[$key], $popup_ans[$key], $popup_act[$key], $logic_id, "existing");
+			    		}
 
-	    		} elseif($actions[$key] == 'removeLogic') {
-	    			$logic = Logics::where('question_id',$q_id)
-	    						->where('answer',$choice)
-	    						->delete();
-	    		} else {
-	    			$logic = Logics::where('question_id',$q_id)
-	    						->where('answer',$choice)
-	    						->update([
-	    							'logic' => "skip to",
-	    							'answer' => $choice,
-	    							'action' => $actions[$key]
-	    						]);
+		    		} elseif($actions[$key] == 'removeLogic') {
+		    			$logic = Logics::where('question_id',$q_id)
+		    						->where('answer',$choice)
+		    						->delete();
+		    		} else {
+		    			$logic = Logics::where('question_id',$q_id)
+		    						->where('answer',$choice)
+		    						->update([
+		    							'logic' => "skip to",
+		    							'answer' => $choice,
+		    							'action' => $actions[$key]
+		    						]);
 
-	    			//update popup
-	    			$logic_id = Logics::where('question_id',$q_id)
-	    						->where('answer',$choice)
-	    						->first()->id;
-	    			$this->popupSave($popup_check, $popup_mess, $popup_ques, $popup_ans, $popup_act, $logic_id, "existing");
-	    		}
+		    			//update popup
+		    			$logic_id = Logics::where('question_id',$q_id)
+		    						->where('answer',$choice)
+		    						->first()->id;
+						if($popup_check != 0) {
+		    				$this->popupSave($popup_mess[$key], $popup_ques[$key], $popup_ans[$key], $popup_act[$key], $logic_id, "existing");
+		    			}
+		    		}
+				}
 			}
     	}
 
@@ -106,46 +114,32 @@ class LogicController extends Controller
     	return response()->json(['answers' => $answers]);
     }
 
-    public function popupSave($popup_check, $popup_mess, $popup_ques, $popup_ans, $popup_act, $logic_id, $existCheck) {
-		if($popup_check != 0) {
-			if($existCheck == 'not-existing') { //create new
-				foreach($popup_ques as $key=>$ques) {
-					if($ques) {
-						$popup = new Popup;
-						$popup->logic_id = $logic_id;
-						$popup->message = $popup_mess[$key];
-						$popup->q_id = $ques;
-						$popup->q_type = DB::table('questions')
-											->where('id','=',$ques)
-											->first()->q_type;
-						$popup->answer = $popup_ans[$key];
-						$popup->action = $popup_act[$key];
-						$popup->save();
-					}
-				}
-			} elseif($existCheck == 'existing') { //update
-				foreach($popup_ques as $key=>$ques) {
-					if($ques) {
-						$popup = Popup::where('logic_id',$logic_id)
-	    							  ->update([
-	    								  'message' => $popup_mess[$key],
-	    								  'q_id' => $ques,
-										  'q_type' => DB::table('questions')
-										  				->where('id','=',$ques)
-										  				->first()->q_type,
-	    								  'answer' => $popup_ans[$key],
-	    								  'action' => $popup_act[$key]
-	    							  ]);
-					}
-				}
-			} else { //delete
-				foreach($popup_ques as $key=>$ques) {
-					if($ques) {
-						$popup = Popup::where('logic_id',$logic_id)
-	    							  ->delete();
-					}
-				}
-			}
+    public function popupSave($popup_mess, $popup_ques, $popup_ans, $popup_act, $logic_id, $existCheck) {
+		if($existCheck == 'not-existing') { //create new
+			$popup = new Popup;
+			$popup->logic_id = $logic_id;
+			$popup->message = $popup_mess;
+			$popup->q_id = $popup_ques;
+			$popup->q_type = DB::table('questions')
+								->where('id','=',$popup_ques)
+								->first()->q_type;
+			$popup->answer = $popup_ans;
+			$popup->action = $popup_act;
+			$popup->save();
+		} elseif($existCheck == 'existing') { //update
+			$popup = Popup::where('logic_id',$logic_id)
+						  ->update([
+							  'message' => $popup_mess,
+							  'q_id' => $popup_ques,
+							  'q_type' => DB::table('questions')
+							  				->where('id','=',$popup_ques)
+							  				->first()->q_type,
+							  'answer' => $popup_ans,
+							  'action' => $popup_act
+						  ]);
+		} else { //delete
+			$popup = Popup::where('logic_id',$logic_id)
+						  ->delete();
 		}
     }
 

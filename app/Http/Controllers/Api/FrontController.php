@@ -45,7 +45,10 @@ class FrontController extends Controller
                 $logicContent = Popup::where('logic_id','=',$logic_query->id)->first();
             } elseif($logic_query->logic == 'end') {
                 $query = [];
-                $logic = $logic_query->logic;
+                $logic = [
+                    $logic_query->logic,
+                    $logic_query->answer
+                ];
                 $newPageCount = count($this->getQuestions($id));
                 $hasLogic = true;
                 $logicContent = false;
