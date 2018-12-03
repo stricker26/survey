@@ -13,7 +13,7 @@ export default class LogicModal extends Component {
 
 	handleChange(event) {
         console.log(event.target.value);
-        console.log(event.target.dataset.value);
+        console.log(event.target.getAttribute('data-value'));
 	}
 
 	saveLogic = () => {
