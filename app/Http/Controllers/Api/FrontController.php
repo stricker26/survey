@@ -33,6 +33,7 @@ class FrontController extends Controller
                              ->first();
 
         if($logic_query) {
+
             //check if the logic is popup or end
             if($logic_query->logic == 'popup') {
                 $query = [];
@@ -43,7 +44,9 @@ class FrontController extends Controller
                 $newPageCount = $pageCount;
                 $hasLogic = true;
                 $logicContent = Popup::where('logic_id','=',$logic_query->id)->first();
+
             } elseif($logic_query->logic == 'end') {
+
                 $query = [];
                 $logic = [
                     $logic_query->logic,
@@ -52,7 +55,9 @@ class FrontController extends Controller
                 $newPageCount = count($this->getQuestions($id));
                 $hasLogic = true;
                 $logicContent = false;
+
             } else { //skip to question
+
                 $query = DB::table('questions')
                             ->select('answer','id','q_title','q_type')
                             ->where('id',$logic_query->action)
@@ -61,15 +66,19 @@ class FrontController extends Controller
                 $newPageCount = $this->newPageCount($id, $logic_query->action);
                 $hasLogic = true;
                 $logicContent = false;
+
             }
         } else {
+
             $query = $this->getQuestions($id);
             $query = $query[$pageCount - 1];
             $newPageCount = $pageCount;
             $logic = 'no logic';
             $hasLogic = false;
             $logicContent = false;
+
         }
+        
         return response()->json([
             'hasLogic' => true,
             'logic' => $logic,
