@@ -86,7 +86,8 @@ export default class ViewSurvey extends Component {
         axios.post('/api/webmaster/question', form).then(response => {
             console.log(response.data.success);
         });
-
+        console.log("Copy");
+        console.log(this.state.surveyID);
         this.getQuestions(this.state.surveyID);
 
     }
@@ -101,6 +102,7 @@ export default class ViewSurvey extends Component {
     }
 
     getQuestions(id) {
+        console.log('get questions');
         axios.get('/api/webmaster/question/' + id).then(response => {
             this.setState({
                 questions: response.data.questions,

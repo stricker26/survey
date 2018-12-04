@@ -31,6 +31,7 @@ class DashboardController extends Controller
 										->where('finished_at','!=',null)
 										->orderBy('survey_id','asc')
 										->get();
+			$r_count = count($respondents);
 			$survey_db = Survey::where('user_id','=',$uid)->get();
 
 
@@ -53,20 +54,68 @@ class DashboardController extends Controller
 			$overview->totalResponses = $responsesCount;
 
 
-			//average completion rate
-			$completionCount = count($respondents);
-			$completionRate = number_format((float)($completionCount/$responsesCount)*100, 2, '.', '') . "%";
-			$overview->completionRate = $completionRate;
+			if($r_count == 0) {
+
+				//average completion rate
+				$completionRate = "0.00%";
+				$overview->completionRate = $completionRate;
 
 
-			//usual time spent
-			foreach($respondents as $timespent) {
-				$timeDifference = (new DateTime($timespent->created_at))->diff(new DateTime($timespent->finished_at));
-				$timespent->timespent = strtotime($timeDifference->format("%H:%i:%s"));
+				//usual time spent
+				$timeSpent = "00:00:00";
+				$overview->timeSpent = $timeSpent;
+
+
+				//average age
+				$a_age = "0";
+				$overview->averageAge = $a_age;
+
+
+				//male percentage
+				$m_count = "0.00%";
+				$overview->male = $m_count;
+
+				
+				//female percentage
+				$f_count = "0.00%";
+				$overview->female = $f_count;
+
+			} else {
+
+				//average completion rate
+				$completionCount = count($respondents);
+				$completionRate = number_format((float)($completionCount/$responsesCount)*100, 2, '.', '') . "%";
+				$overview->completionRate = $completionRate;
+
+
+				//usual time spent
+				foreach($respondents as $timespent) {
+					$timeDifference = (new DateTime($timespent->created_at))->diff(new DateTime($timespent->finished_at));
+					$timespent->timespent = strtotime($timeDifference->format("%H:%i:%s"));
+				}
+				$plucked_timespent = $respondents->pluck('timespent')->all();
+				$timeSpent = date("H:i:s", array_sum($plucked_timespent)/$completionCount);
+				$overview->timeSpent = $timeSpent;
+
+
+				//average age
+				$ageArr = $respondents->pluck('age')->all();
+				$a_age = number_format((float)(array_sum($ageArr)/$completionCount), 2, '.', '');
+				$overview->averageAge = $a_age;
+
+
+				//male percentage
+				$maleCount = $respondents->where('gender', '=', "male")->count();
+				$m_count = number_format((float)($maleCount/$completionCount)*100, 2, '.', '') . "%";
+				$overview->male = $m_count;
+
+
+				//female percentage
+				$femaleCount = $respondents->where('gender', '=', "female")->count();
+				$f_count = number_format((float)($femaleCount/$completionCount)*100, 2, '.', '') . "%";
+				$overview->female = $f_count;
+
 			}
-			$plucked_timespent = $respondents->pluck('timespent')->all();
-			$timeSpent = date("H:i:s", array_sum($plucked_timespent)/$completionCount);
-			$overview->timeSpent = $timeSpent;
 			//overview row end
 
 
@@ -92,24 +141,74 @@ class DashboardController extends Controller
 				$as_obj_store->questionCount = $questionCount;
 
 
-				//completion rate
+				//check if it has responses
 				$respondents = Respondents::where('survey_id', '=', $survey->survey_id)
 											->where('finished_at', '!=', null)
 											->get();
-				$responsesCount = Respondents::where('survey_id', '=', $survey->survey_id)->count();
-				$completionCount = count($respondents);
-				$completionRate = number_format((float)($completionCount/$responsesCount)*100, 2, '.', '') . "%";
-				$as_obj_store->completionRate = $completionRate;
+				$r_count = count($respondents);
+
+				if($r_count == 0) {
+
+					$completionRate = "0.00%";
+					$as_obj_store->completionRate = $completionRate;
 
 
-				//usual time for completion
-				foreach($respondents as $timespent) {
-					$timeDifference = (new DateTime($timespent->created_at))->diff(new DateTime($timespent->finished_at));
-					$timespent->timespent = strtotime($timeDifference->format("%H:%i:%s"));
+					//usual time for completion
+					$timeSpent = 0;
+					$as_obj_store->timeSpent = $timeSpent;
+
+
+					//average age
+					$ageArr = "0";
+					$as_obj_store->averageAge = $ageArr;
+
+
+					//male percentage
+					$maleCount = "0.00%";
+					$as_obj_store->male = $maleCount;
+
+
+					//female percentage
+					$femaleCount = "0.00%";
+					$as_obj_store->female = $femaleCount;
+
+				} else {
+
+					//completion rate
+					$responsesCount = Respondents::where('survey_id', '=', $survey->survey_id)->count();
+					$completionCount = count($respondents);
+					$completionRate = number_format((float)($completionCount/$responsesCount)*100, 2, '.', '') . "%";
+					$as_obj_store->completionRate = $completionRate;
+
+
+					//usual time for completion
+					foreach($respondents as $timespent) {
+						$timeDifference = (new DateTime($timespent->created_at))->diff(new DateTime($timespent->finished_at));
+						$timespent->timespent = strtotime($timeDifference->format("%H:%i:%s"));
+					}
+					$plucked_timespent = $respondents->pluck('timespent')->all();
+					$timeSpent = (int)date("i", array_sum($plucked_timespent)/$completionCount);
+					if($timeSpent == 0) {
+						$timeSpent = 1;
+					}
+					$as_obj_store->timeSpent = $timeSpent;
+
+
+					//average age
+					$ageArr = $respondents->pluck('age')->all();
+					$as_obj_store->averageAge = number_format((float)(array_sum($ageArr)/$completionCount), 2, '.', '');
+
+
+					//male percentage
+					$maleCount = $respondents->where('gender', '=', "male")->count();
+					$as_obj_store->male = number_format((float)($maleCount/$completionCount)*100, 2, '.', '') . "%";
+
+
+					//female percentage
+					$femaleCount = $respondents->where('gender', '=', "female")->count();
+					$as_obj_store->female = number_format((float)($femaleCount/$completionCount)*100, 2, '.', '') . "%";
+
 				}
-				$plucked_timespent = $respondents->pluck('timespent')->all();
-				$timeSpent = (int)date("i", array_sum($plucked_timespent)/$completionCount);
-				$as_obj_store->timeSpent = $timeSpent;
 
 
 				if($survey->status == 1) { //active surveys

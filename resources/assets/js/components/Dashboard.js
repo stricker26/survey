@@ -127,15 +127,15 @@ export default class Dashboard extends Component {
 											</div>
 		                					<div className="col-lg-2 border">
 												<label>Average Age</label>
-												<label>27.5 years old</label>
+												<label>{this.state.overview.averageAge} years old</label>
 											</div>
 											<div className="col-lg-1 border">
 												<label>Male</label>
-												<label>80%</label>
+												<label>{this.state.overview.male}</label>
 											</div>
 											<div className="col-lg-1 border">
 												<label>Female</label>
-												<label>20%</label>
+												<label>{this.state.overview.female}</label>
 											</div>
 											<div className="col-lg-2 border">
 												<label>Total Responses</label>
@@ -171,22 +171,22 @@ export default class Dashboard extends Component {
 																					<span className="font-weight-bold survey-title">{value.title.length >= 40 ? value.title.substring(0, 40) + "..." : value.title}</span><br/>
 																					<span>Date created: {value.created_at}</span><br/>
 																					<span>Last Modified: {value.updated_at}</span><br/>
-																					<Link to={'/dashboard/survey/'+ value.survey_id +'/view'}>Manage</Link>
+																					<Link to={"/dashboard/survey/" + value.survey_id + "/view"}>Manage</Link>
 																				</div>
 											                					<div className="col-2">
 											                						<span>&nbsp;</span>
 																					<label>Average Age</label>
-																					<label>27.5 years old</label>
+																					<label>{value.averageAge} years old</label>
 																				</div>
 																				<div className="col-1">
 											                						<span>&nbsp;</span>
 																					<label>Male</label>
-																					<label>80%</label>
+																					<label>{value.male}</label>
 																				</div>
 																				<div className="col-1">
 											                						<span>&nbsp;</span>
 																					<label>Female</label>
-																					<label>20%</label>
+																					<label>{value.female}</label>
 																				</div>
 																				<div className="col-1">
 											                						<span>&nbsp;</span>
@@ -231,22 +231,22 @@ export default class Dashboard extends Component {
 																					<span className="font-weight-bold survey-title">{value.title.length >= 40 ? value.title.substring(0, 40) + "..." : value.title}</span><br/>
 																					<span>Date created: {value.created_at}</span><br/>
 																					<span>Last Modified: {value.updated_at}</span>
-																					<Link to={'/dashboard/survey/'+ value.survey_id +'/view'}>Manage</Link>
+																					<Link to={"/dashboard/survey/" + value.survey_id + "/view"}>Manage</Link>
 																				</div>
 											                					<div className="col-2">
 											                						<span>&nbsp;</span>
 																					<label>Average Age</label>
-																					<label>27.5 years old</label>
+																					<label>{value.averageAge} years old</label>
 																				</div>
 																				<div className="col-1">
 											                						<span>&nbsp;</span>
 																					<label>Male</label>
-																					<label>80%</label>
+																					<label>{value.male}</label>
 																				</div>
 																				<div className="col-1">
 											                						<span>&nbsp;</span>
 																					<label>Female</label>
-																					<label>20%</label>
+																					<label>{value.female}</label>
 																				</div>
 																				<div className="col-1">
 											                						<span>&nbsp;</span>
