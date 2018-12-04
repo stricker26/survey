@@ -16,21 +16,26 @@ class RespondentsController extends Controller
         date_default_timezone_set("Asia/Manila");
         $date_now = date("Y-m-d H:i:s");
     	$rules = array(
-            'respondentEmail' => 'required'
+            'name' => 'required',
+            'age' => 'required',
+            'gender' => 'required'
         );
 
         $validator = Validator::make(Input::all(), $rules);
 
         if($validator->fails()) {
 
-            return response()->json(['warning' => 'Email is required!']);
+            return response()->json(['warning' => 'Field Required!']);
 
         } else {
 
         	$respondents = new Respondents;
-            $respondents->email = $request->get('respondentEmail');
+            $respondents->email = $request->get('name');
             $respondents->survey_id = $request->get('survey_id');
             $respondents->survey_source = 'Web Link 1 (Web Link)';
+            $respondents->age = $request->get('age');
+            $respondents->gender = $request->get('gender');
+            $respondents->sec = $request->get('sec');
         	$respondents->ip = \Request::ip();
             $respondents->created_at = $date_now;
         	$respondents->save();

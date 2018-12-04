@@ -10772,8 +10772,8 @@ section .container-fluid .surveys div a {
   display: block;
 }
 
-section .container-fluid .surveys .col-7 label {
-  text-align: left;
+section .container-fluid .surveys .survey-title {
+  line-height: 2rem;
 }
 
 footer {
@@ -11528,17 +11528,6 @@ Switch Button
 .container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span {
   font-weight: bold;
   font-size: 1rem;
-  display: block;
-}
-
-.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span .asterisk-default {
-  display: inline-block;
-  color: #000;
-}
-
-.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey span .asterisk-error {
-  display: inline-block;
-  color: #ff0000;
 }
 
 .container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .label-form-welcomeSurvey .error-hide {
@@ -11551,20 +11540,34 @@ Switch Button
   display: block;
 }
 
-.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey {
-  display: inline-block;
-  margin-right: 10px;
-  width: 60%;
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .asterisk-default {
+  color: #000;
 }
 
-.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey input {
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .asterisk-error {
+  color: #ff0000;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey input,
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey select {
   width: 100%;
   border: 1px solid #a7a7a7;
   padding: 10px 10px;
 }
 
-.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey {
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey .label-text {
   display: inline-block;
+  width: 180px;
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .inputDiv-welcomeSurvey .input-field {
+  display: inline-block;
+  width: calc(100% - 180px);
+}
+
+.container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey {
+  margin-top: 20px;
+  text-align: center;
 }
 
 .container-welcomeSurvey .body-welcomeSurvey .form-welcomeSurvey .submitDiv-welcomeSurvey button {

@@ -174,17 +174,6 @@
 				span {
 					font-weight: bold;
 					font-size: 1rem;
-					display: block;
-					.asterisk-default {
-						display: inline-block;
-						//color: #ff0000;
-						color: #000;
-					}
-
-					.asterisk-error {
-						display: inline-block;
-						color: #ff0000;
-					}
 				}
 				
 				.error-hide {
@@ -197,20 +186,35 @@
 					display: block;
 				}
 			}
+				
+			.asterisk-default {
+				color: #000;
+			}
+
+			.asterisk-error {
+				color: #ff0000;
+			}
 
 			.inputDiv-welcomeSurvey {
-				display: inline-block;
-				margin-right: 10px;
-				width: 60%;
-				input {
+				input,
+				select {
 					width: 100%;
 					border: 1px solid #a7a7a7;
 					padding: 10px 10px;
 				}
+				.label-text {
+					display: inline-block;
+					width: 180px;
+				}
+				.input-field {
+					display: inline-block;
+					width: calc(100% - 180px);
+				}
 			}
 
 			.submitDiv-welcomeSurvey {
-				display: inline-block;
+				margin-top: 20px;
+				text-align: center;
 				button {
 					padding: 10px 100px;
 					border: 1px solid #558ed5;

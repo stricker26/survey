@@ -58,7 +58,7 @@ export default class Response extends Component {
     componentWillMount() {
         const { id } = this.props.match.params;
 
-        axios.get('/api/response/ir/' + id).then(response => {
+        axios.get('/api/response/ir/all/' + id).then(response => {
             this.setState({
                 title: response.data.title,
                 id: id,

@@ -24,6 +24,9 @@ Route::prefix('user')->group(function() {
 });
 
 Route::prefix('webmaster')->group(function() {
+	//dashboard
+	Route::post('dashboard','Api\DashboardController@getAll');
+
 	Route::resource('survey', 'Api\SurveyController');
 	Route::post('getName', 'Api\AuthController@getName');
 
@@ -43,6 +46,9 @@ Route::prefix('webmaster')->group(function() {
 	//logic
 	Route::post('logic', 'Api\LogicController@logic');
 	Route::post('logic/getAnswer', 'Api\LogicController@getAnswer');
+
+	//set status of survey
+	Route::get('surveyStatus/{id}/{status}', 'Api\QuestionController@surveyStatus');
 });
 
 Route::prefix('response')->group(function() {
@@ -55,7 +61,7 @@ Route::prefix('response')->group(function() {
 	Route::post('data_trends/getTrend2/{id}', 'Api\ResponseController@dataTrendsGetTrend2');
 	Route::post('data_trends/nextGraph/{id}', 'Api\ResponseController@dataTrendsNextGraph');
 
-	Route::get('ir/{id}', 'Api\ResponseController@indResponsesGetAll');
+	Route::get('ir/all/{id}', 'Api\ResponseController@indResponsesGetAll');
 	Route::post('ir/{id}', 'Api\ResponseController@indResponsesGetid');
 	Route::post('ir/delete/{id}', 'Api\ResponseController@indResponsesDelete');
 });

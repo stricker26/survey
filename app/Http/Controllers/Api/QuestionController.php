@@ -84,8 +84,13 @@ class QuestionController extends Controller
         
         $questions = Question::where('survey_id', '=', $id)->get();
         $survey = Survey::where('survey_id', '=', $id)->first();
+        $surveyStatus = $survey->status;
 
-        return response()->json(['surveys' => $survey, 'questions' => $questions]);
+        return response()->json([
+            'surveys' => $survey,
+            'questions' => $questions,
+            'surveyStatus' => $surveyStatus
+        ]);
     }
 
     /**
@@ -119,7 +124,10 @@ class QuestionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $question = Question::find($id);
+        $question->delete();
+
+        return response()->json(['success' => 'Successfully deleted!']);
     }
 
     public function single($id) {
@@ -146,5 +154,18 @@ class QuestionController extends Controller
                             ->count();
 
         return response()->json(['qNumber' => ($q_count + 1)]);
+    }
+
+    public function surveyStatus($id, $status) {
+        $check = DB::table('surveys')->where('survey_id','=',$id)
+                                    ->update([
+                                        'status' => $status
+                                    ]);
+
+        if($check) {
+            return response()->json(['success' => 'success!']);
+        } else {
+            return response()->json(['error' => 'error!']);
+        }
     }
 }

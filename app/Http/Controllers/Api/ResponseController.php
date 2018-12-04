@@ -1416,7 +1416,7 @@ class ResponseController extends Controller
             }
         }
 
-        $respondents_email = DB::table('Respondents')->where('survey_id','=',$id)
+        $respondents_email = DB::table('respondents')->where('survey_id','=',$id)
                                                      ->where('finished_at','!=',null)
                                                      ->get();
 

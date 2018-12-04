@@ -59,7 +59,7 @@ class SurveyController extends Controller
 
             $survey = new Survey;
             $survey->title = $request->get('title');
-            $survey->status = 1;
+            $survey->status = 0;
             $survey->survey_id = $uniqueID;
             $survey->user_id = $user_id;
             $survey->save();

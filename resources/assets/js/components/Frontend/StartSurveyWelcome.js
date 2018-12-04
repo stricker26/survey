@@ -9,7 +9,15 @@ export default class Survey extends Component {
         this.state = {
             title: '',
             surveyId: '',
-            respondentEmail: '',
+
+            name: '',
+            className: 'asterisk-default',
+            age: '',
+            classAge: 'asterisk-default',
+            gender: '',
+            classGender: 'asterisk-default',
+            sec: '',
+
             asteriskClass: 'asterisk-default',
             errorClass: 'error-hide',
             topImage: './../../images/startsurvey.png'
@@ -30,16 +38,19 @@ export default class Survey extends Component {
     }
 
     handleChange = (e) => {
-    	this.setState({
-    		respondentEmail: e.target.value
-    	});
+        this.setState({
+            [e.target.name]: e.target.value
+        });
     }
 
     submitForm = (e) => {
     	e.preventDefault();
         const form = {
             survey_id: this.state.surveyId,
-            respondentEmail: this.state.respondentEmail
+            name: this.state.name,
+            age: this.state.age,
+            gender: this.state.gender,
+            sec: this.state.sec,
         }
 
         axios.post('/api/webmaster/emailRespondent', form).then(response => {
@@ -50,6 +61,36 @@ export default class Survey extends Component {
 		            asteriskClass: 'asterisk-error',
 		            errorClass: 'error-show'
         		});
+
+                if(this.state.name == '') {
+                    this.setState({
+                        className: 'asterisk-error'
+                    });
+                } else {
+                    this.setState({
+                        className: 'asterisk-default'
+                    });
+                }
+
+                if(this.state.age == '') {
+                    this.setState({
+                        classAge: 'asterisk-error'
+                    });
+                } else {
+                    this.setState({
+                        className: 'asterisk-default'
+                    });
+                }
+                
+                if(this.state.gender == '') {
+                    this.setState({
+                        classGender: 'asterisk-error'
+                    });
+                } else {
+                    this.setState({
+                        className: 'asterisk-default'
+                    });
+                }
         	}
         }).catch(error => {
             console.log(error);
@@ -86,11 +127,52 @@ export default class Survey extends Component {
 	                        	</div>
 		                        <div className="form-welcomeSurvey">
 		                        	<div className="label-form-welcomeSurvey">
-		                        		<span>Please input your Email Address to proceed.<span className={this.state.asteriskClass}>*</span></span>
+		                        		<span>Please fill up the fields to proceed.<span className={this.state.asteriskClass}>*</span></span>
 		                        		<small className={this.state.errorClass}>*This field is required.</small>
 		                        	</div>
 		                        	<div className="inputDiv-welcomeSurvey">
-			                        	<input type="text" className="input-welcomeSurvey" onChange={this.handleChange} />
+                                        <div className="row pb-3">
+                                            <div className="col">
+                                                <div className="label-text">
+                                                    <span>Name: <span className={this.state.className}>*</span></span>
+                                                </div>
+                                                <div className="input-field">
+                                                    <input type="text" name="name" onChange={this.handleChange} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row pb-3">
+                                            <div className="col-6">
+                                                <div className="label-text">
+                                                    <span>Age: <span className={this.state.classAge}>*</span></span>
+                                                </div>
+                                                <div className="input-field">
+                                                    <input type="number" name="age" onChange={this.handleChange} />
+                                                </div>
+                                            </div>
+                                            <div className="col-6">
+                                                <div className="label-text text-center">
+                                                    <span>Gender: <span className={this.state.classGender}>*</span></span>
+                                                </div>
+                                                <div className="input-field">
+                                                    <select defaultValue="" name="gender" onChange={this.handleChange}>
+                                                        <option value="" disabled>--Gender--</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <div className="label-text">
+                                                    <span>Socio Economic Class:</span>
+                                                </div>
+                                                <div className="input-field">
+                                                    <input type="text" name="sec" onChange={this.handleChange} />
+                                                </div>
+                                            </div>
+                                        </div>
 		                        	</div>
 		                        	<div className="submitDiv-welcomeSurvey">
 		                        		<button type="submit" className="submit-welcomeSurvey" onClick={this.submitForm}>Begin</button>

@@ -18,6 +18,7 @@ export default class Branching extends Component {
             deleteIcon: './../../../images/delete-icon.png',
             questions: [],
             surveysTitle: '',
+            surveyStatus: 0,
             surveyID: '',
             questionID: '',
             question_iterate: '',
@@ -75,7 +76,8 @@ export default class Branching extends Component {
         axios.get('/api/webmaster/question/' + id).then(response => {
             this.setState({
                 questions: response.data.questions,
-                surveysTitle: response.data.surveys.title
+                surveysTitle: response.data.surveys.title,
+                surveyStatus: response.data.surveyStatus,
             });
         }).catch(errors => {
             console.log(errors);
@@ -118,6 +120,21 @@ export default class Branching extends Component {
 
     closeWarningModal = () => {
         this.toggleWarnigModal();
+    }
+
+    statusChange = (e) => {
+        if(this.state.surveyStatus == 0) {
+            var surveyCurrStat = 1;
+        } else {
+            var surveyCurrStat = 0;
+        }
+        this.setState({
+            surveyStatus: surveyCurrStat
+        });
+
+        axios.get('/api/webmaster/surveyStatus/' + this.state.surveyID + '/' + surveyCurrStat).catch(errors => {
+            console.log(errors);
+        })
     }
 
     render() {
@@ -176,9 +193,9 @@ export default class Branching extends Component {
                                     	<div className="checkbox">
 											<ul className="tg-list mt-5">
 										    	<li className="tg-list-item">
-												    <input className="tgl tgl-ios" id="cb2" type="checkbox"/>
+												    <input className="tgl tgl-ios" id="cb2" type="checkbox" checked={this.state.surveyStatus} onChange={this.statusChange}/>
 												    <label className="tgl-btn" htmlFor="cb2"></label>
-												    <label>Survey is Inactive.</label>
+												    <label>Survey is {this.state.surveyStatus == 0 ? "Inactive" : "Active"}.</label>
 												</li>
 										  	</ul>
 										</div>
@@ -190,7 +207,7 @@ export default class Branching extends Component {
                                     <div className="col pl-0 pr-0">
                                         <ul>
                                             <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/view"}>Question List</Link></li>
-                                            <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/logic"}>Survey Logic</Link></li>
+                                            {/*<li><Link to={"/dashboard/survey/" + this.state.surveyID + "/logic"}>Survey Logic</Link></li>*/}
                                             <li className="active">Question Branching</li>
                                         </ul>
                                     </div>

@@ -12,6 +12,8 @@ class Header extends Component {
             redirect: false,
         };
 
+        const { name } = this.props;
+
         const form = {
             token: sessionStorage.getItem('token')
         };
@@ -21,6 +23,8 @@ class Header extends Component {
                 this.setState({
                     user: response.data.user
                 });
+
+                name(response.data.user);
             } else if(response.data.error) {
                 this.setState({
                     redirect: true

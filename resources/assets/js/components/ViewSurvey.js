@@ -17,6 +17,7 @@ export default class ViewSurvey extends Component {
             deleteIcon: './../../../images/delete-icon.png',
             questions: [],
             surveysTitle: '',
+            surveyStatus: 0,
             sTitle: '',
             surveyID: '',
 
@@ -42,20 +43,73 @@ export default class ViewSurvey extends Component {
         });
     }
 
+    handleDelete = (e) => () => {
+        const questions = this.state.questions;
+
+        const filteredQuestions = questions.filter(question => {
+            return question.id !== e;
+        });
+
+        axios.delete('/api/webmaster/question/' + e).then(response => {
+            console.log(response.data.success);
+        });
+
+        this.setState({
+            questions: filteredQuestions
+        });
+    }
+
+    handleCopy = (e) => () => {
+        const questions = this.state.questions;
+        let title, type, order, choice;
+
+        const filteredQuestions = questions.filter(question => {
+            return question.id == e;
+        });
+
+        filteredQuestions.map(filteredQuestion => {
+           title = filteredQuestion.q_title;
+           type = filteredQuestion.q_type;
+           order = filteredQuestion.q_order;
+           choice = filteredQuestion.q_writeinchoice;
+        });
+
+        const form = {
+            title: title,
+            type: type,
+            order: order,
+            wchoice: choice,
+            id: this.state.surveyID,
+            answers: ''
+        }
+
+        axios.post('/api/webmaster/question', form).then(response => {
+            console.log(response.data.success);
+        });
+
+        this.getQuestions(this.state.surveyID);
+
+    }
+
     componentWillMount() {
 
         const { id } = this.props.match.params;
         this.setState({ surveyID: id });
 
+        this.getQuestions(id);
+
+    }
+
+    getQuestions(id) {
         axios.get('/api/webmaster/question/' + id).then(response => {
             this.setState({
                 questions: response.data.questions,
                 surveysTitle: response.data.surveys.title,
+                surveyStatus: response.data.surveyStatus,
             });
         }).catch(errors => {
             console.log(errors);
         })
-
     }
 
     editSurveyTitle = () => {
@@ -93,6 +147,21 @@ export default class ViewSurvey extends Component {
 
     closeWarningModal = () => {
         this.toggleWarnigModal();
+    }
+
+    statusChange = (e) => {
+        if(this.state.surveyStatus == 0) {
+            var surveyCurrStat = 1;
+        } else {
+            var surveyCurrStat = 0;
+        }
+        this.setState({
+            surveyStatus: surveyCurrStat
+        });
+
+        axios.get('/api/webmaster/surveyStatus/' + this.state.surveyID + '/' + surveyCurrStat).catch(errors => {
+            console.log(errors);
+        })
     }
 
     render() {
@@ -142,9 +211,9 @@ export default class ViewSurvey extends Component {
                                     	<div className="checkbox">
 											<ul className="tg-list mt-5">
 										    	<li className="tg-list-item">
-												    <input className="tgl tgl-ios" id="cb2" type="checkbox"/>
+												    <input className="tgl tgl-ios" id="cb2" type="checkbox" checked={this.state.surveyStatus} onChange={this.statusChange}/>
 												    <label className="tgl-btn" htmlFor="cb2"></label>
-												    <label>Survey is Inactive.</label>
+												    <label>Survey is {this.state.surveyStatus == 0 ? "Inactive" : "Active"}.</label>
 												</li>
 										  	</ul>
 										</div>
@@ -156,7 +225,7 @@ export default class ViewSurvey extends Component {
                                     <div className="col pl-0 pr-0">
                                         <ul>
                                             <li className="active"><Link to={"/dashboard/survey/" + this.state.surveyID + "/view"}>Question List</Link></li>
-                                            <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/logic"}>Survey Logic</Link></li>
+                                            {/*<li><Link to={"/dashboard/survey/" + this.state.surveyID + "/logic"}>Survey Logic</Link></li>*/}
                                             <li><Link to={"/dashboard/survey/" + this.state.surveyID + "/branching"}>Question Branching</Link></li>
                                         </ul>
                                     </div>
@@ -191,13 +260,13 @@ export default class ViewSurvey extends Component {
                                                                     <img src={this.state.editIcon} />{/*</Link>*/}
                                                                 </div>
                                                                 <div className="question-tools-item">
-                                                                    <img src={this.state.duplicateIcon} />
+                                                                    <Link to="#" onClick={this.handleCopy(question.id)}><img src={this.state.duplicateIcon} /></Link>
                                                                 </div>
                                                                 <div className="question-tools-item">
                                                                     <img src={this.state.dragIcon} />
                                                                 </div>
                                                                 <div className="question-tools-item">
-                                                                    <img src={this.state.deleteIcon} />
+                                                                    <Link to="#" onClick={this.handleDelete(question.id)}><img src={this.state.deleteIcon} /></Link>
                                                                 </div>
                                                             </div>
                                                         </div>
