@@ -66,7 +66,7 @@ export default class Login extends Component {
                 <section className="login-section">
                     <div className="header-loginImg">
                         <div className="header1">
-                            <span>Start your field research today.</span>
+                            <span>Start building your survey today.</span>
                         </div>
                         <img className="header" src={this.state.headerBodyImg}/>
                     </div>
@@ -76,7 +76,7 @@ export default class Login extends Component {
                                 <div className="card-logo">
                                     <img src={this.state.scmiLogo} />
                                 </div>
-                                <h4>Log in to your Field Researcher Account:</h4>
+                                <h4>Log in to your Research Administrator Account:</h4>
                                 <div className="card-form-input">
                                     <div className="div-input-name">
                                         <label>Name</label>
@@ -95,7 +95,7 @@ export default class Login extends Component {
                                     </div>
                                 </div>
                                 <div className="card-form-submit">
-                                    <button type="submit" className="login-submit-btn" onClick={this.submitLogin}>Log In</button>
+                                    <button type="submit" className="login-submit-btn" onClick={this.submitLogin}>Sign In</button>
                                 </div>
                             </div>
                         </div>

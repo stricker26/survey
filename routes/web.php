@@ -26,3 +26,13 @@ Route::prefix('dashboard')->group(function() {
 	Route::get('/{path}/{url}/{id}', 'Dashboard\DashboardController@index');
 	//Route::post('/dashboard/survey/add/', 'Dashboard\DashboardController@add');
 });
+
+Route::prefix('excel')->group(function() {
+	Route::get('/individual/{rid}', 'ExcelExportController@individual');
+	Route::get('/all/{sid}', 'ExcelExportController@all');
+});
+
+Route::prefix('csv')->group(function() {
+	Route::get('/individual/{rid}', 'CSVExportController@individual');
+	Route::get('/all/{sid}', 'CSVExportController@all');
+});

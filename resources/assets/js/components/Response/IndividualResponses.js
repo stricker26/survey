@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { If, Then, ElseIf, Else } from 'react-if-elseif-else-render';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
@@ -68,6 +69,7 @@ export default class Response extends Component {
                 respondentLastModified: response.data.respondents.finished_at,
                 respondentTimeSpend: response.data.respondents.timeSpend,
                 respondentIP: response.data.respondents.ip,
+                respondentID: response.data.respondents.id,
                 questions: response.data.questions,
                 answers: response.data.answers,
                 respondentsOverall: response.data.respondentsOverall,
@@ -110,6 +112,7 @@ export default class Response extends Component {
                 respondentLastModified: response.data.respondents.finished_at,
                 respondentTimeSpend: response.data.respondents.timeSpend,
                 respondentIP: response.data.respondents.ip,
+                respondentID: response.data.respondents.id,
                 answers: response.data.answers
             });
         }).catch(error => {
@@ -164,6 +167,7 @@ export default class Response extends Component {
                     respondentLastModified: response.data.respondents.finished_at,
                     respondentTimeSpend: response.data.respondents.timeSpend,
                     respondentIP: response.data.respondents.ip,
+                    respondentID: response.data.respondents.id,
                     answers: response.data.answers
                 });
             }).catch(error => {
@@ -329,7 +333,11 @@ export default class Response extends Component {
                                                     <button type="button" className={this.state.nextStatBtn} data-value="next" onClick={this.nextBackBtn}>Next&nbsp;&nbsp;&nbsp;<span className="float-right"><FontAwesomeIcon icon={faChevronRight} /></span></button>
                                                 </div>
                                                 <div className="export-btn">
-                                                    <button type="button" data-name="export" data-value={this.state.respondent_no} onClick={this.actionsBtn} title="Export All Respondents">Export</button>
+                                                    <button type="button" data-name="export" id="allExportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export All Respondents">Export All</button>
+                                                    <div className="dropdown-menu" aria-labelledby="allExportDropdown">
+                                                        <a href={"/csv/all/" + this.state.id} target="_blank"><span class="dropdown-item">CSV</span></a>
+                                                        <a href={"/excel/all/" + this.state.id} target="_blank"><span class="dropdown-item">EXCEL</span></a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -349,7 +357,11 @@ export default class Response extends Component {
                                                         <button type="button" data-name="delete" data-value={this.state.respondent_no} onClick={this.actionsBtn}>Delete</button>
                                                     </div>
                                                     <div className="export-btn">
-                                                        <button type="button" data-name="export" data-value={this.state.respondent_no} onClick={this.actionsBtn} title="Export this Respondent">Export</button>
+                                                        <button type="button" data-name="export" id="indExportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export">Export</button>
+                                                        <div className="dropdown-menu" aria-labelledby="indExportDropdown">
+                                                            <a href={"/csv/individual/" + this.state.respondentID} target="_blank"><span class="dropdown-item">CSV</span></a>
+                                                            <a href={"/excel/individual/" + this.state.respondentID} target="_blank"><span class="dropdown-item">EXCEL</span></a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -84,15 +84,15 @@ class Header extends Component {
                 	</ul>
                 	<ul className="nav justify-content-end right-nav">
                 		<li className="nav-item">
-                            <button type="button" className="btn btn-orange" onClick={this.createSurvey}>Create Survey</button>
+                            <Link to="/dashboard/survey/add"><button type="button" className="btn btn-orange" /*onClick={this.createSurvey}*/>Create Survey</button></Link>
                         </li>
                 		<li className="nav-item dropdown">
     				    	<a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><FontAwesomeIcon icon="user" /> {this.state.user}</a>
     				    	<div className="dropdown-menu">
-    				      		<a className="dropdown-item" href="#">Action</a>
+    				      		{/*<a className="dropdown-item" href="#">Action</a>
     				      		<a className="dropdown-item" href="#">Another action</a>
     				      		<a className="dropdown-item" href="#">Something else here</a>
-    				      		<div className="dropdown-divider"></div>
+    				      		<div className="dropdown-divider"></div>*/}
     				      		<a className="dropdown-item" href="/dashboard/logout">Logout</a>
     				    	</div>
     				  	</li>
