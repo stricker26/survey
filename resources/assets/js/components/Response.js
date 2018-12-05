@@ -71,7 +71,7 @@ export default class Response extends Component {
                         this.state.surveySummary.map(list => 
                             <div key={list.id}>
                                 <div className="response-card">
-                                    <div className="response-card-header">
+                                    <div className={list.status == 'Active Survey' ? "response-card-header-green" : "response-card-header-red"}>
                                         <div className="response-header-status"><span>{list.status}</span></div>
                                         <div className="response-header-title"><span>{list.title.length >= 24 ? list.title.substring(0, 24) + "..." : list.title}</span></div>
                                     </div>

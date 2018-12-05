@@ -27,8 +27,10 @@ class ResponseController extends Controller
         if(count($all_survey) != 0) {
         	foreach($all_survey as $survey) {
         		if($survey->status == '1') {
-        			$survey->status = 'Digital Survey';
-        		}
+        			$survey->status = 'Active Survey';
+        		} else {
+                    $survey->status = 'Drafted Survey';
+                }
                 $respondentCount = Respondents::where('survey_id',$survey->survey_id)
                                               ->where('finished_at','!=',null)
                                               ->count();

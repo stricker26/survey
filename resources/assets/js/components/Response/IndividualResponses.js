@@ -328,6 +328,9 @@ export default class Response extends Component {
                                                 <div className="next-btn">
                                                     <button type="button" className={this.state.nextStatBtn} data-value="next" onClick={this.nextBackBtn}>Next&nbsp;&nbsp;&nbsp;<span className="float-right"><FontAwesomeIcon icon={faChevronRight} /></span></button>
                                                 </div>
+                                                <div className="export-btn">
+                                                    <button type="button" data-name="export" data-value={this.state.respondent_no} onClick={this.actionsBtn} title="Export All Respondents">Export</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -346,7 +349,7 @@ export default class Response extends Component {
                                                         <button type="button" data-name="delete" data-value={this.state.respondent_no} onClick={this.actionsBtn}>Delete</button>
                                                     </div>
                                                     <div className="export-btn">
-                                                        <button type="button" data-name="export" data-value={this.state.respondent_no} onClick={this.actionsBtn}>Export</button>
+                                                        <button type="button" data-name="export" data-value={this.state.respondent_no} onClick={this.actionsBtn} title="Export this Respondent">Export</button>
                                                     </div>
                                                 </div>
                                             </div>
