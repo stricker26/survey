@@ -36,3 +36,8 @@ Route::prefix('csv')->group(function() {
 	Route::get('/individual/{rid}', 'CSVExportController@individual');
 	Route::get('/all/{sid}', 'CSVExportController@all');
 });
+
+Route::prefix('m-survey')->group(function() {
+	Route::get('/getSurvey/s38rV3eY&/{token}','ForMobileController@getSurvey');
+	Route::get('/checkConn/s38rV3eY&','ForMobileController@checkConn');
+});
