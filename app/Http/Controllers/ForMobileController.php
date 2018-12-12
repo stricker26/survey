@@ -13,6 +13,7 @@ class ForMobileController extends Controller
 
     	//$token is encrypted, we will decrypt it later
     	$sid = $token;
+        $s_title = DB::table('surveys')->where('survey_id','=',$sid)->first()->title;
     	$q_db = DB::table('questions')->where('survey_id','=',$sid)->get();
         $l_db = DB::table('logics')->whereIn('question_id',$q_db->pluck('id')->all());
         $p_db = DB::table('popups')->whereIn('logic_id',$l_db->pluck('id')->all());
@@ -67,6 +68,7 @@ class ForMobileController extends Controller
     	return response()->json([
             'data' => $data,
             'surveyID' => $sid,
+            'surveyTitle' => $s_title,
         ]);
     }
 
