@@ -6,6 +6,7 @@ import Header from './Layouts/Header';
 import Footer from './Layouts/Footer';
 import SurveyTitleModal from './Modal/SurveyTitleModal';
 import { Redirect } from 'react-router-dom';
+import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc';
 
 export default class ViewSurvey extends Component {
     constructor() {
@@ -29,7 +30,6 @@ export default class ViewSurvey extends Component {
             token: sessionStorage.getItem('token'),
         }
     }
-
             
     renderRedirect = () => {
         if(!this.state.token) {
@@ -102,7 +102,6 @@ export default class ViewSurvey extends Component {
     }
 
     getQuestions(id) {
-        console.log('get questions');
         axios.get('/api/webmaster/question/' + id).then(response => {
             this.setState({
                 questions: response.data.questions,
@@ -166,8 +165,61 @@ export default class ViewSurvey extends Component {
         })
     }
 
+    onSortEnd = ({oldIndex, newIndex}) => {
+        this.setState({
+            questions: arrayMove(this.state.questions, oldIndex, newIndex),
+        });
+    };
+
     render() {
         let iterate = 1;
+
+        const DragHandle = SortableHandle(() => <img src={this.state.dragIcon} className="drag" />);
+
+        const SortableItem = SortableElement(({id, title, type}) =>
+            <div className="row">
+                <div className="col-lg-1 border">
+                    <label className="question-label">Q{iterate++}</label>
+                </div>
+                <div className="col-lg-11 border">
+                    <div className="row">
+                        <div className="col-lg-4">
+                            <label>{title.replace(/<\/?[^>]+(>|$)/g, "")}</label>
+                        </div>
+                        <div className="col-lg-4">
+                            <label>{type}</label>
+                        </div>
+                        <div className="col-lg-4">
+                            <div className="question-tools">
+                                <div className="question-tools-item">
+                                    <Link to={"/dashboard/survey/" + id + "/edit"}><img src={this.state.editIcon} /></Link>
+                                </div>
+                                <div className="question-tools-item">
+                                    <Link to="#" onClick={this.handleCopy(id)}><img src={this.state.duplicateIcon} /></Link>
+                                </div>
+                                <div className="question-tools-item">
+                                   <DragHandle />
+                                </div>
+                                <div className="question-tools-item">
+                                    <Link to="#" onClick={this.handleDelete(id)}><img src={this.state.deleteIcon} /></Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const SortableList = SortableContainer(({items}) => {
+          return (
+            <div className="col">
+              {items.map((value, index) => (
+                <SortableItem key={`item-${index}`} index={index} id={value.id} title={value.q_title} type={value.q_type} />
+              ))}
+            </div>
+          );
+        });
+
         return (
             <React.Fragment>
                 {this.renderRedirect()}
@@ -242,46 +294,13 @@ export default class ViewSurvey extends Component {
                                                 <p>QUESTION TYPE</p>
                                             </div>
                                         </div>
-                                        {this.state.questions.map(question => 
-                                            <div className="row mr-1 ml-1 mb-3" key={question.id}>
-                                                <div className="col-lg-1 border">
-                                                    <label className="question-label">Q{iterate++}</label>
-                                                </div>
-                                                <div className="col-lg-11 border">
-                                                    <div className="row">
-                                                        <div className="col-lg-4">
-                                                            <label>{question.q_title.replace(/<\/?[^>]+(>|$)/g, "")}</label>
-                                                        </div>
-                                                        <div className="col-lg-4">
-                                                            <label>{question.q_type}</label>
-                                                        </div>
-                                                        <div className="col-lg-4">
-                                                            <div className="question-tools">
-                                                                <div className="question-tools-item">
-                                                                    {/*<Link to={"/dashboard/survey/" + question.id + "/edit"}>*/}
-                                                                    <img src={this.state.editIcon} />{/*</Link>*/}
-                                                                </div>
-                                                                <div className="question-tools-item">
-                                                                    <Link to="#" onClick={this.handleCopy(question.id)}><img src={this.state.duplicateIcon} /></Link>
-                                                                </div>
-                                                                <div className="question-tools-item">
-                                                                    <img src={this.state.dragIcon} />
-                                                                </div>
-                                                                <div className="question-tools-item">
-                                                                    <Link to="#" onClick={this.handleDelete(question.id)}><img src={this.state.deleteIcon} /></Link>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
+                                        <SortableList items={this.state.questions} onSortEnd={this.onSortEnd} useDragHandle={true} lockAxis="y" />
                                         <div className="row mt-5 mb-5">
-                                        	<div className="col text-center">
-                                        		<Link to="add" params={{ id: this.state.surveyID }} className="nav-link">
+                                            <div className="col text-center">
+                                                <Link to="add" params={{ id: this.state.surveyID }} className="nav-link">
                                                     <div className="btn add-question">Add a question</div>
                                                 </Link>
-                                        	</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -10508,6 +10508,15 @@ header .container .nav.right-nav li .dropdown-menu a {
   color: #000000;
 }
 
+body .row .question-tools .question-tools-item {
+  width: 25%;
+  display: inline-block;
+}
+
+body .row .question-tools .question-tools-item .drag {
+  cursor: move;
+}
+
 section .container-fluid .bg-dark {
   color: #ffffff;
   overflow: hidden;
@@ -10658,6 +10667,10 @@ section .container-fluid .content-inner .content-inner-body .border label.questi
 section .container-fluid .content-inner .content-inner-body .border .question-tools .question-tools-item {
   width: 25%;
   display: inline-block;
+}
+
+section .container-fluid .content-inner .content-inner-body .border .question-tools .question-tools-item .drag {
+  cursor: move;
 }
 
 section .container-fluid .content-inner .content-inner-body .col-lg-11.border .row {

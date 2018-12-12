@@ -1,3 +1,16 @@
+body {
+	.row {
+		.question-tools {
+			.question-tools-item {
+				width: 25%;
+				display: inline-block;
+				.drag {
+					cursor: move;
+				}
+			}
+		}
+	}
+}
 section {
 	.container-fluid {
 		.bg-dark {
@@ -130,6 +143,9 @@ section {
 						.question-tools-item {
 							width: 25%;
 							display: inline-block;
+							.drag {
+								cursor: move;
+							}
 						}
 					}
 				}
