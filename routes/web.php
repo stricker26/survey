@@ -39,5 +39,6 @@ Route::prefix('csv')->group(function() {
 
 Route::prefix('m-survey')->group(function() {
 	Route::get('/getSurvey/s38rV3eY&/{token}','ForMobileController@getSurvey');
+	Route::post('/submitData/s38rV3eY&','ForMobileController@saveData');
 	Route::get('/checkConn/s38rV3eY&','ForMobileController@checkConn');
 });

@@ -241,35 +241,49 @@ export default class Response extends Component {
                                             {this.state.answers[list.id] ? <span><FontAwesomeIcon icon={faStar} />&nbsp;&nbsp;&nbsp;&nbsp;{this.state.answers[list.id]}/5 Stars</span> : <span>(skipped)</span>}
                                         </When>
                                         <When condition = {list.q_type == 'Textboxes'}>
-                                            {
-                                                (JSON.parse(list.choices)).map((element, key)=>
-                                                    <div className="row" key={key}>
-                                                        <div className="col-sm-2">
-                                                            <span>{element.answer}</span>
-                                                        </div>
-                                                        <div className="col-sm-10">
-                                                            <span>{JSON.parse(this.state.answers[list.id])[key]}</span>
-                                                        </div>
-                                                    </div>
-                                                )
-                                            }
+                                            <Choose>
+                                                <When condition = {this.state.answers[list.id]}>
+                                                    {
+                                                        (JSON.parse(list.choices)).map((element, key)=>
+                                                            <div className="row" key={key}>
+                                                                <div className="col-sm-2">
+                                                                    <span>{element.answer}</span>
+                                                                </div>
+                                                                <div className="col-sm-10">
+                                                                    <span>{JSON.parse(this.state.answers[list.id])[key]}</span>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </When>
+                                                <Otherwise>
+                                                    <span>(skipped)</span>
+                                                </Otherwise>
+                                            </Choose>
                                         </When>
                                         <When condition = {list.q_type == 'Contact'}>
-                                            {
-                                                (JSON.parse(list.choices)).map((element, key)=>
-                                                    <If condition = {element.answer}>
-                                                        <div className="row" key={key}>
-                                                            <div className="col-sm-2">
-                                                                <span>{this.state.contactData[key]}</span>
-                                                            </div>
-                                                            <div className="col-sm-10">
-                                                                <span>{JSON.parse(this.state.answers[list.id])[iterator]}</span>
-                                                                <span className={iterator = iterator + 1}></span>
-                                                            </div>
-                                                        </div>
-                                                    </If>
-                                                )
-                                            }
+                                            <Choose>
+                                                <When condition = {this.state.answers[list.id]}>
+                                                    {
+                                                        (JSON.parse(list.choices)).map((element, key)=>
+                                                            <If condition = {element.answer}>
+                                                                <div className="row" key={key}>
+                                                                    <div className="col-sm-2">
+                                                                        <span>{this.state.contactData[key]}</span>
+                                                                    </div>
+                                                                    <div className="col-sm-10">
+                                                                        <span>{JSON.parse(this.state.answers[list.id])[iterator]}</span>
+                                                                        <span className={iterator = iterator + 1}></span>
+                                                                    </div>
+                                                                </div>
+                                                            </If>
+                                                        )
+                                                    }
+                                                </When>
+                                                <Otherwise>
+                                                    <span>(skipped)</span>
+                                                </Otherwise>
+                                            </Choose>
                                         </When>
                                         <Otherwise>
                                             {this.state.answers[list.id] ? <span>{this.state.answers[list.id]}</span> : <span>(skipped)</span>}

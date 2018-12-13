@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+        'm-survey/submitData/s38rV3eY&'
     ];
 }
