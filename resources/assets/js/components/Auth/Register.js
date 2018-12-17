@@ -76,7 +76,7 @@ export default class Login extends Component {
                                 <div className="card-logo">
                                     <img src={this.state.scmiLogo} />
                                 </div>
-                                <h4>Log in to your Research Administrator Account:</h4>
+                                <h4>Register to your Research Administrator Account:</h4>
                                 <div className="card-form-input">
                                     <div className="div-input-name">
                                         <label>Name</label>

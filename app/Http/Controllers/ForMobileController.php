@@ -8,17 +8,32 @@ use App\Http\Controllers\Controller;
 use DB;
 use App\Respondents;
 use App\Answers;
+use App\User;
+use App\Researchers;
+use App\ResearchersData;
+use Illuminate\Support\Facades\Hash;
 
 class ForMobileController extends Controller
 {
-    public function getSurvey($token) {
 
-    	//$token is encrypted, we will decrypt it later
+    public function getSurvey($token, $rid) {
+
     	$sid = $token;
+
+        //survey
     	$q_db = DB::table('questions')->where('survey_id','=',$sid)->get();
         if(count($q_db) == 0) {
-            return response()->json(['data'=> []]);
+            return response()->json(['data' => []]);
         }
+
+
+        //check researcher can use the survey
+        $researcher = Researchers::where('id','=',$rid)->first();
+        if(DB::table('surveys')->where('user_id','=',$researcher->user_id)->count() == 0) {
+            return response()->json(['data' => []]);
+        }
+
+
         $s_title = DB::table('surveys')->where('survey_id','=',$sid)->first()->title;
     	$arr = array();
     	$obj = (object)[];
@@ -74,6 +89,7 @@ class ForMobileController extends Controller
             'surveyID' => $sid,
             'surveyTitle' => $s_title,
         ]);
+    
     }
 
     public function checkConn() {
@@ -128,4 +144,49 @@ class ForMobileController extends Controller
         return response()->json(['success'=>'Save Success!']);
 
     }
+
+    public function saveLocation(Request $request) {
+
+        $data = $request->get('data');
+
+        foreach($data as $d) {
+
+            $r_data = new ResearchersData;
+            $r_data->researcher_id = $d['researcher_id'];
+            $r_data->longitude = $d['longitude'];
+            $r_data->latitude = $d['latitude'];
+            $r_data->heading = $d['heading'];
+            $r_data->survey = $d['survey'];
+            $r_data->serial = $d['serial'];
+            $r_data->model = $d['model'];
+            $r_data->created_at = date("Y-m-d H:i:s", $d['created_at']);
+            $r_data->save();
+
+        }
+
+    }
+
+    public function loginMobile(Request $request) {
+
+        $username = $request->get('username');
+        $password = $request->get('password');
+ 
+        if(Researchers::where('username', '=', $username)->count() != 0) {
+            $passwordHashed = Researchers::where('username',$username)->first();
+            if(Hash::check($password, $passwordHashed->password)) {
+                return response()->json([
+                    'login' => 'success',
+                    'id' => $passwordHashed->id,
+                    'username' => $passwordHashed->username,
+                    'name' => $passwordHashed->name
+                ]);
+            } else {
+                return response()->json(['login' => 'credentials unmatched']);
+            }
+        } else {
+            return response()->json(['login' => 'credentials unmatched']);
+        }
+
+    }
+
 }

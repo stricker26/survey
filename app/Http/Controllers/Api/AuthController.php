@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use App\Researchers;
 use DB;
 
 class AuthController extends Controller
@@ -29,18 +30,40 @@ class AuthController extends Controller
     }
 
     public function register(Request $request) {
+        //unique username dapat gawa validation
+        $username = $request->get('username');
+        $password = Hash::make($request->get('password'));
+        $name = $request->get('name');
+        $tokens = Hash::make(microtime(true) . random_bytes('16'));
+        $usernew = new User;
+        $usernew->name = $name;
+        $usernew->username = $username;
+        $usernew->password = $password;
+        $usernew->token = $tokens;
+        $usernew->save();
+        return response()->json(['success' => $tokens]);
+    }
+
+    public function registerResearcher(Request $request) {
+        date_default_timezone_set("Asia/Manila");
+        $date_now = date("Y-m-d H:i:s");
+
     	//unique username dapat gawa validation
     	$username = $request->get('username');
+        if(Researchers::where('username','=',$username)->count() != 0) {
+            return response()->json(['error' => 'Username already taken!']);
+        }
     	$password = Hash::make($request->get('password'));
         $name = $request->get('name');
-    	$tokens = Hash::make(microtime(true) . random_bytes('16'));
-    	$usernew = new User;
+        $uid = User::where('token', '=', $request->get('token'))->first()->id;
+    	$usernew = new Researchers;
+        $usernew->user_id = $uid;
     	$usernew->name = $name;
     	$usernew->username = $username;
     	$usernew->password = $password;
-    	$usernew->token = $tokens;
+        $usernew->created_at = $date_now;
     	$usernew->save();
-        return response()->json(['success' => $tokens]);
+        return response()->json(['success' => 'success']);
     }
 
     public function getName(Request $request) {

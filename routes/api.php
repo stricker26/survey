@@ -21,6 +21,7 @@ Route::prefix('user')->group(function() {
 	Route::post('login', 'Api\AuthController@login');
 	Route::get('logout', 'Api\AuthController@logout');
 	Route::post('register', 'Api\AuthController@register');
+	Route::post('register/researcher', 'Api\AuthController@registerResearcher');
 });
 
 Route::prefix('webmaster')->group(function() {
@@ -49,6 +50,10 @@ Route::prefix('webmaster')->group(function() {
 
 	//set status of survey
 	Route::get('surveyStatus/{id}/{status}', 'Api\QuestionController@surveyStatus');
+
+	//field researcher get survey name
+	Route::get('getSurveyName/{id}', 'Api\FieldResearchersController@getSurveyTitle');
+	Route::post('getFieldResearchers/all', 'Api\FieldResearchersController@getAllFR');
 });
 
 Route::prefix('response')->group(function() {

@@ -1,0 +1,34 @@
+.field-researcher-section {
+	min-height: calc(calc(100vh - 92px) - 54px);
+	font-family: "Nunito", sans-serif;
+	background-color: #ffffff;
+	.fr-search,
+	.fr-create {
+		margin: 50px 0 20px 0;
+	}
+
+	.fr-table-div {
+		.fr-table {
+			margin-bottom: 70px;
+			td {
+			    padding: 0.75rem;
+			    vertical-align: middle;
+			    border-top: 1px solid #dee2e6;
+			    background-color: #f1f1f1;
+
+			    .faEye:hover {
+			    	cursor: pointer;
+			    }
+			}
+
+			td:last-child {
+				width: 10%;
+			}
+
+			th:last-child,
+			td:last-child {
+				text-align: center;
+			}
+		}
+	}
+}

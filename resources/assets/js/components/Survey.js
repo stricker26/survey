@@ -224,7 +224,7 @@ export default class Survey extends Component {
                                                                                 <td align="center"><img src={this.state.analyzeIcon} alt="Analyze" onClick={this.analyzeClick(list.survey_id)}/></td>
                                                                                 <td align="center"><img src={this.state.shareIcon} alt="Share" onClick={this.shareSurvey(list.survey_id)} /></td>
                                                                                 <td align="center"><img src={this.state.moreIcon} alt="More" /></td>
-                                                                                <td align="center"><img src={this.state.researcherIcon} alt="Researcher" /></td>
+                                                                                <td align="center"><Link to={'/dashboard/fieldResearcher/' + list.survey_id}><img src={this.state.researcherIcon} alt="Researcher" /></Link></td>
                                                                             </tr>
                                                                         </When>
                                                                         <When condition = {key == 0 && (csAll == false || (csDrafted == false && this.state.surveyType == 0) || (csActive == false && this.state.surveyType == 1))}>

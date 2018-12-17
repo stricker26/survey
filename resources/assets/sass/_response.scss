@@ -6,6 +6,7 @@
 	display: block;
 }
 .response-section {
+	min-height: calc(calc(100vh - 92px) - 54px);
 	font-family: "Nunito", sans-serif;
 	background-color: #efefef;
 	.container {
@@ -100,6 +101,7 @@
 
 //question-summaries
 .response-qs-section {
+	min-height: calc(calc(100vh - 92px) - 54px);
 	font-family: "Nunito", sans-serif;
 	background-color: #efefef;
 	.response-qs-header {
@@ -375,6 +377,7 @@
 
 //individual responses
 .response-ir-section {
+	min-height: calc(calc(100vh - 92px) - 54px);
 	font-family: "Nunito", sans-serif;
 	background-color: #efefef;
 	.response-ir-header {
@@ -552,6 +555,7 @@
 
 //data trends
 .response-dt-section {
+	min-height: calc(calc(100vh - 92px) - 54px);
 	font-family: "Nunito", sans-serif;
 	background-color: #efefef;
 	.response-dt-header {

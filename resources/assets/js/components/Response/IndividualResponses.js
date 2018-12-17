@@ -349,8 +349,8 @@ export default class Response extends Component {
                                                 <div className="export-btn">
                                                     <button type="button" data-name="export" id="allExportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export All Respondents">Export All</button>
                                                     <div className="dropdown-menu" aria-labelledby="allExportDropdown">
-                                                        <a href={"/csv/all/" + this.state.id} target="_blank"><span class="dropdown-item">CSV</span></a>
-                                                        <a href={"/excel/all/" + this.state.id} target="_blank"><span class="dropdown-item">EXCEL</span></a>
+                                                        <a href={"/csv/all/" + this.state.id} target="_blank"><span className="dropdown-item">CSV</span></a>
+                                                        <a href={"/excel/all/" + this.state.id} target="_blank"><span className="dropdown-item">EXCEL</span></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -373,8 +373,8 @@ export default class Response extends Component {
                                                     <div className="export-btn">
                                                         <button type="button" data-name="export" id="indExportDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export">Export</button>
                                                         <div className="dropdown-menu" aria-labelledby="indExportDropdown">
-                                                            <a href={"/csv/individual/" + this.state.respondentID} target="_blank"><span class="dropdown-item">CSV</span></a>
-                                                            <a href={"/excel/individual/" + this.state.respondentID} target="_blank"><span class="dropdown-item">EXCEL</span></a>
+                                                            <a href={"/csv/individual/" + this.state.respondentID} target="_blank"><span className="dropdown-item">CSV</span></a>
+                                                            <a href={"/excel/individual/" + this.state.respondentID} target="_blank"><span className="dropdown-item">EXCEL</span></a>
                                                         </div>
                                                     </div>
                                                 </div>

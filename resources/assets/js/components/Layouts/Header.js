@@ -80,7 +80,8 @@ class Header extends Component {
     	          	<ul className="nav">
                   		<li className="nav-item"><Link to="/dashboard/home" className="nav-link">Dashboard</Link></li>
                   		<li className="nav-item"><Link to="/dashboard/survey" className="nav-link">My Survey</Link></li>
-                  		<li className="nav-item"><Link to="/dashboard/response" className="nav-link">Responses</Link></li>
+                        <li className="nav-item"><Link to="/dashboard/response" className="nav-link">Responses</Link></li>
+                  		<li className="nav-item"><Link to="/dashboard/fieldResearcher" className="nav-link">Field Researchers</Link></li>
                 	</ul>
                 	<ul className="nav justify-content-end right-nav">
                 		<li className="nav-item">

@@ -63,6 +63,7 @@
 }
 
 .dashboard-survey {
+	min-height: calc(calc(100vh - 92px) - 54px);
 	.survey-list {
 		th {
 			text-align: center;

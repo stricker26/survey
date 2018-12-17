@@ -12,10 +12,13 @@ import SurveyLogic from './components/SurveyLogic';
 import Branching from './components/Branching';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import RegisterResearcher from './components/Auth/RegisterResearcher';
 import Logout from './components/Auth/Logout';
 import QuestionSummaries from './components/Response/QuestionSummaries';
 import IndividualResponses from './components/Response/IndividualResponses';
 import DataTrends from './components/Response/DataTrends';
+import FieldResearcher from './components/FieldResearcher';
+import FieldResearcherAll from './components/FieldResearcherAll';
 
 //Frontend
 import StartSurvey from './components/Frontend/StartSurvey';
@@ -27,11 +30,14 @@ export default class Index extends Component {
 			<Router>
 				<React.Fragment>
 					<Route exact path={"/dashboard/register"} component={Register} />
+					<Route exact path={"/dashboard/register/researcher"} component={RegisterResearcher} />
 					<Route exact path={"/dashboard/login"} component={Login} />
 					<Route exact path={"/dashboard/logout"} component={Logout} />
 					<Route exact path={"/dashboard/home"} component={Dashboard} />
 					<Route exact path={"/dashboard/survey"} component={Survey} />
 					<Route exact path={"/dashboard/response"} component={Response} />
+					<Route exact path={"/dashboard/fieldResearcher"} component={FieldResearcherAll} />
+					<Route exact path={"/dashboard/fieldResearcher/:id"} component={FieldResearcher} />
 					<Route exact path={"/dashboard/response/question_summaries/:id"} component={QuestionSummaries} />
 					<Route exact path={"/dashboard/response/data_trends/:id"} component={DataTrends} />
 					<Route exact path={"/dashboard/response/individual_responses/:id"} component={IndividualResponses} />

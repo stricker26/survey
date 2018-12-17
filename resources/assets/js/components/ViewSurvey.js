@@ -162,7 +162,7 @@ export default class ViewSurvey extends Component {
 
         axios.get('/api/webmaster/surveyStatus/' + this.state.surveyID + '/' + surveyCurrStat).catch(errors => {
             console.log(errors);
-        })
+        });
     }
 
     onSortEnd = ({oldIndex, newIndex}) => {
@@ -265,7 +265,7 @@ export default class ViewSurvey extends Component {
                                     	<div className="checkbox">
 											<ul className="tg-list mt-5">
 										    	<li className="tg-list-item">
-												    <input className="tgl tgl-ios" id="cb2" type="checkbox" checked={this.state.surveyStatus} onChange={this.statusChange}/>
+												    <input className="tgl tgl-ios" id="cb2" type="checkbox" checked={this.state.surveyStatus == 0 ? false : true} onChange={this.statusChange}/>
 												    <label className="tgl-btn" htmlFor="cb2"></label>
 												    <label>Survey is {this.state.surveyStatus == 0 ? "Inactive" : "Active"}.</label>
 												</li>
